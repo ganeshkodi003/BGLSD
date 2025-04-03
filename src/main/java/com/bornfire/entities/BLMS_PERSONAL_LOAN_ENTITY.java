@@ -6,10 +6,13 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name="BLMS_PERSONAL_LOAN_DETAILS")
 public class BLMS_PERSONAL_LOAN_ENTITY {
 	private String	name;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date	date_of_birth;
 	private String	phone_number;
 	private String	email_id;

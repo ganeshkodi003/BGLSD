@@ -49,18 +49,6 @@
 
 
 <style>
-.loader__dot {
-	animation: 1s blink infinite
-}
-
-.loader__dot:nth-child(2) {
-	animation-delay: 250ms
-}
-
-.loader__dot:nth-child(3) {
-	animation-delay: 500ms
-}
-
 body {
 	font-size: 0.8rem;
 }
@@ -658,28 +646,6 @@ function formatNumberWithIndianSeparation(amount) {
 }
 
 </script>
-<script type="text/javascript">
-function SubPersonal(a) { 
-    // Show the loader
-    $('#loader').show();
-
-    // If all validations pass, proceed with the AJAX request
-    $.ajax({
-        type: "POST",
-        url: './RetailPersDet',  
-        data: $("#PersonalForm").serialize(),
-        success: function (response) { 
-            $("#mypopup_alertmsg").html(response); 
-            $('#mypopup').modal('show');
-        },
-        complete: function() {
-            // Hide the loader regardless of success or error
-            $('#loader').hide();
-        }
-    }); 
-}
-
-</script>
 </head>
 
 
@@ -733,7 +699,7 @@ function SubPersonal(a) {
 						<div id="tab1" class="tabcontent" style="display: block">
 							<div class="card-body">
 								<form class=" border border-secondary" action="#" method="post"
-									id="PersonalForm" autocomplete="off">
+									id="assosiateForm" autocomplete="off">
 									<div class="row formline" style="padding: 10px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Applicant
@@ -745,7 +711,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="name" id="name"
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -753,7 +719,7 @@ function SubPersonal(a) {
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Date of Birth</div>
 										<div class="col-sm-2">
-											<input type="date" name="date_of_birth" id="date_of_birth"
+											<input type="date" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 									</div>
@@ -766,7 +732,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="number" name="phone_number" id="phone_number"
+											<input type="number" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -775,7 +741,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Email ID</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="email_id" id="email_id"
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -789,7 +755,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="home_address" id="home_address"
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 
@@ -797,7 +763,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Marital Status</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="marital_status" id="marital_status"
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 
@@ -812,7 +778,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="place_of_work" id="place_of_work"
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -821,7 +787,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Job Title</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="job_title" id="job_title"
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -832,7 +798,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="work_address" id="work_address"
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -841,7 +807,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Service</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="service" id="service"
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -852,7 +818,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="monthly_income" id="monthly_income"
+											<input type="text" name="" id=""
 												onchange="formatAndSetValue(this)"
 												class="form-control form-control-sm bg-white border border-dark" />
 
@@ -862,7 +828,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Annual Income</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="annual_income" id="annual_income"
+											<input type="text" name="" id=""
 												onchange="formatAndSetValue(this)"
 												class="form-control form-control-sm bg-white border border-dark"
 												readonly />
@@ -877,7 +843,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<select name="employer" id="employer"
+											<select name="ca_address_type" id="ca_address_type"
 												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
 												class="form-control form-control-sm bg-white border border-dark">
 												<option>SELECT</option>
@@ -894,7 +860,7 @@ function SubPersonal(a) {
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Employment Nature</div>
 										<div class="col-sm-2">
-											<select name="employment_nature" id="employment_nature"
+											<select name="ca_address_type" id="ca_address_type"
 												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
 												class="form-control form-control-sm bg-white border border-dark">
 												<option>SELECT</option>
@@ -924,7 +890,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<select name="purpose_of_personal_loan" id="purpose_of_personal_loan"
+											<select name="ca_address_type" id="ca_address_type"
 												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
 												class="form-control form-control-sm bg-white border border-dark">
 												<option>SELECT</option>
@@ -944,7 +910,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Loan Amount</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="loan_amount" id="loan_amount"
+											<input type="text" name="" id=""
 												onchange="formatAndSetValue(this)"
 												class="form-control form-control-sm bg-white border border-dark" />
 
@@ -958,7 +924,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="number" name="rate_of_interest" id="rate_of_interest"
+											<input type="number" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -967,7 +933,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Repayment Period</div>
 										<div class="col-sm-2">
 
-											<input type="number" name="repayment_period" id="repayment_period"
+											<input type="number" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -980,7 +946,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="monthly_installment" id="monthly_installment"
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -989,7 +955,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Remarks</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="remarks" id="remarks"
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -998,17 +964,6 @@ function SubPersonal(a) {
 								</form>
 
 							</div>
-							<!-- Loader HTML -->
-											<div id="loader"
-												style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background-color: rgba(211, 211, 211, 0.6); /* Light gray with more transparency */ padding: 20px; /* Padding around the loader */ border-radius: 8px; /* Rounded corners */ text-align: center;">
-												<!-- Center text in the loader -->
-												<div
-													style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-													<img style="width: 50px; height: 50px;"
-														th:src="@{/images/loader.gif}" alt="Loading..." />
-												</div>
-											</div>
-							
 							<div class="card-footer text-center "
 								style="background-color: #e9ecef">
 
@@ -3019,20 +2974,7 @@ function SubPersonal(a) {
 			</div>
 		</div>
 	</div>
-<div class="modal fade" data-backdrop="false" data-keyboard="false"
-	tabindex="-1" role="dialog" aria-hidden="true"
-	style="padding-right: 850px" id="mypopup">
-	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-		style="height: 20%">
-		<div class="modal-content">
-			<div class="modal-body" style="text-align: center">
-				<p id="mypopup_alertmsg"></p>
-				<button type="button" class="btn btn-primary" data-dismiss="modal"
-					onclick="openCity(event, 'Paris');">Close</button>
-			</div>
-		</div>
-	</div>
-</div>
+
 	<div class="modal fade" data-backdrop="false" data-keyboard="false"
 		id="alert1" tabindex="-1" role="dialog" aria-hidden="true">
 		<div

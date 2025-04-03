@@ -68,6 +68,8 @@ import com.bornfire.entities.BACP_DOC_MAN_REP;
 import com.bornfire.entities.BACP_NEGATIVE_LIST_Repo;
 import com.bornfire.entities.BGLSBusinessTable_Entity;
 import com.bornfire.entities.BGLSBusinessTable_Rep;
+import com.bornfire.entities.BLMS_PERSONALDET_REPO;
+import com.bornfire.entities.BLMS_PERSONAL_LOAN_ENTITY;
 import com.bornfire.entities.Bacp_Signature_master;
 import com.bornfire.entities.Bacp_Signature_masterRepo;
 import com.bornfire.entities.Bacp_WorkFLow_Entity;
@@ -178,6 +180,9 @@ public class CustOnboardinController {
 
 	@Autowired
 	BGLSBusinessTable_Rep bglsBusinessTable_Rep;
+	
+	@Autowired
+	BLMS_PERSONALDET_REPO bLMS_PERSONALDET_REPO;
 
 	// Start API
 	/// for get session
@@ -5944,5 +5949,40 @@ public class CustOnboardinController {
 			md.addAttribute("formmode", "ModifyHead");
 		} 
 		return "CorporateLoan";
+	}
+	
+	@RequestMapping(value = "Retailloanapproval", method = { RequestMethod.GET, RequestMethod.POST })
+	public String Retailloanapproval(@RequestParam(required = false) String formmode,
+			@RequestParam(required = false) String branch_name, Model md, HttpServletRequest req,
+			@RequestParam(required = false) BigDecimal record_srl) {
+
+		String userid = (String) req.getSession().getAttribute("USERID");
+		md.addAttribute("menu", "BAJHeaderMenu");
+
+		if (formmode == null || formmode.equals("add")) {
+			md.addAttribute("formmode", "add");
+
+		} else if (formmode.equals("ModifyHead")) {
+			md.addAttribute("formmode", "ModifyHead");
+		} 
+		return "RetailLoanApproval";
+	}
+	
+ 
+	
+	@RequestMapping(value = "RetailPersDet", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public String RetailPersDet(@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY BLMS_PERSONAL_LOAN_ENTITY, Model md, HttpServletRequest req) {
+		String userid = (String) req.getSession().getAttribute("USERID");
+		String srlno = bLMS_PERSONALDET_REPO.srlnum();
+		BLMS_PERSONAL_LOAN_ENTITY.setId(srlno);
+		BLMS_PERSONAL_LOAN_ENTITY.setEntity_user(userid);
+		BLMS_PERSONAL_LOAN_ENTITY.setEntity_time(new Date());
+		BLMS_PERSONAL_LOAN_ENTITY.setModify_user(userid);
+		BLMS_PERSONAL_LOAN_ENTITY.setModify_time(new Date());
+		BLMS_PERSONAL_LOAN_ENTITY.setEntity_flg("N");
+		BLMS_PERSONAL_LOAN_ENTITY.setModify_flg("N");
+		bLMS_PERSONALDET_REPO.save(BLMS_PERSONAL_LOAN_ENTITY);
+		return "Submitted Successfully";
 	}
 }
