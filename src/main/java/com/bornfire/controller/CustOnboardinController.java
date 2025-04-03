@@ -87,6 +87,7 @@ import com.bornfire.entities.Lease_Loan_Work_Repo;
 import com.bornfire.entities.Loan_Parameter_Entity;
 import com.bornfire.entities.MinimalDataRepository;
 import com.bornfire.entities.NoticeDetailsPayment0Rep;
+import com.bornfire.entities.Organization_Entity;
 import com.bornfire.entities.ParameterRep;
 import com.bornfire.entities.ParametersDetails;
 import com.bornfire.entities.Reference_Code_Entity;
@@ -5910,4 +5911,38 @@ public class CustOnboardinController {
 				return "Error constructing URL";
 			}
 		}
+	
+	@RequestMapping(value = "Retailloan", method = { RequestMethod.GET, RequestMethod.POST })
+	public String Retailloan(@RequestParam(required = false) String formmode,
+			@RequestParam(required = false) String branch_name, Model md, HttpServletRequest req,
+			@RequestParam(required = false) BigDecimal record_srl) {
+
+		String userid = (String) req.getSession().getAttribute("USERID");
+		md.addAttribute("menu", "BAJHeaderMenu");
+
+		if (formmode == null || formmode.equals("add")) {
+			md.addAttribute("formmode", "add");
+
+		} else if (formmode.equals("ModifyHead")) {
+			md.addAttribute("formmode", "ModifyHead");
+		} 
+		return "RetailLoan";
+	}
+	
+	@RequestMapping(value = "Corporateloan", method = { RequestMethod.GET, RequestMethod.POST })
+	public String Corporateloan(@RequestParam(required = false) String formmode,
+			@RequestParam(required = false) String branch_name, Model md, HttpServletRequest req,
+			@RequestParam(required = false) BigDecimal record_srl) {
+
+		String userid = (String) req.getSession().getAttribute("USERID");
+		md.addAttribute("menu", "BAJHeaderMenu");
+
+		if (formmode == null || formmode.equals("add")) {
+			md.addAttribute("formmode", "add");
+
+		} else if (formmode.equals("ModifyHead")) {
+			md.addAttribute("formmode", "ModifyHead");
+		} 
+		return "CorporateLoan";
+	}
 }
