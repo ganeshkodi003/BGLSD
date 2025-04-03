@@ -146,7 +146,7 @@ label {
 	text-align: left;
 }
 
-.modal-backdrop { 
+.modal-backdrop {
 	width: 200vw;
 	height: 200vh;
 }
@@ -202,15 +202,11 @@ a {
 	/*<![CDATA[*/
 
 	/* Re-Direction Functionality */
-	
-function contentLoad(a) {
-	location.href = "/BGLS/" + a.id;
 
-}
+	function contentLoad(a) {
+		location.href = "/BGLS/" + a.id;
 
-
-
-
+	}
 
 	/* LogOut Functionality */
 	function logout() {
@@ -232,99 +228,96 @@ function contentLoad(a) {
 </script>
 
 <script>
+	function imageuserprofile() {
+		var userphoto = document.getElementById("userphoto").value;
+		//alert(userphoto)
+		$.ajax({
+			type : 'GET',
+			url : '/BGLS/userprofileimage?userphoto=' + userphoto, // Ensure the userphoto is URL encoded
+			success : function(response) {
+				// alert("Response received: " + response); // Initial alert to see raw response
+				console.log("Response type:", typeof response); // Check response type
+				console.log("Response content:", response); // Log response content for debugging
 
+				var element = document.getElementById("photoCapture123");
+				element.innerHTML = ''; // Clear previous images
 
-function imageuserprofile() {
-    var userphoto = document.getElementById("userphoto").value;
-//alert(userphoto)
-    $.ajax({
-        type: 'GET',
-        url: '/BGLS/userprofileimage?userphoto=' + userphoto, // Ensure the userphoto is URL encoded
-        success: function(response) {
-           // alert("Response received: " + response); // Initial alert to see raw response
-            console.log("Response type:", typeof response); // Check response type
-            console.log("Response content:", response); // Log response content for debugging
+				// Check if response contains valid image data
+				if (response.startsWith("No records found")
+						|| response.startsWith("Photo content is null")) {
+					//   alert("No image found");
+					// element.innerHTML = 'No photo available.';
+					return; // Exit if no valid image
+				}
 
-            var element = document.getElementById("photoCapture123");
-            element.innerHTML = ''; // Clear previous images
+				// Convert the base64 string to a Blob and create an image URL
+				const uint8Array = base64ToUint8Array(response);
+				const blob = new Blob([ uint8Array ], {
+					type : "image/jpeg"
+				});
+				const imageUrl = URL.createObjectURL(blob);
 
-            // Check if response contains valid image data
-            if (response.startsWith("No records found") || response.startsWith("Photo content is null")) {
-             //   alert("No image found");
-               // element.innerHTML = 'No photo available.';
-                return; // Exit if no valid image
-            }
+				// Create and append image element
+				const img = document.createElement("img");
+				img.src = imageUrl;
+				img.style.width = "70px";
+				img.style.height = "60px";
+				img.style.borderRadius = "50%";
+				img.alt = "User Profile Image";
 
-            // Convert the base64 string to a Blob and create an image URL
-            const uint8Array = base64ToUint8Array(response);
-            const blob = new Blob([uint8Array], { type: "image/jpeg" });
-            const imageUrl = URL.createObjectURL(blob);
+				element.appendChild(img);
+			},
+			error : function() {
+				console.error("Error fetching image.");
+				var element = document.getElementById("photoCapture123");
+				element.innerHTML = 'No photo available.';
+			}
+		});
+	}
 
-            // Create and append image element
-            const img = document.createElement("img");
-            img.src = imageUrl;
-            img.style.width = "70px"; 
-            img.style.height = "60px";
-            img.style.borderRadius = "50%";
-            img.alt = "User Profile Image"; 
+	// Function to convert Base64 string to Uint8Array
+	function base64ToUint8Array(base64) {
+		const binaryString = window.atob(base64);
+		const len = binaryString.length;
+		const bytes = new Uint8Array(len);
+		for (let i = 0; i < len; i++) {
+			bytes[i] = binaryString.charCodeAt(i);
+		}
+		return bytes;
+	}
 
-            element.appendChild(img);
-        },
-        error: function() {
-            console.error("Error fetching image.");
-            var element = document.getElementById("photoCapture123");
-            element.innerHTML = 'No photo available.';
-        }
-    });
-}
-
-// Function to convert Base64 string to Uint8Array
-function base64ToUint8Array(base64) {
-    const binaryString = window.atob(base64);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes;
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    imageuserprofile();
-});
-
-
-
-
+	document.addEventListener("DOMContentLoaded", function() {
+		imageuserprofile();
+	});
 </script>
 <script>
-        // Function to hide the image and show photoCapture123 if the image fails to load
-        function hideImage() {
-            const imgElement = document.getElementById("showmenu1");
-            const photoCaptureElement = document.getElementById("photoCapture123");
+	// Function to hide the image and show photoCapture123 if the image fails to load
+	function hideImage() {
+		const imgElement = document.getElementById("showmenu1");
+		const photoCaptureElement = document.getElementById("photoCapture123");
 
-            imgElement.style.display = "none";  // Hide the image if not loaded
-            photoCaptureElement.style.display = "flex"; // Show the photoCapture123 div
-        }
+		imgElement.style.display = "none"; // Hide the image if not loaded
+		photoCaptureElement.style.display = "flex"; // Show the photoCapture123 div
+	}
 
-        // On page load, check if the image has loaded successfully
-/*         window.onload = function() {
-            const imgElement = document.getElementById("showmenu1");
-            const photoCaptureElement = document.getElementById("photoCapture123");
+	// On page load, check if the image has loaded successfully
+	/*         window.onload = function() {
+	 const imgElement = document.getElementById("showmenu1");
+	 const photoCaptureElement = document.getElementById("photoCapture123");
 
-            // If image is loaded, show it and hide the photoCapture123 div
-            imgElement.onload = function() {
-                photoCaptureElement.style.display = "none";
-            };
+	 // If image is loaded, show it and hide the photoCapture123 div
+	 imgElement.onload = function() {
+	 photoCaptureElement.style.display = "none";
+	 };
 
-            // Set display styles based on whether the image loads successfully
-            if (imgElement.complete && imgElement.naturalHeight !== 0) {
-                photoCaptureElement.style.display = "none"; // Hide if image loaded
-            } else {
-                hideImage(); // Hide image and show photoCapture123 if the image is missing
-            }
-        }; */
-    </script>   
+	 // Set display styles based on whether the image loads successfully
+	 if (imgElement.complete && imgElement.naturalHeight !== 0) {
+	 photoCaptureElement.style.display = "none"; // Hide if image loaded
+	 } else {
+	 hideImage(); // Hide image and show photoCapture123 if the image is missing
+	 }
+	 }; */
+</script>
 
 
 </head>
@@ -333,13 +326,8 @@ document.addEventListener("DOMContentLoaded", function() {
 	<input type="hidden" id="activemenu" th:value="${menu}" />
 	<nav class="navbar fixed-top navbar-expand-md navbar-dark  mb-3"
 		style="box-shadow: 6px 6px 12px #888888; height: 70px">
-	<input type="text"
-       name="userphoto"
-       id="userphoto"
-       th:value="${session.USERID}"
-       
-     
-       hidden />
+		<input type="text" name="userphoto" id="userphoto"
+			th:value="${session.USERID}" hidden />
 		<div
 			class="col-sm-12 d-flex justify-content-between align-items-center">
 			<img th:src="@{/images/Image_logo.png}" class="img-fluid"
@@ -352,57 +340,54 @@ document.addEventListener("DOMContentLoaded", function() {
 			<div class="col-sm-8"></div>
 
 			<div>
-				<input type="text" style="font-size: 20px;width: 150px"
+				<input type="text" style="font-size: 20px; width: 150px"
 					th:value="${#dates.format(session.TRANDATE, 'dd-MM-yyyy')}"
-					class="form-control-sm-sm bg-white border border-dark"
-					readonly />
+					class="form-control-sm-sm bg-white border border-dark" readonly />
 
 			</div>
-		    <button type="button" style="margin-left: 30px"
-            class="btn btn-default d-flex align-items-center p-2" id="userdtl">
-        <img th:src="@{'/images/' + ${session.USERID} + '.jpg'}"
-             class="rounded-circle me-2" 
-             id="showmenu1" alt="Bornfire" onerror="hideImage()">
-    </button>
+			<button type="button" style="margin-left: 30px"
+				class="btn btn-default d-flex align-items-center p-2" id="userdtl">
+				<img th:src="@{'/images/' + ${session.USERID} + '.jpg'}"
+					class="rounded-circle me-2" id="showmenu1" alt="Bornfire"
+					onerror="hideImage()">
+			</button>
 
-    <div id="photoCapture123">
-       
-    </div>
+			<div id="photoCapture123"></div>
 
-                       <!--     <img th:src="'data:image/png;base64,' + ${fileData}" alt="Excel File Image" />  -->
+			<!--     <img th:src="'data:image/png;base64,' + ${fileData}" alt="Excel File Image" />  -->
 
 
 
-<div class="user-info">
-	<div class="row formline">
-    <div class="col">
-        <span class="ms-2"
-            th:text="'USER ID'+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+':'+'&nbsp;&nbsp;&nbsp;'+${session.USERID}">
-        </span>
-    </div>
-</div>
-<div class="row formline">
-    <div class="col">
-        <span class="ms-2"
-            th:text="'USER NAME ' + '  ' + ' : ' + ${session.USERNAME}">
-        </span>
-    </div>
-</div>
-<div class="row formline">
-    <div class="col">
-        <span class="ms-2"
-            th:text="'LOGIN TIME ' + '  ' + ' : ' + ${session.LOGIN_TIME}">
-        </span>
-    </div>
-</div>
-</div>
-
+			<div class="user-info">
+				<div class="row formline">
+					<div class="col">
+						<span class="ms-2"
+							th:text="'USER ID'+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+':'+'&nbsp;&nbsp;&nbsp;'+${session.USERID}">
+						</span>
+					</div>
+				</div>
+				<div class="row formline">
+					<div class="col">
+						<span class="ms-2"
+							th:text="'USER NAME ' + '  ' + ' : ' + ${session.USERNAME}">
+						</span>
+					</div>
+				</div>
+				<div class="row formline">
+					<div class="col">
+						<span class="ms-2"
+							th:text="'LOGIN TIME ' + '  ' + ' : ' + ${session.LOGIN_TIME}">
+						</span>
+					</div>
+				</div>
 			</div>
-	
+
+		</div>
+
 
 
 	</nav>
-	
+
 	<!-- <input type="text"
        name="userphoto"
        id="userphoto"
@@ -419,8 +404,7 @@ document.addEventListener("DOMContentLoaded", function() {
 				id="Dashboard" href="#" onclick="contentLoad(this)">Home</a></li>
 
 
-			<li 
-			class="nav-item"><a class="nav-link nav-link-collapse pl-3"
+			<li class="nav-item"><a class="nav-link nav-link-collapse pl-3"
 				href="#" id="hasSubItems" data-toggle="collapse"
 				data-target="#collapseSubItems1" aria-controls="collapseSubItems1"
 				aria-expanded="false">Admin</a>
@@ -447,10 +431,10 @@ document.addEventListener("DOMContentLoaded", function() {
 						href="#" onclick="contentLoad(this)">Account ledger</a></li>-->
 					<!--<li class="nav-item"><a class="nav-link" id="Parameter" href="#"
 							onclick="contentLoad(this)">Parameters</a></li>-->
-							
+
 					<!-- <li class="nav-item"><a class="nav-link" id="calendermaintenance"
 						href="#" onclick="contentLoad(this)">Calender Maintenance</a></li> -->
-						
+
 					<li class="nav-item"><a class="nav-link"
 						id="audittraildetails" href="#" onclick="contentLoad(this)">
 							Audit Trail </a></li>
@@ -468,18 +452,18 @@ document.addEventListener("DOMContentLoaded", function() {
 			<li class="nav-item"><a class="nav-link nav-link-collapse pl-3 "
 				id="day_end_operation" href="#" onclick="contentLoad(this)"> Day
 					End Operation </a></li>
-					
+
 			<li class="nav-item"><a class="nav-link nav-link-collapse pl-3"
 				href="#" id="hasSubItems" data-toggle="collapse"
 				data-target="#collapseSubItems22" aria-controls="collapseSubItems22"
-				aria-expanded="false">Loan Origination System</a> 
+				aria-expanded="false">Loan Origination System</a>
 				<ul class="nav-second-level collapse" id="collapseSubItems22"
-					data-parent="#navAccordion"> 
-					<li class="nav-item"><a class="nav-link"
-						id="Retailloan" href="#" onclick="contentLoad(this)">Retail </a></li> 
+					data-parent="#navAccordion">
+					<li class="nav-item"><a class="nav-link" id="Retailloan"
+						href="#" onclick="contentLoad(this)">Retail </a></li>
 					<li class="nav-item"><a class="nav-link" id="Corporateloan"
 						href="#" onclick="contentLoad(this)">Corporate</a></li>
-					 
+
 				</ul></li>
 
 			<li class="nav-item"><a class="nav-link nav-link-collapse pl-3"
@@ -529,6 +513,20 @@ document.addEventListener("DOMContentLoaded", function() {
 				</ul></li>
 
 			<li class="nav-item"><a class="nav-link nav-link-collapse pl-3"
+				href="#" id="hasSubItems1" data-toggle="collapse"
+				data-target="#collapseSubItemsLoan"
+				aria-controls="collapseSubItemsLoan" aria-expanded="false"> Loan
+					Operation </a>
+				<ul class="nav-second-level collapse" id="collapseSubItemsLoan"
+					data-parent="#navAccordion">
+					<li class="nav-item"><a class="nav-link" id="loanOperation"
+						href="#" onclick="contentLoad(this)">Loan Operation</a></li>
+					<li class="nav-item"><a class="nav-link" id="loanClosure"
+						href="#" onclick="contentLoad(this)">Loan Closure</a></li>
+				</ul></li>
+
+
+			<li class="nav-item"><a class="nav-link nav-link-collapse pl-3"
 				href="#" id="hasSubItems" data-toggle="collapse"
 				data-target="#collapseSubItems25" aria-controls="collapseSubItems25"
 				aria-expanded="false">Customer Master</a>
@@ -557,9 +555,8 @@ document.addEventListener("DOMContentLoaded", function() {
 							Statements </a></li>
 					<li class="nav-item"><a class="nav-link" id="" href="#" onclick="contentLoad(this)">Flow Details
 						</a></li>-->
-                    <li class="nav-item"><a class="nav-link"
-						id="LeaseOperaions" href="#" onclick="contentLoad(this)">
-							Lease Operaions</a></li>
+					<li class="nav-item"><a class="nav-link" id="LeaseOperaions"
+						href="#" onclick="contentLoad(this)"> Lease Operaions</a></li>
 					<li class="nav-item"><a class="nav-link" id="InventoryMaster1"
 						href="#" onclick="contentLoad(this)">Collateral Inventary
 							Master </a></li>
@@ -663,7 +660,7 @@ document.addEventListener("DOMContentLoaded", function() {
 					<li class="nav-item"><a class="nav-link"
 						id="profitAndLossAccount" href="#" onclick="contentLoad(this)">
 							Profit & Loss Account </a></li>
-				<!-- 	<li class="nav-item"><a class="nav-link"
+					<!-- 	<li class="nav-item"><a class="nav-link"
 						id="day_end_operation" href="#" onclick="contentLoad(this)">
 							Day End Operation </a></li>  -->
 
@@ -731,21 +728,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
 				</ul>
 			</li>-->
-					
+
 			<li class="nav-item"><a class="nav-link nav-link-collapse pl-3"
 				href="#" id="hasSubItems" data-toggle="collapse"
 				data-target="#collapseSubItems15" aria-controls="collapseSubItems15"
 				aria-expanded="false">Collection Process</a>
 				<ul class="nav-second-level collapse" id="collapseSubItems15"
 					data-parent="#navAccordion">
-					<li class="nav-item"><a class="nav-link" id="participatingJobs"
-						href="#" onclick="contentLoad(this)">Participating Banks</a></li>
+					<li class="nav-item"><a class="nav-link"
+						id="participatingJobs" href="#" onclick="contentLoad(this)">Participating
+							Banks</a></li>
 
 					<li class="nav-item"><a class="nav-link" id="leasecollection"
 						href="#" onclick="contentLoad(this)">Lease Collection</a></li>
-				</ul>
-				
-			</li>
+				</ul></li>
 
 			<li class="nav-item"><a class="nav-link nav-link-collapse pl-3"
 				href="#" id="hasSubItems" data-toggle="collapse"
@@ -758,8 +754,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 				</ul></li>
-		
-				
+
+
 
 
 
@@ -772,7 +768,7 @@ document.addEventListener("DOMContentLoaded", function() {
 				<ul class="nav-second-level collapse" id="collapseSubItems7"
 					data-parent="#navAccordion">
 					<li class="nav-item"><a class="nav-link" id="Account_Balances"
-						href="#" onclick="contentLoad(this)"> Account Balances  </a></li>
+						href="#" onclick="contentLoad(this)"> Account Balances </a></li>
 					<li class="nav-item"><a class="nav-link" id="interest_summary"
 						href="#" onclick="contentLoad(this)"> Interest Summary </a></li>
 					<li class="nav-item"><a class="nav-link" id="journalbook"
@@ -784,7 +780,7 @@ document.addEventListener("DOMContentLoaded", function() {
 					<!-- <li class="nav-item"><a class="nav-link"
 						id="trialBalanceReports" href="#" onclick="contentLoad(this)">Trial
 							Balance </a></li> -->
-							<li class="nav-item"><a class="nav-link"
+					<li class="nav-item"><a class="nav-link"
 						id="trialBalanceReports2" href="#" onclick="contentLoad(this)">Trial
 							Balance </a></li>
 					<li class="nav-item"><a class="nav-link" id="generalLedger"
