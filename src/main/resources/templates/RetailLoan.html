@@ -699,18 +699,19 @@ function formatNumberWithIndianSeparation(amount) {
 						<div id="tab1" class="tabcontent" style="display: block">
 							<div class="card-body">
 								<form class=" border border-secondary" action="#" method="post"
-									id="assosiateForm" autocomplete="off"> 
-									<div class="row formline" style="padding: 10px 0px 2px 0px;"> 
+									id="assosiateForm" autocomplete="off">
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
-										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Applicant Personal Details</div> 
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Applicant
+											Personal Details</div>
 									</div>
-									<div class="row formline" style="padding: 10px 0px 2px 0px;"> 
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Name</div>
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id=""  
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -718,7 +719,7 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Date of Birth</div>
 										<div class="col-sm-2">
-											<input type="date" name="" id=""  
+											<input type="date" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 									</div>
@@ -731,7 +732,7 @@ function formatNumberWithIndianSeparation(amount) {
 
 
 										<div class="col-sm-2">
-											<input type="number" name="" id="" 
+											<input type="number" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -740,7 +741,7 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-2">Email ID</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -754,7 +755,7 @@ function formatNumberWithIndianSeparation(amount) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 
@@ -762,7 +763,7 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-2">Marital Status</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 
@@ -777,7 +778,7 @@ function formatNumberWithIndianSeparation(amount) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -786,8 +787,51 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-2">Job Title</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Work Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="" id=""
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Service</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="" id=""
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Monthly Income</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="" id=""
+												onchange="formatAndSetValue(this)"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Annual Income</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="" id=""
+												onchange="formatAndSetValue(this)"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
 
 										</div>
 									</div>
@@ -795,30 +839,49 @@ function formatNumberWithIndianSeparation(amount) {
 
 
 										<div class="col-sm-1"></div>
-										<div class="col-sm-2">Work Address</div>
+										<div class="col-sm-2">Employer</div>
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id="" 
-												class="form-control form-control-sm bg-white border border-dark" />
+											<select name="ca_address_type" id="ca_address_type"
+												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+												class="form-control form-control-sm bg-white border border-dark">
+												<option>SELECT</option>
+												<option value="Car">Private Limited</option>
+												<option value="Bike">Public Sector</option>
+												<option value="Central Government">Central
+													Government</option>
+												<option value="State Government">State Government</option>
+												<option value="Local Bodies">Local Bodies</option>
+											</select>
 
 										</div>
 
 										<div class="col-sm-1"></div>
-										<div class="col-sm-2">Monthly Net Income</div>
+										<div class="col-sm-2">Employment Nature</div>
 										<div class="col-sm-2">
-
-											<input type="text" name="" id=""   onchange="formatAndSetValue(this)"
-												class="form-control form-control-sm bg-white border border-dark" />
+											<select name="ca_address_type" id="ca_address_type"
+												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+												class="form-control form-control-sm bg-white border border-dark">
+												<option>SELECT</option>
+												<option value="Salaried ">Salaried</option>
+												<option value="Self-Employed">Self-Employed</option>
+												<option value="Government Employee">Government
+													Employee</option>
+												<option value="Contractual/Temporary Employee ">Contractual/Temporary
+													Employee</option>
+												<option value="Retired/Pensioner">Retired/Pensioner</option>
+											</select>
 
 										</div>
 									</div>
-									
-									<div class="row formline" style="padding: 0px 0px 2px 0px;"> 
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
-										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Personal Loan Details</div> 
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Personal
+											Loan Details</div>
 									</div>
-									
+
 									<div class="row formline" style="padding: 10px 0px 2px 0px;">
 
 
@@ -828,15 +891,18 @@ function formatNumberWithIndianSeparation(amount) {
 
 										<div class="col-sm-2">
 											<select name="ca_address_type" id="ca_address_type"
-														onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
-														class="form-control form-control-sm bg-white border border-dark">
-														<option>SELECT</option>
-														<option value="Purchase of vehicle">Purchase of vehicle</option>
-														<option value="Purchase of office equipment">Purchase of office equipment</option>
-														<option value="Travel">Travel</option>
-														<option value="Takeover of existing personal loan">Takeover of existing personal loan</option>
-														<option value="Other">Other</option>
-													</select>
+												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+												class="form-control form-control-sm bg-white border border-dark">
+												<option>SELECT</option>
+												<option value="Purchase of vehicle">Purchase of
+													vehicle</option>
+												<option value="Purchase of office equipment">Purchase
+													of office equipment</option>
+												<option value="Travel">Travel</option>
+												<option value="Takeover of existing personal loan">Takeover
+													of existing personal loan</option>
+												<option value="Other">Other</option>
+											</select>
 
 										</div>
 
@@ -844,7 +910,8 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-2">Loan Amount</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id=""   onchange="formatAndSetValue(this)"
+											<input type="text" name="" id=""
+												onchange="formatAndSetValue(this)"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -857,7 +924,7 @@ function formatNumberWithIndianSeparation(amount) {
 
 
 										<div class="col-sm-2">
-											<input type="number" name="" id=""  
+											<input type="number" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -866,7 +933,7 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-2">Repayment Period</div>
 										<div class="col-sm-2">
 
-											<input type="number" name="" id="" 
+											<input type="number" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -879,7 +946,7 @@ function formatNumberWithIndianSeparation(amount) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id=""  
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -888,7 +955,7 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-2">Remarks</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -910,20 +977,21 @@ function formatNumberWithIndianSeparation(amount) {
 
 						<div id="tab2" class="tabcontent" style="display: none">
 
-													<div class="card-body">
+							<div class="card-body">
 								<form class=" border border-secondary" action="#" method="post"
-									id="assosiateForm" autocomplete="off"> 
-									<div class="row formline" style="padding: 10px 0px 2px 0px;"> 
+									id="assosiateForm" autocomplete="off">
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
-										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Applicant Personal Details</div> 
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Applicant
+											Personal Details</div>
 									</div>
-									<div class="row formline" style="padding: 10px 0px 2px 0px;"> 
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Name</div>
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id=""  
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -931,7 +999,7 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Date of Birth</div>
 										<div class="col-sm-2">
-											<input type="date" name="" id=""  
+											<input type="date" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 									</div>
@@ -944,7 +1012,7 @@ function formatNumberWithIndianSeparation(amount) {
 
 
 										<div class="col-sm-2">
-											<input type="number" name="" id="" 
+											<input type="number" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -953,7 +1021,7 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-2">Email ID</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -967,7 +1035,7 @@ function formatNumberWithIndianSeparation(amount) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 
@@ -975,7 +1043,7 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-2">Marital Status</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 
@@ -990,7 +1058,7 @@ function formatNumberWithIndianSeparation(amount) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -999,8 +1067,51 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-2">Job Title</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+																		<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Work Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="" id=""
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Service</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="" id=""
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Monthly Income</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="" id=""
+												onchange="formatAndSetValue(this)"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Annual Income</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="" id=""
+												onchange="formatAndSetValue(this)"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
 
 										</div>
 									</div>
@@ -1008,51 +1119,72 @@ function formatNumberWithIndianSeparation(amount) {
 
 
 										<div class="col-sm-1"></div>
-										<div class="col-sm-2">Work Address</div>
+										<div class="col-sm-2">Employer</div>
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id="" 
-												class="form-control form-control-sm bg-white border border-dark" />
+											<select name="ca_address_type" id="ca_address_type"
+												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+												class="form-control form-control-sm bg-white border border-dark">
+												<option>SELECT</option>
+												<option value="Car">Private Limited</option>
+												<option value="Bike">Public Sector</option>
+												<option value="Central Government">Central
+													Government</option>
+												<option value="State Government">State Government</option>
+												<option value="Local Bodies">Local Bodies</option>
+											</select>
 
 										</div>
 
 										<div class="col-sm-1"></div>
-										<div class="col-sm-2">Monthly Net Income</div>
+										<div class="col-sm-2">Employment Nature</div>
 										<div class="col-sm-2">
-
-											<input type="text" name="" id=""   onchange="formatAndSetValue(this)"
-												class="form-control form-control-sm bg-white border border-dark" />
+											<select name="ca_address_type" id="ca_address_type"
+												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+												class="form-control form-control-sm bg-white border border-dark">
+												<option>SELECT</option>
+												<option value="Salaried ">Salaried</option>
+												<option value="Self-Employed">Self-Employed</option>
+												<option value="Government Employee">Government
+													Employee</option>
+												<option value="Contractual/Temporary Employee ">Contractual/Temporary
+													Employee</option>
+												<option value="Retired/Pensioner">Retired/Pensioner</option>
+											</select>
 
 										</div>
 									</div>
-									
-									<div class="row formline" style="padding: 0px 0px 2px 0px;"> 
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
-										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Vehicle Loan Details</div> 
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Vehicle
+											Loan Details</div>
 									</div>
-								 
-									<div class="row formline" style="padding: 10px 0px 2px 0px;"> 
+
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Vehicle type</div>
 
 
 										<div class="col-sm-2">
 											<select name="ca_address_type" id="ca_address_type"
-														onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
-														class="form-control form-control-sm bg-white border border-dark">
-														<option>SELECT</option>
-														<option value="Car">Car</option>
-														<option value="Bike">Bike</option>
-														<option value="Commercial Vehicle">Commercial Vehicle</option> 
-													</select>
+												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+												class="form-control form-control-sm bg-white border border-dark">
+												<option>SELECT</option>
+												<option value="Car">Car</option>
+												<option value="Bike">Bike</option>
+												<option value="Commercial Vehicle">Commercial
+													Vehicle</option>
+											</select>
 
 										</div>
 
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Vehicle Value</div>
 										<div class="col-sm-2">
-											<input type="text" name="" id="" onchange="formatAndSetValue(this)"
+											<input type="text" name="" id=""
+												onchange="formatAndSetValue(this)"
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 									</div>
@@ -1065,7 +1197,7 @@ function formatNumberWithIndianSeparation(amount) {
 
 
 										<div class="col-sm-2">
-											<input type="number" name="" id="" 
+											<input type="number" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1074,7 +1206,7 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-2">Registration Number</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1088,7 +1220,7 @@ function formatNumberWithIndianSeparation(amount) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 
@@ -1096,14 +1228,14 @@ function formatNumberWithIndianSeparation(amount) {
 										<div class="col-sm-2">Dealer Address</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id="" 
+											<input type="text" name="" id=""
 												class="form-control form-control-sm bg-white border border-dark" />
 
 
 										</div>
-									</div> 
-									
-									
+									</div>
+
+
 								</form>
 
 							</div>
@@ -1120,7 +1252,7 @@ function formatNumberWithIndianSeparation(amount) {
 
 						</div>
 						<div id="tabCalendar" class="tabcontent" style="display: none;">
-				 
+
 						</div>
 					</div>
 				</div>
