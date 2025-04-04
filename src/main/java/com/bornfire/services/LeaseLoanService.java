@@ -1,5 +1,6 @@
 package com.bornfire.services;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bornfire.entities.BACP_CUS_PROFILE_REPO;
+import com.bornfire.entities.Chart_Acc_Entity;
 import com.bornfire.entities.Chart_Acc_Rep;
 import com.bornfire.entities.DMD_TABLE;
 import com.bornfire.entities.DMD_TABLE_REPO;
@@ -25,6 +27,8 @@ import com.bornfire.entities.Loan_Repayment_Master_Entity;
 import com.bornfire.entities.Loan_Repayment_Master_Repo;
 import com.bornfire.entities.NoticeDetailsPayment0Entity;
 import com.bornfire.entities.NoticeDetailsPayment0Rep;
+import com.bornfire.entities.SB_AccountMasterEntity;
+import com.bornfire.entities.SB_AccountMasterEntityRepo;
 import com.bornfire.entities.TestPrincipalCalculation;
 
 @Service
@@ -54,12 +58,16 @@ public class LeaseLoanService {
 	@Autowired
 	InterestCalculationServices interestCalculationServices;
 
+	@Autowired
+	SB_AccountMasterEntityRepo sb_AccountMasterEntityRepo;
+
 	public String addLeaseLoan(LeaseData leaseRecord, String entryUser) {
 
 		boolean flag = true;
 		String msg = "";
 
 		Lease_Loan_Work_Entity loandetails = leaseRecord.getLoanDetails();
+		SB_AccountMasterEntity sbAcctDetails = convertToSBAccountMaster(leaseRecord.getLoanDetails());
 		if (Objects.nonNull(loandetails.getLoan_accountno())) {
 			loandetails.setEntry_user(entryUser);
 			loandetails.setEntry_time(new Date());
@@ -67,6 +75,32 @@ public class LeaseLoanService {
 			loandetails.setModify_time(new Date());
 			loandetails.setEntity_flg("N");
 			loandetails.setDel_flg("N");
+
+			Chart_Acc_Entity coa = new Chart_Acc_Entity();
+
+					coa.setAcct_num(sbAcctDetails.getLoan_accountno());
+					coa.setAcct_name(loandetails.getCustomer_name());
+					coa.setAcct_crncy(loandetails.getLoan_currency());
+					coa.setAcct_bal(BigDecimal.ZERO);
+					coa.setCr_amt(BigDecimal.ZERO);
+					coa.setDr_amt(BigDecimal.ZERO);
+					coa.setGl_code(sbAcctDetails.getGl_code());
+					coa.setGl_desc(sbAcctDetails.getGl_desc());
+					coa.setGlsh_code(sbAcctDetails.getGlsh_code());
+					coa.setGlsh_desc(sbAcctDetails.getGlsh_desc());
+					coa.setSchm_code(sbAcctDetails.getScheme_code());
+					coa.setSchm_type(sbAcctDetails.getScheme_type());
+					coa.setClassification("Asset");
+					coa.setAdd_det_flg("N");
+					coa.setEntity_flg("Y");
+					coa.setDel_flg("N");
+					coa.setAcct_status("Y");
+					coa.setAcct_cls_flg("N");
+					coa.setAcct_type("L");
+
+					chart_Acc_Rep.save(coa);
+
+
 		} else {
 			flag = false;
 		}
@@ -85,6 +119,7 @@ public class LeaseLoanService {
 
 		if (flag) {
 			lease_Loan_Work_Repo.save(loandetails);
+			sb_AccountMasterEntityRepo.save(sbAcctDetails);
 			paymentWorkRepo.save(repaymentDetails);
 			msg = "Loan Account Created Successfully";
 		} else {
@@ -92,7 +127,47 @@ public class LeaseLoanService {
 		}
 		return msg;
 	}
+// converting the leaseloan entity to sb account entity
+	private SB_AccountMasterEntity convertToSBAccountMaster(Lease_Loan_Work_Entity loanDetails) {
+		SB_AccountMasterEntity sbAccount = new SB_AccountMasterEntity();
 
+		// Get all declared fields from both classes
+		Field[] loanFields = Lease_Loan_Work_Entity.class.getDeclaredFields();
+		Field[] sbFields = SB_AccountMasterEntity.class.getDeclaredFields();
+
+		for (Field loanField : loanFields) {
+			loanField.setAccessible(true); // Allow access to private fields
+			try {
+				Object value = loanField.get(loanDetails); // Get value from loanDetails
+
+				// Find the matching field in SB_AccountMasterEntity
+				for (Field sbField : sbFields) {
+					if (sbField.getName().equals(loanField.getName())) {
+						sbField.setAccessible(true);
+						sbField.set(sbAccount, value); // Set value to sbAccount
+						break;
+					}
+				}
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// Set additional specific values (if any)
+		sbAccount.setLoan_accountno("SB0000"+sb_AccountMasterEntityRepo.getNextLoanAccountNo());
+		sbAccount.setEntry_time(new Date());
+		sbAccount.setModify_time(new Date());
+		sbAccount.setScheme_type("SBA");
+		sbAccount.setScheme_code("SBGEN");
+		sbAccount.setGl_code("2000002010");
+		sbAccount.setGl_desc("Deposits");
+		sbAccount.setGlsh_code("2010");
+		sbAccount.setGlsh_desc("SBGeneral");
+
+		
+
+		return sbAccount;
+	}
 	public String verifyleaseloan(String accountNo, String entryUser) {
 
 		boolean flag = true;
