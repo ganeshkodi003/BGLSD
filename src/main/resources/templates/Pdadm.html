@@ -1,0 +1,928 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+	CREATED BY : AISHWARYA
+	DATE : 04-04-2025
+-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" href="/webjars/font-awesome/5.9.0/css/all.min.css" th:href="@{/webjars/font-awesome/5.9.0/css/all.min.css}">
+<link rel="stylesheet" type="text/css" href="/webjars/jquery-ui/1.12.1/jquery-ui.min.css" th:href="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.css}">
+<link rel="stylesheet" type="text/css" href="/webjars/datatables/1.10.19/css/jquery.dataTables.min.css" th:href="@{/webjars/datatables/1.10.19/css/jquery.dataTables.min.css}">
+<link rel="shortcut icon" th:href="@{/favicon.ico}" type="image/x-icon">
+<link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
+<script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+<script src="/webjars/popper.js/1.14.7/umd/popper.min.js" th:src="@{/webjars/popper.js/1.14.7/umd/popper.min.js}"></script>
+<script src="/webjars/jquery/3.4.1/jquery.min.js" th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js" th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js" th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
+<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js" th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
+<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js" th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
+<script src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js" th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
+<style>
+.loader__dot {
+	animation: 1s blink infinite
+}
+.loader__dot:nth-child(2) {
+	animation-delay: 250ms
+}
+.loader__dot:nth-child(3) {
+	animation-delay: 500ms
+}
+body {
+	font-size: 0.8rem;
+}
+.btn {
+	line-height: 0.5rem;
+}
+.table-bordered td, .table-bordered th {
+	font-size: smaller;
+}
+.container-manager {
+	width: 83.5%;
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: 17.3%;
+	margin-top: 80px;
+	margin-top: 80px;
+}
+.table .thead-light th {
+	color: #495057;
+	background-color: #e9ecef;
+	border-color: #dee2e6;
+	width: 23px;
+}
+.scroll {
+	max-height: 60vh;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+.tablinks {
+	background-color: #f1f1f1;
+	/* Default background color */
+	border: none;
+	color: black;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	transition: background-color 0.3s;
+}
+.tablinks.active {
+	background-color: #2084a9;
+	color: white;
+}
+.tab {
+	overflow: hidden;
+	border: 1px solid #ccc;
+	background-color: #f2f2f2;
+}
+.tab button {
+	background-color: inherit;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 56px;
+	transition: 0.3s;
+	font-size: 17px;
+}
+.tab button:hover {
+	background-color: #ddd;
+}
+.tabcontent {
+	display: none;
+	padding: 0px;
+	border-top: 1px solid #ccc;
+}
+.active {
+	background-color: #2084a9;
+}
+#myPieChart {
+	width: 100px;
+	height: 100px;
+}
+</style>
+<style>
+.modal {
+	display: none;
+	/* Hidden by default */
+	position: absolute;
+	/* Stay in place */
+	z-index: 1;
+	/* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%;
+	/* Full width */
+	height: 100%;
+	/* Full height */
+	overflow: auto;
+	/* Enable scroll if needed */
+	background-color: rgb(0, 0, 0);
+	/* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4);
+	/* Black w/ opacity */
+}
+/* Modal Content */
+.modal-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 100%;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0
+		rgba(0, 0, 0, 0.19);
+	-webkit-animation-name: animatetop;
+	-webkit-animation-duration: 0.4s;
+	animation-name: animatetop;
+	animation-duration: 0.4s
+}
+.modal-pass {
+	background-color: #fefefe;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 40%;
+	height: 25%;
+	margin-left: 400PX;
+	margin-right: auto;
+	border-radius: 10px;
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+	font-family: Arial, sans-serif;
+}
+.close {
+	color: red;
+	font-size: 28px;
+	font-weight: bold;
+}
+.close:hover, .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+</style>
+<style>
+.password-info {
+	visibility: hidden;
+	width: 320px;
+	background-color: #333;
+	color: #fff;
+	text-align: left;
+	border-radius: 10px;
+	padding: 10px;
+	position: absolute;
+	z-index: 1;
+	top: calc(100% + 10px);
+	left: 50%;
+	transform: translateX(-50%);
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+input:hover+.password-info {
+	visibility: visible;
+	opacity: 0.8;
+}
+.subtablinks {
+	background-color: #f1f1f1;
+	/* Default background color */
+	border: none;
+	color: black;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	transition: background-color 0.3s;
+}
+.subtablinks.active {
+	background-color: #2084a9;
+	color: white;
+}
+.hover-underline:hover {
+	text-decoration: underline;
+	text-decoration-color: #007bff;
+	cursor: pointer;
+	/* Sets underline color to blue */
+}
+</style>
+<script>
+function Home() {
+	location.href = 'Dashboard';
+}
+function Back() {
+	window.history.back();
+}
+$(function() {
+	$( "#doj,#dob,#date_of_offer,#date_of_appointment_letter,#aed,#ped,#dsd,#ded").datepicker({
+	  dateFormat : "dd-mm-yy",
+	  changeMonth : true,
+	  changeYear : true
+	});
+});
+function openTab(evt, tabName) {
+		// Hide all main tab content
+		let i, tabcontent, tablinks;
+		tabcontent = document.getElementsByClassName("tabcontent");
+		for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		}
+		// Remove active class from main tabs
+		tablinks = document.getElementsByClassName("tablinks");
+		for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].className = tablinks[i].className
+					.replace(" active", "");
+		}
+		// Show selected main tab and set as active
+		document.getElementById(tabName).style.display = "block";
+		evt.currentTarget.className += " active";
+}
+</script>
+</head>
+<body>
+<div class="col-sm-2">
+	<div th:insert="BGLSHeaderMenu :: header"></div>
+</div>
+<!-----------------------------------------------------------------------------User List Starts---------------------------------------------------------------->
+<!-- Start Content-->
+<div class="container-manager">
+	<div class="row">
+		<div class="col-sm-11 ml-5 mt-2" style="font-size: 0.8rem;">
+<!----------------------------------------------------------------------------------Tab-------------------------------------------------------------------------->
+				<div th:if="${formmode}=='list'">
+					<div class="card ">
+						<div class="card-header"
+							style="background-color: #e9ecef; height: 50px">
+							<div class="float-left">
+								<h6 style="font-size: 1.2rem; color: black;">SUIT FILED CUSTOMER MASTER MAINTENANCE</h6>
+							</div>
+						</div>
+						<div class="tab mt-2"
+							style="padding: 4px 4px; position: relative; display: flex; justify-content: space-around; margin-top: 10px; width: 100%; height: 43px">
+							<button class="tablinks" onclick="openTab(event, 'tab1')" style="font-size: 16px; padding: 4px 8px; height: 32px;">S-Suit Det</button>
+							<button class="tablinks" onclick="openTab(event, 'tab2')" style="font-size: 16px; padding: 4px 8px; height: 32px;">J-Judgement Det</button>
+							<button class="tablinks" onclick="openTab(event, 'tab3')" style="font-size: 16px; padding: 4px 8px; height: 32px;">A-Additional Det</button>
+							<button class="tablinks" onclick="openTab(event, 'tab4')" style="font-size: 16px; padding: 4px 8px; height: 32px;">C-Cust Master Inq</button>
+							<button class="tablinks" onclick="openTab(event, 'tab5')" style="font-size: 16px; padding: 4px 8px; height: 32px;">H-History</button>
+							<button class="tablinks" onclick="openTab(event, 'tab6')" style="font-size: 16px; padding: 4px 8px; height: 32px;">L-Liablility</button>
+							<button class="tablinks" onclick="openTab(event, 'tab7')" style="font-size: 16px; padding: 4px 8px; height: 32px;">Q-Quit</button>
+						</div>
+<!----------------------------------------------------------------------------------Tab 1-------------------------------------------------------------------------->
+<div id="tab1" class="tabcontent" style="display: block">
+	<div class="card-body">
+		<form class=" border border-secondary" action="#" method="post" id="PersonalForm" autocomplete="off">
+			
+			<div class="row formline" style="padding: 10px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Function Code</div>
+				<div class="col-sm-2">
+					<input type="text" name="name" id="name"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Srl No</div>
+				<div class="col-sm-2">
+					<input type="text" name="name" id="name"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Customer Id</div>
+				<div class="col-sm-2">
+					<input type="number" name="phone_number" id="phone_number"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Customer Name</div>
+				<div class="col-sm-2">
+					<input type="text" name="email_id" id="email_id"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Option</div>
+				<div class="col-sm-2">
+					<input type="text" name="home_address" id="home_address"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Sol Id</div>
+				<div class="col-sm-2">
+					<input type="text" name="marital_status" id="marital_status"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Date Sanction Suit</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Sanction Authority</div>
+				<div class="col-sm-2">
+					<input type="text" name="job_title" id="job_title"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Lawyer Name</div>
+				<div class="col-sm-2">
+					<input type="text" name="work_address" id="work_address"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Lawyer Remarks</div>
+				<div class="col-sm-2">
+					<input type="text" name="service" id="service"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Legal Notice Date</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Legal Notice Ref</div>
+				<div class="col-sm-2">
+					<input type="text" name="annual_income" id="annual_income" onchange="formatAndSetValue(this)"
+						class="form-control form-control-sm bg-white border border-dark" readonly />
+				</div>
+			</div>	
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Suit Filed date</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Suit Filed Ref</div>
+				<div class="col-sm-2">
+					<input type="number" name="repayment_period" id="repayment_period"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Court/Tribunal</div>
+				<div class="col-sm-2">
+					<input type="text" name="monthly_installment" id="monthly_installment"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Court/Tribunal Loc</div>
+				<div class="col-sm-2">
+					<input type="text" name="remarks" id="remarks"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Suit Amount</div>
+				<div class="col-sm-2">
+					<input type="text" name="monthly_installment" id="monthly_installment"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Suit Remarks</div>
+				<div class="col-sm-2">
+					<input type="text" name="remarks" id="remarks"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Suit Status</div>
+				<div class="col-sm-2">
+					<input type="text" name="monthly_installment" id="monthly_installment"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Suit Status Date</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Next Hearing Date</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Hearing Details</div>
+				<div class="col-sm-2">
+					<input type="text" name="remarks" id="remarks"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- Loader HTML -->
+	<div id="loader"
+		style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background-color: rgba(211, 211, 211, 0.6); /* Light gray with more transparency */ padding: 20px; /* Padding around the loader */ border-radius: 8px; /* Rounded corners */ text-align: center;">
+		<!-- Center text in the loader -->
+		<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+			<img style="width: 50px; height: 50px;" th:src="@{/images/loader.gif}" alt="Loading..." />
+		</div>
+	</div>
+
+	<div class="card-footer text-center " style="background-color: #e9ecef">
+		<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+		<button class="btn btn-primary p-2" onclick="SubPersonal();">Submit</button>
+		<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+	</div>
+</div>
+<!----------------------------------------------------------------------------------Tab 2-------------------------------------------------------------------------->
+<div id="tab2" class="tabcontent" style="display: none">
+	<div class="card-body">
+		<form class=" border border-secondary" action="#" method="post" id="assosiateForm" autocomplete="off">
+
+			<div class="row formline" style="padding: 10px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Function Code</div>
+				<div class="col-sm-2">
+					<input type="text" name="name" id="name"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Srl No</div>
+				<div class="col-sm-2">
+					<input type="text" name="name" id="name"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Customer Id</div>
+				<div class="col-sm-2">
+					<input type="number" name="phone_number" id="phone_number"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Customer Name</div>
+				<div class="col-sm-2">
+					<input type="text" name="email_id" id="email_id"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Option</div>
+				<div class="col-sm-2">
+					<input type="text" name="home_address" id="home_address"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Sol Id</div>
+				<div class="col-sm-2">
+					<input type="text" name="marital_status" id="marital_status"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Judgement Date</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Judgement Details</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Appeal Date</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Apl Court/Tribunal</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Decree Issued On</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Decree Details</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Decree Amount</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Amount Recovered</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Decree Executed On</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Execution Details</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" onchange="formatAndSetValue(this)"
+						class="form-control form-control-sm bg-white border border-dark" readonly />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Court Liquidator</div>
+				<div class="col-sm-2">
+					<input type="number" name="" id=""
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Liquidator Aptd On</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Settlement Date</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Settlement Mode</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="card-footer text-center" style="background-color: #e9ecef">
+		<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+		<button class="btn btn-primary p-2" onclick="SubVehicle();">Submit</button>
+		<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+	</div>
+</div>
+</div>
+</div>
+<!-- ---------------------------------------------------------Tab 3----------------------------------------------------------------- -->
+<div id="tab3" class="tabcontent" style="display: none">
+	<div class="card-body">
+		<form class=" border border-secondary" action="#" method="post" id="assosiateForm" autocomplete="off">
+
+			<div class="row formline" style="padding: 10px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Function Code</div>
+				<div class="col-sm-2">
+					<input type="text" name="name" id="name"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Srl No</div>
+				<div class="col-sm-2">
+					<input type="text" name="name" id="name"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Customer Id</div>
+				<div class="col-sm-2">
+					<input type="number" name="phone_number" id="phone_number"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Customer Name</div>
+				<div class="col-sm-2">
+					<input type="text" name="email_id" id="email_id"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Option</div>
+				<div class="col-sm-2">
+					<input type="text" name="home_address" id="home_address"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Sol Id</div>
+				<div class="col-sm-2">
+					<input type="text" name="marital_status" id="marital_status"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Rcvr Crtfct Iss Dt</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Dmnd Ntc Dt</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Atch Ast JdgmtDt</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Nws Ppr Ntc Dt</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Asset Sale Date</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Amt Rcvd frm Asst</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Frthr Act BalRcv</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Action Dtls</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>			
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Adv Fees Sanc(Y/N)</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Adv Fee Sntcnd Amt</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Adv Fees Paid Dt</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Adv Fees Paid Amt</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Valutn Expenses</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Scrt Crg Paid(Y/N)</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Other Expenses</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Othr Expns Dtls</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Remarks 1</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Remarks 2</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Remarks 3</div>
+				<div class="col-sm-2">
+					<input type="number" name="" id=""
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Remarks 4</div>
+				<div class="col-sm-2">
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="card-footer text-center" style="background-color: #e9ecef">
+		<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+		<button class="btn btn-primary p-2" onclick="SubVehicle();">Submit</button>
+		<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+	</div>
+</div>
+</div>
+</div>
+<!-- -----------------------------------------------------------------------Tab 4------------------------------------------------------------- -->
+<div th:if="${formmode}=='UploadHoliday'">
+	<form action="#" method="post" autocomplete="off" style="width: 100%">
+		<div class="card">
+			<div class="card-header" style="background-color: #BBC3CB;">
+				<div class="float-right"></div>
+				<h4>HOLIDAY MASTER - FILE UPLOAD</h4>
+			</div>
+			<div class="card-body p-0 mt-3">
+				<div class="panel-heading text-center">
+					<div class="form-group ">
+						<div class="row">
+							<div class="col-sm-3">
+								<label class="">Upload</label>
+							</div>
+							<div class="col-sm-2">
+								<input type="file" id="fileval" name="fileval" accept=".xlsx,.xls,.csv"
+									class="form-control form-control-sm">
+							</div>
+							<div class="col-sm-2"></div>
+						</div>
+					</div>
+					<div class="form-group "></div>
+				</div>
+			</div>
+			<div class="card-footer text-center" style="background-color: #BBC3CB;">
+				<button type="button" class="btn btn-primary" id="btnHome" onclick="home();">Home</button>
+
+				<button type="button" class="btn btn-primary" id="nav" onclick="submitexcelgst(this)">Upload</button>
+
+				<button type="button" class="btn btn-primary" id="btnBack" onclick="back();">Back</button>
+			</div>
+		</div>
+	</form>
+</div>
+<!-- -----------------------------------------------------------------------Tab 5------------------------------------------------------------- -->
+<div th:if="${formmode} =='ModifyHoliday'">
+	<div class="card">
+		<div class="card-header" style="background-color: #e9ecef; height: 50px">
+			<div class="float-left">
+				<h6 style="font-size: 1.2rem; color: black;">Holiday
+					Master-Modify</h6>
+			</div>
+		</div>
+		<div class="card-body">
+			<form class=" border border-secondary" action="#" method="post" id="tab1modify" autocomplete="off">
+				<div class="row formline" style="padding: 10px 0px 2px 0px;">
+					<div class="col-sm-1"></div>
+					<div class="col-sm-2">Organization</div>
+					<div class="col-sm-2">
+						<input type="text" name="" id="" readonly
+							class="form-control form-control-sm bg-white border border-dark" />
+					</div>
+					<div class="col-sm-1"></div>
+					<div class="col-sm-2">Location</div>
+					<div class="col-sm-2">
+						<input type="text" name="" id="" readonly
+							class="form-control form-control-sm bg-white border border-dark" />
+					</div>
+				</div>
+				<div class="row formline" style="padding: 0px 0px 2px 0px;">
+					<div class="col-sm-1"></div>
+					<div class="col-sm-2">Calendar Year</div>
+					<div class="col-sm-2">
+						<input type="text" name="" id="" readonly
+							class="form-control form-control-sm bg-white border border-dark" />
+					</div>
+					<div class="col-sm-1"></div>
+					<div class="col-sm-2">Month</div>
+					<div class="col-sm-2">
+						<input type="text" name="" id="" readonly
+							class="form-control form-control-sm bg-white border border-dark" />
+					</div>
+				</div>
+				<div class="row formline" style="padding: 0px 0px 2px 0px;">
+					<div class="col-sm-1"></div>
+					<div class="col-sm-2">Record No</div>
+					<div class="col-sm-2">
+						<input type="text" name="" id="" readonly
+							class="form-control form-control-sm bg-white border border-dark" />
+					</div>
+					<div class="col-sm-1"></div>
+					<div class="col-sm-2">Date</div>
+					<div class="col-sm-2">
+						<input type="text" name="" id="" readonly
+							class="form-control form-control-sm bg-white border border-dark" />
+					</div>
+				</div>
+				<div class="row formline" style="padding: 0px 0px 2px 0px;">
+					<div class="col-sm-1"></div>
+					<div class="col-sm-2">Description</div>
+					<div class="col-sm-2">
+						<input type="text" name="" id="" readonly
+							class="form-control form-control-sm bg-white border border-dark" />
+					</div>
+					<div class="col-sm-1"></div>
+					<div class="col-sm-2">Remarks</div>
+					<div class="col-sm-2">
+						<input type="text" name="" id="" readonly
+							class="form-control form-control-sm bg-white border border-dark" />
+					</div>
+				</div>
+				<div class="row formline" style="padding: 0px 0px 2px 0px;">
+					<div class="col-sm-1"></div>
+					<div class="col-sm-2">Holiday Flag</div>
+					<div class="col-sm-2">
+						<input type="text" name="" id="" readonly
+							class="form-control form-control-sm bg-white border border-dark" />
+					</div>
+					<div class="col-sm-1"></div>
+					<div class="col-sm-2">Record Status</div>
+					<div class="col-sm-2">
+						<input type="text" name="" id="" readonly
+							class="form-control form-control-sm bg-white border border-dark" />
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="card-footer text-center" style="background-color: #e9ecef">
+			<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+			<button class="btn btn-primary p-2" id="submitBtn" onclick="ModifyTab1Submit();">Submit</button>
+			<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+		</div>
+	</div>
+</div>
+<!-- -----------------------------------------------------------------------Tab 6------------------------------------------------------------- -->
+	 </div>
+  </div>
+</div>
+<!-- -----------------------------------------------------------------------Modal------------------------------------------------------------- -->
+	<div class="modal fade" data-backdrop="false" data-keyboard="false"
+		id="alert" tabindex="-1" role="dialog" aria-hidden="true">
+		<div
+			class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+
+				<div class="modal-body" style="text-align: center;">
+					<h6 id="alertmsg"></h6>
+					<button type="button" class="btn btn-primary" onclick="add()">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- -----------------------------------------------------------------------End------------------------------------------------------------- -->
+</body>
+</html>

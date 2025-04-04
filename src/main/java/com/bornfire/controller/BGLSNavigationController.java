@@ -3463,4 +3463,15 @@ public class BGLSNavigationController {
 		}
 		return "LoanClosure";
 	}
+	
+	@RequestMapping(value = "scfmm", method = { RequestMethod.GET, RequestMethod.POST })
+	public String scfmm(@RequestParam(required = false) String formmode, Model md, HttpServletRequest req) {
+
+		if (formmode == null || formmode.equals("list")) {
+			md.addAttribute("formmode", "list");
+		} else if (formmode.equals("add")) {
+			md.addAttribute("formmode", "add");
+		}
+		return "Pdadm";
+	}
 }
