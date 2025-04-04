@@ -45,9 +45,26 @@
 	src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js"
 	th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
 
+<link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<style>
+.emi-output {
+	display: none;
+	font-size: 18px;
+	font-weight: bold;
+	color: #007bff;
+	text-align: center;
+	margin-top: 10px;
+}
 
-
+.slider-label {
+	font-weight: bold;
+}
+</style>
 <style>
 .loader__dot {
 	animation: 1s blink infinite
@@ -151,56 +168,6 @@ body {
 }
 </style>
 <style>
-.modal {
-	display: none;
-	/* Hidden by default */
-	position: absolute;
-	/* Stay in place */
-	z-index: 1;
-	/* Location of the box */
-	left: 0;
-	top: 0;
-	width: 100%;
-	/* Full width */
-	height: 100%;
-	/* Full height */
-	overflow: auto;
-	/* Enable scroll if needed */
-	background-color: rgb(0, 0, 0);
-	/* Fallback color */
-	background-color: rgba(0, 0, 0, 0.4);
-	/* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-	background-color: #fefefe;
-	margin: auto;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 100%;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0
-		rgba(0, 0, 0, 0.19);
-	-webkit-animation-name: animatetop;
-	-webkit-animation-duration: 0.4s;
-	animation-name: animatetop;
-	animation-duration: 0.4s
-}
-
-.modal-pass {
-	background-color: #fefefe;
-	margin: 15% auto;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 40%;
-	height: 25%;
-	margin-left: 400PX;
-	margin-right: auto;
-	border-radius: 10px;
-	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
-	font-family: Arial, sans-serif;
-}
-
 .close {
 	color: red;
 	font-size: 28px;
@@ -616,48 +583,49 @@ input:hover+.password-info {
         }
     }
 </script>
-<script type="text/javascript">
-function formatAndSetValue(inputField) {
-    // Remove non-numeric characters except the decimal point
-    let rawValue = inputField.value.replace(/[^0-9.]/g, '');
+<script>
+        // Function to format and set value
+        function formatAndSetValue(inputField) {
+            // Remove any commas from the value (for number input types only)
+            let rawValue = inputField.value.replace(/,/g, '');
+            // Ensure the value has decimal precision
+            let formattedValue = formatForNumbers(rawValue);
 
-    // Ensure only one decimal point exists
-    let parts = rawValue.split('.');
-    if (parts.length > 2) {
-        rawValue = parts[0] + '.' + parts.slice(1).join('');
-    }
+            // If it's a number input, avoid commas in the input field value (parse as number)
+            if (inputField.type === 'number') {
+                inputField.value = parseFloat(formattedValue); // Assign the raw number value without commas
+            } else {
+                inputField.value = formatNumberWithIndianSeparationForOninput(formattedValue); // Apply Indian separation for text input
+            }
+        }
 
-    // Convert to float and limit to two decimal places
-    let number = parseFloat(rawValue);
-    if (isNaN(number)) {
-        inputField.value = ''; // Clear input if invalid
-        return;
-    }
+        // Function to format number with Indian separation
+        function formatNumberWithIndianSeparationForOninput(value) {
+            if (!value) return '';
+
+            let [integerPart, decimalPart] = value.split('.');
+
+            let lastThreeDigits = integerPart.slice(-3);
+            let otherDigits = integerPart.slice(0, -3);
+
+            if (otherDigits !== '') {
+                lastThreeDigits = ',' + lastThreeDigits;
+            }
+
+            let formattedIntegerPart = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThreeDigits;
+
+            return decimalPart !== undefined ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
+        }
+
+        // Function to ensure the number has two decimal places
+        function formatForNumbers(value) {
+            let num = parseFloat(value);
+            return isNaN(num) ? '0.00' : num.toFixed(2); // Ensure two decimal places for consistent formatting
+        }
+        
+        
     
-    // Format with Indian comma separation
-    let formattedValue = formatNumberWithIndianSeparation(number.toFixed(2));
-
-    // Set the formatted value back to the input field
-    inputField.value = formattedValue;
-}
-
-function formatNumberWithIndianSeparation(amount) {
-    let parts = amount.split('.');
-    let integerPart = parts[0];
-    let decimalPart = parts.length > 1 ? '.' + parts[1] : '';
-
-    // Apply Indian number system comma placement
-    let lastThree = integerPart.slice(-3);
-    let otherNumbers = integerPart.slice(0, -3);
-    if (otherNumbers !== '') {
-        lastThree = ',' + lastThree;
-    }
-    let formattedNumber = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
-
-    return formattedNumber + decimalPart;
-}
-
-</script>
+    </script>
 <script type="text/javascript">
 function SubPersonal(a) { 
     // Show the loader
@@ -679,7 +647,212 @@ function SubPersonal(a) {
     }); 
 }
 
+function SubVehicle(a) { 
+	alert("vehicle");
+    // Show the loader
+    $('#loader1').show();
+
+    // If all validations pass, proceed with the AJAX request
+    $.ajax({
+        type: "POST",
+        url: './RetailVehicleDet',  
+        data: $("#VehicleForm").serialize(),
+        success: function (response) { 
+            $("#mypopup_alertmsg").html(response); 
+            $('#mypopup').modal('show');
+        },
+        complete: function() {
+            // Hide the loader regardless of success or error
+            $('#loader1').hide();
+        }
+    }); 
+}
+
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const loanAmount = document.getElementById("loanAmount");
+    const loanYears = document.getElementById("loanYears");
+    const interestRate = document.getElementById("interestRate");
+    const loanAmountValue = document.getElementById("loanAmountValue");
+    const loanYearsValue = document.getElementById("loanYearsValue");
+    const interestRateValue = document.getElementById("interestRateValue");
+
+    const emiResultBox = document.getElementById("emiResultBox");
+    const emiResultText = document.getElementById("emiResultText");
+    const emiChart = document.getElementById("emiChart");
+    let chartInstance = null;
+
+    function updateSliderValues() {
+        loanAmountValue.innerText = new Intl.NumberFormat('en-IN').format(loanAmount.value);
+        loanYearsValue.innerText = loanYears.value;
+        interestRateValue.innerText = interestRate.value;
+    }
+
+    loanAmount.addEventListener("input", updateSliderValues);
+    loanYears.addEventListener("input", updateSliderValues);
+    interestRate.addEventListener("input", updateSliderValues);
+
+   window.calculateEMI = function() {
+    let P = parseFloat(loanAmount.value);
+    let N = parseInt(loanYears.value) * 12;
+    let R = parseFloat(interestRate.value) / 100 / 12;
+
+    if (isNaN(P) || isNaN(N) || isNaN(R) || R === 0) {
+        emiResultText.innerText = "Invalid Input!";
+        emiResultBox.style.display = "block";
+        return;
+    }
+
+    let EMI = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+    EMI = EMI.toFixed(2);
+
+    emiResultText.innerHTML = `Your Monthly EMI will be <span style="color: #007bff; font-size: 24px;">₹${EMI}</span> per month`;
+    emiResultBox.style.display = "block";
+
+    // Disable sliders
+    loanAmount.disabled = true;
+    loanYears.disabled = true;
+    interestRate.disabled = true;
+
+    // Replace Calculate button with Reset button
+    let calculateBtn = document.getElementById("calculateBtn");
+    calculateBtn.innerText = "Reset";
+    calculateBtn.classList.remove("btn-success");
+    calculateBtn.classList.add("btn-danger");
+    calculateBtn.setAttribute("onclick", "resetForm()");
+
+    // Show Graph
+    displayGraph(P, R, N);
+};
+
+window.resetForm = function() {
+    loanAmount.value = 500000;
+    loanYears.value = 7;
+    interestRate.value = 7;
+    updateSliderValues();
+
+    emiResultBox.style.display = "none";
+    emiChart.style.display = "none";
+
+    // Enable sliders
+    loanAmount.disabled = false;
+    loanYears.disabled = false;
+    interestRate.disabled = false;
+
+    let calculateBtn = document.getElementById("calculateBtn");
+    calculateBtn.innerText = "Calculate";
+    calculateBtn.classList.remove("btn-danger");
+    calculateBtn.classList.add("btn-success");
+    calculateBtn.setAttribute("onclick", "calculateEMI()");
+};
+
+
+     function displayGraph(P, R, N) {
+        let totalPayment = 0, totalInterest = 0;
+        let principalData = [], interestData = [], labels = [];
+
+        for (let i = 1; i <= N / 12; i++) {
+            let interest = (P * R);
+            let EMI = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+            let principal = EMI - interest;
+
+            totalInterest += interest * 12;
+            totalPayment += (EMI * 12);
+
+            principalData.push(totalPayment - totalInterest);
+            interestData.push(totalInterest);
+            labels.push("Yr " + i);
+        }
+
+        emiChart.style.display = "block";
+
+        if (chartInstance) chartInstance.destroy();
+
+        let ctx = emiChart.getContext("2d");
+        chartInstance = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: "Principal", data: principalData, borderColor: "blue", fill: false },
+                    { label: "Interest", data: interestData, borderColor: "red", fill: false }
+                ]
+            },
+            options: { responsive: true }
+        });
+    }
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    function syncSliderWithInput(sliderId, inputId) {
+        let slider = document.getElementById(sliderId);
+        let input = document.getElementById(inputId);
+
+        // Sync input field when the slider moves
+        slider.addEventListener("input", function() {
+            input.value = slider.value;
+        });
+
+        // Sync slider when the input field is changed manually
+        input.addEventListener("input", function() {
+            let value = parseFloat(input.value); // Convert input to a number
+
+            // Ensure the value is within the allowed range
+            if (value < parseFloat(slider.min)) {
+                value = slider.min;
+            } else if (value > parseFloat(slider.max)) {
+                value = slider.max;
+            }
+
+            input.value = value; // Update input field if it's out of range
+            slider.value = value; // Sync the slider
+        });
+    }
+
+    syncSliderWithInput("loanAmount", "loanAmountInput");
+    syncSliderWithInput("loanYears", "loanYearsInput");
+    syncSliderWithInput("interestRate", "interestRateInput");
+});
+
+</script>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function() {
+    calculateAnnualIncome();
+    document.getElementById('monthly_income').addEventListener('input', calculateAnnualIncome);
+});
+
+// Function to calculate Annual Income from Monthly Income
+function calculateAnnualIncome() {
+    var monthlyIncome = document.getElementById('monthly_income').value;
+    console.log("Monthly Income: ", monthlyIncome);
+
+    if (monthlyIncome) {
+        var monthlyIncomeValue = parseFloat(monthlyIncome.replace(/,/g, ''));
+        var annualIncome = (monthlyIncomeValue * 12).toFixed(2);
+        console.log("Annual Income: ", annualIncome);
+        document.getElementById('annual_income').value = formatNumberWithIndianSeparation(annualIncome);
+    } else {
+        document.getElementById('annual_income').value = '';
+    }
+}
+
+// Reuse or rename your formatter function
+function formatNumberWithIndianSeparation(value) {
+    if (!value && value !== 0) return '';
+    let valueStr = value.toString();
+    let [integerPart, decimalPart] = valueStr.split('.');
+    let lastThreeDigits = integerPart.slice(-3);
+    let otherDigits = integerPart.slice(0, -3);
+    if (otherDigits !== '') {
+        lastThreeDigits = ',' + lastThreeDigits;
+    }
+    let formattedIntegerPart = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThreeDigits;
+    return decimalPart !== undefined ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
+}
+</script>
+
 </head>
 
 
@@ -711,7 +884,10 @@ function SubPersonal(a) {
 							<div class="float-left">
 								<h6 style="font-size: 1.2rem; color: black;">RETAIL</h6>
 							</div>
-
+							<div class="float-right">
+								<button class="btn btn-primary p-2"
+									onclick="$('#emiModal').modal('show');">Calculate EMI</button>
+							</div>
 						</div>
 
 						<div class="tab mt-2"
@@ -740,6 +916,21 @@ function SubPersonal(a) {
 											Personal Details</div>
 									</div>
 									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Appl Ref No</div> 
+										<div class="col-sm-2">
+											<input type="text" name="id" id="id"  th:value="${SrlNo}"
+												class="form-control form-control-sm bg-white border border-dark" /> 
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Application</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_application" id="date_of_application"
+												class="form-control form-control-sm bg-white border border-dark" />
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Name</div>
 
@@ -796,11 +987,16 @@ function SubPersonal(a) {
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Marital Status</div>
 										<div class="col-sm-2">
-
-											<input type="text" name="marital_status" id="marital_status"
-												class="form-control form-control-sm bg-white border border-dark" />
-
-
+<select name="marital_status" id="marital_status"
+												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+												class="form-control form-control-sm bg-white border border-dark">
+												<option>SELECT</option>
+												<option value="Single">Single</option>
+												<option value="Married">Married</option>
+												<option value="Seperated">Seperated</option>
+												<option value="Divorced ">Divorced</option>
+												<option value="Widowed">Widowed</option>
+											</select>
 										</div>
 									</div>
 
@@ -862,8 +1058,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Annual Income</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="annual_income" id="annual_income"
-												onchange="formatAndSetValue(this)"
+											<input type="text" name="annual_income" id="annual_income" 
 												class="form-control form-control-sm bg-white border border-dark"
 												readonly />
 
@@ -924,7 +1119,8 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<select name="purpose_of_personal_loan" id="purpose_of_personal_loan"
+											<select name="purpose_of_personal_loan"
+												id="purpose_of_personal_loan"
 												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
 												class="form-control form-control-sm bg-white border border-dark">
 												<option>SELECT</option>
@@ -958,7 +1154,8 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="number" name="rate_of_interest" id="rate_of_interest"
+											<input type="number" name="rate_of_interest"
+												id="rate_of_interest"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -967,7 +1164,8 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Repayment Period</div>
 										<div class="col-sm-2">
 
-											<input type="number" name="repayment_period" id="repayment_period"
+											<input type="number" name="repayment_period"
+												id="repayment_period"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -980,7 +1178,8 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="monthly_installment" id="monthly_installment"
+											<input type="text" name="monthly_installment"
+												id="monthly_installment"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -999,16 +1198,16 @@ function SubPersonal(a) {
 
 							</div>
 							<!-- Loader HTML -->
-											<div id="loader"
-												style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background-color: rgba(211, 211, 211, 0.6); /* Light gray with more transparency */ padding: 20px; /* Padding around the loader */ border-radius: 8px; /* Rounded corners */ text-align: center;">
-												<!-- Center text in the loader -->
-												<div
-													style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-													<img style="width: 50px; height: 50px;"
-														th:src="@{/images/loader.gif}" alt="Loading..." />
-												</div>
-											</div>
-							
+							<div id="loader"
+								style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background-color: rgba(211, 211, 211, 0.6); /* Light gray with more transparency */ padding: 20px; /* Padding around the loader */ border-radius: 8px; /* Rounded corners */ text-align: center;">
+								<!-- Center text in the loader -->
+								<div
+									style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+									<img style="width: 50px; height: 50px;"
+										th:src="@{/images/loader.gif}" alt="Loading..." />
+								</div>
+							</div>
+
 							<div class="card-footer text-center "
 								style="background-color: #e9ecef">
 
@@ -1024,7 +1223,7 @@ function SubPersonal(a) {
 
 							<div class="card-body">
 								<form class=" border border-secondary" action="#" method="post"
-									id="assosiateForm" autocomplete="off">
+									id="VehicleForm" autocomplete="off">
 									<div class="row formline" style="padding: 10px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Applicant
@@ -1032,11 +1231,26 @@ function SubPersonal(a) {
 									</div>
 									<div class="row formline" style="padding: 10px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Appl Ref No</div> 
+										<div class="col-sm-2">
+											<input type="text" name="id" id="id"  th:value="${SrlNo}"
+												class="form-control form-control-sm bg-white border border-dark" /> 
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Application</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_application" id="date_of_application"
+												class="form-control form-control-sm bg-white border border-dark" />
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Name</div>
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id=""
+											<input type="text" name="name" id="name"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1044,7 +1258,7 @@ function SubPersonal(a) {
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Date of Birth</div>
 										<div class="col-sm-2">
-											<input type="date" name="" id=""
+											<input type="date" name="date_of_birth" id="date_of_birth"
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 									</div>
@@ -1057,7 +1271,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="number" name="" id=""
+											<input type="number" name="phone_number" id="phone_number"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1066,7 +1280,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Email ID</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id=""
+											<input type="text" name="email_id" id="email_id"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1080,18 +1294,23 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id=""
+											<input type="text" name="home_address" id="home_address"
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Marital Status</div>
 										<div class="col-sm-2">
-
-											<input type="text" name="" id=""
-												class="form-control form-control-sm bg-white border border-dark" />
-
-
+											<select name="marital_status" id="marital_status"
+												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+												class="form-control form-control-sm bg-white border border-dark">
+												<option>SELECT</option>
+												<option value="Single">Single</option>
+												<option value="Married">Married</option>
+												<option value="Seperated">Seperated</option>
+												<option value="Divorced ">Divorced</option>
+												<option value="Widowed">Widowed</option>
+											</select>
 										</div>
 									</div>
 
@@ -1103,7 +1322,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id=""
+											<input type="text" name="place_of_work" id="place_of_work"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1112,18 +1331,18 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Job Title</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id=""
+											<input type="text" name="job_title" id="job_title"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
 									</div>
-																		<div class="row formline" style="padding: 0px 0px 2px 0px;">
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Work Address</div>
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id=""
+											<input type="text" name="work_address" id="work_address"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1132,7 +1351,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Service</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id=""
+											<input type="text" name="service" id="service"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1143,8 +1362,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id=""
-												onchange="formatAndSetValue(this)"
+											<input type="text" name="monthly_income" id="monthly_income" onchange="formatAndSetValue(this)"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1153,8 +1371,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Annual Income</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id=""
-												onchange="formatAndSetValue(this)"
+											<input type="text" name="annual_income" id="annual_income" 
 												class="form-control form-control-sm bg-white border border-dark"
 												readonly />
 
@@ -1168,7 +1385,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<select name="ca_address_type" id="ca_address_type"
+											<select name="employer" id="employer"
 												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
 												class="form-control form-control-sm bg-white border border-dark">
 												<option>SELECT</option>
@@ -1185,7 +1402,7 @@ function SubPersonal(a) {
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Employment Nature</div>
 										<div class="col-sm-2">
-											<select name="ca_address_type" id="ca_address_type"
+											<select name="employment_nature" id="employment_nature"
 												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
 												class="form-control form-control-sm bg-white border border-dark">
 												<option>SELECT</option>
@@ -1201,6 +1418,7 @@ function SubPersonal(a) {
 										</div>
 									</div>
 
+
 									<div class="row formline" style="padding: 0px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Vehicle
@@ -1213,7 +1431,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<select name="ca_address_type" id="ca_address_type"
+											<select name="vehicle_type" id="vehicle_type"
 												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
 												class="form-control form-control-sm bg-white border border-dark">
 												<option>SELECT</option>
@@ -1228,8 +1446,7 @@ function SubPersonal(a) {
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Vehicle Value</div>
 										<div class="col-sm-2">
-											<input type="text" name="" id=""
-												onchange="formatAndSetValue(this)"
+											<input type="text" name="vehicle_value" id="vehicle_value" onchange="formatAndSetValue(this)"
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 									</div>
@@ -1242,7 +1459,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="number" name="" id=""
+											<input type="text" name="vehicle_model" id="vehicle_model"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1251,7 +1468,8 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Registration Number</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id=""
+											<input type="text" name="registration_number"
+												id="registration_number"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1265,7 +1483,7 @@ function SubPersonal(a) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="" id=""
+											<input type="text" name="dealer_name" id="dealer_name"
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 
@@ -1273,7 +1491,7 @@ function SubPersonal(a) {
 										<div class="col-sm-2">Dealer Address</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="" id=""
+											<input type="text" name="dealer_address" id="dealer_address"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 
@@ -1284,12 +1502,22 @@ function SubPersonal(a) {
 								</form>
 
 							</div>
+							<!-- Loader HTML -->
+							<div id="loader1"
+								style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background-color: rgba(211, 211, 211, 0.6); /* Light gray with more transparency */ padding: 20px; /* Padding around the loader */ border-radius: 8px; /* Rounded corners */ text-align: center;">
+								<!-- Center text in the loader -->
+								<div
+									style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+									<img style="width: 50px; height: 50px;"
+										th:src="@{/images/loader.gif}" alt="Loading..." />
+								</div>
+							</div>
 							<div class="card-footer text-center "
 								style="background-color: #e9ecef">
 
 
 								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
-								<button class="btn btn-primary p-2" onclick="SubVehicle();">Submit</button>
+								<button class="btn btn-primary p-2" onclick="SubVehicle(this);">Submit</button>
 								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
 
 							</div>
@@ -3019,20 +3247,74 @@ function SubPersonal(a) {
 			</div>
 		</div>
 	</div>
-<div class="modal fade" data-backdrop="false" data-keyboard="false"
-	tabindex="-1" role="dialog" aria-hidden="true"
-	style="padding-right: 850px" id="mypopup">
-	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-		style="height: 20%">
-		<div class="modal-content">
-			<div class="modal-body" style="text-align: center">
-				<p id="mypopup_alertmsg"></p>
-				<button type="button" class="btn btn-primary" data-dismiss="modal"
-					onclick="openCity(event, 'Paris');">Close</button>
+	<div class="modal fade" data-backdrop="false" data-keyboard="false"
+		tabindex="-1" role="dialog" aria-hidden="true"
+		style="padding-right: 850px" id="mypopup">
+		<div
+			class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+			style="height: 20%">
+			<div class="modal-content">
+				<div class="modal-body" style="text-align: center">
+					<p id="mypopup_alertmsg"></p>
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+	<div class="modal fade" id="emiModal" tabindex="-1"
+		aria-labelledby="emiModalLabel" aria-hidden="true" style="top: 6%;">
+		<div class="modal-dialog">
+			<div class="modal-content" style="width: 170%;">
+				<div class="modal-header">
+					<h5 class="modal-title" id="emiModalLabel">EMI Calculator</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="emiForm">
+						<div class="mb-3">
+							<label class="form-label slider-label">Amount You Need
+								(₹): <span id="loanAmountValue">500000</span>
+							</label> <input type="number" id="loanAmountInput"
+								class="form-control w-25" min="200000" max="1500000"
+								step="50000" value="500000"> <input type="range"
+								class="form-range" id="loanAmount" min="200000" max="1500000"
+								step="50000" value="500000">
+						</div>
+						<div class="mb-3">
+							<label class="form-label slider-label">For (Years): <span
+								id="loanYearsValue">7</span></label> <input type="number"
+								id="loanYearsInput" class="form-control w-25" min="1" max="10"
+								value="7"> <input type="range" class="form-range"
+								id="loanYears" min="1" max="10" value="7">
+						</div>
+						<div class="mb-3">
+							<label class="form-label slider-label">Interest Rate (%):
+								<span id="interestRateValue">7</span>
+							</label> <input type="number" id="interestRateInput"
+								class="form-control w-25" min="2" max="13" step="0.1" value="7">
+							<input type="range" class="form-range" id="interestRate" min="2"
+								max="13" step="0.1" value="7">
+						</div>
+						<button type="button" id="calculateBtn" class="btn btn-success"
+							onclick="calculateEMI()">Calculate</button>
+					</form>
+
+					<div class="emi-output" id="emiResultBox">
+						<p id="emiResultText">Your Monthly EMI will be ₹7,546 per
+							month</p>
+					</div>
+
+					<canvas id="emiChart" style="display: none;"></canvas>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="modal fade" data-backdrop="false" data-keyboard="false"
 		id="alert1" tabindex="-1" role="dialog" aria-hidden="true">
 		<div

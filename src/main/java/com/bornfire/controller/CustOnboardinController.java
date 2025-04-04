@@ -70,6 +70,8 @@ import com.bornfire.entities.BGLSBusinessTable_Entity;
 import com.bornfire.entities.BGLSBusinessTable_Rep;
 import com.bornfire.entities.BLMS_PERSONALDET_REPO;
 import com.bornfire.entities.BLMS_PERSONAL_LOAN_ENTITY;
+import com.bornfire.entities.BLMS_VEHICLEDET_REPO;
+import com.bornfire.entities.BLMS_VEHICLE_DET_ENTITY;
 import com.bornfire.entities.Bacp_Signature_master;
 import com.bornfire.entities.Bacp_Signature_masterRepo;
 import com.bornfire.entities.Bacp_WorkFLow_Entity;
@@ -183,6 +185,9 @@ public class CustOnboardinController {
 	
 	@Autowired
 	BLMS_PERSONALDET_REPO bLMS_PERSONALDET_REPO;
+	
+	@Autowired
+	BLMS_VEHICLEDET_REPO bLMS_VEHICLEDET_REPO;
 
 	// Start API
 	/// for get session
@@ -5927,7 +5932,8 @@ public class CustOnboardinController {
 
 		if (formmode == null || formmode.equals("add")) {
 			md.addAttribute("formmode", "add");
-
+			String srlno = bLMS_VEHICLEDET_REPO.srlnum();
+			md.addAttribute("SrlNo", srlno);
 		} else if (formmode.equals("ModifyHead")) {
 			md.addAttribute("formmode", "ModifyHead");
 		} 
@@ -5966,9 +5972,7 @@ public class CustOnboardinController {
 			md.addAttribute("formmode", "ModifyHead");
 		} 
 		return "RetailLoanApproval";
-	}
-	
- 
+	} 
 	
 	@RequestMapping(value = "RetailPersDet", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
@@ -5982,7 +5986,27 @@ public class CustOnboardinController {
 		BLMS_PERSONAL_LOAN_ENTITY.setModify_time(new Date());
 		BLMS_PERSONAL_LOAN_ENTITY.setEntity_flg("N");
 		BLMS_PERSONAL_LOAN_ENTITY.setModify_flg("N");
+		BLMS_PERSONAL_LOAN_ENTITY.setVerify_flg("N");
+		BLMS_PERSONAL_LOAN_ENTITY.setDel_flg("N");
 		bLMS_PERSONALDET_REPO.save(BLMS_PERSONAL_LOAN_ENTITY);
+		return "Submitted Successfully";
+	}
+	
+	@RequestMapping(value = "RetailVehicleDet", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public String RetailVehicleDet(@ModelAttribute BLMS_VEHICLE_DET_ENTITY BLMS_VEHICLE_DET_ENTITY, Model md, HttpServletRequest req) {
+		String userid = (String) req.getSession().getAttribute("USERID");
+		String srlno = bLMS_VEHICLEDET_REPO.srlnum();
+		BLMS_VEHICLE_DET_ENTITY.setId(srlno);
+		BLMS_VEHICLE_DET_ENTITY.setEntity_user(userid);
+		BLMS_VEHICLE_DET_ENTITY.setEntity_time(new Date());
+		BLMS_VEHICLE_DET_ENTITY.setModify_user(userid);
+		BLMS_VEHICLE_DET_ENTITY.setModify_time(new Date());
+		BLMS_VEHICLE_DET_ENTITY.setEntity_flg("N");
+		BLMS_VEHICLE_DET_ENTITY.setModify_flg("N");
+		BLMS_VEHICLE_DET_ENTITY.setVerify_flg("N");
+		BLMS_VEHICLE_DET_ENTITY.setDel_flg("N");
+		bLMS_VEHICLEDET_REPO.save(BLMS_VEHICLE_DET_ENTITY);
 		return "Submitted Successfully";
 	}
 }
