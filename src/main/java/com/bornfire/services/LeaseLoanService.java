@@ -91,6 +91,7 @@ public class LeaseLoanService {
 					coa.setSchm_code(sbAcctDetails.getScheme_code());
 					coa.setSchm_type(sbAcctDetails.getScheme_type());
 					coa.setClassification("Asset");
+					coa.setBank_acc_name(loandetails.getLoan_accountno());
 					coa.setAdd_det_flg("N");
 					coa.setEntity_flg("Y");
 					coa.setDel_flg("N");

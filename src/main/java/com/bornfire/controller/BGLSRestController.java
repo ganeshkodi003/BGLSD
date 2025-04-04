@@ -3300,7 +3300,7 @@ public class BGLSRestController {
 				/* Second Transaction - cash on hand account Debit */
 				/* this account already existed in COA */
 				String acct_num = "1100001120";
-				Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaedit(acct_num);
+				Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaeditVALUES(loandetails.getLoan_accountno());
 
 				TRAN_MAIN_TRM_WRK_ENTITY debitTrm = new TRAN_MAIN_TRM_WRK_ENTITY();
 
@@ -3454,8 +3454,7 @@ public class BGLSRestController {
 
 				/* Second Transaction - office Loan Account Debit */
 				/* this account already existed in COA */
-				String acct_num = "2700002750";
-				Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaedit(acct_num);
+				Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaeditVALUES(loandetails.getLoan_accountno());
 
 				TRAN_MAIN_TRM_WRK_ENTITY debitTrm = new TRAN_MAIN_TRM_WRK_ENTITY();
 

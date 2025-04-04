@@ -2721,7 +2721,7 @@ public class CustOnboardinController {
 						/* Second Transaction - CASH ON HAND ACCOUNT CREDIT */
 						/* this account already existed in COA */
 						String acct_num = "1100001120";
-						Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaedit(acct_num);
+						Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaeditVALUES(leasy.getLoan_accountno());
 
 						TRAN_MAIN_TRM_WRK_ENTITY creditTrm = new TRAN_MAIN_TRM_WRK_ENTITY();
 
@@ -2791,8 +2791,7 @@ public class CustOnboardinController {
 
 						/* Second Transaction - office Loan Account CREDIT */
 						/* this account already existed in COA */
-						String acct_num = "2700002750";
-						Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaedit(acct_num);
+						Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaeditVALUES(leasy.getLoan_accountno());
 
 						TRAN_MAIN_TRM_WRK_ENTITY creditTrm = new TRAN_MAIN_TRM_WRK_ENTITY();
 
@@ -3024,7 +3023,7 @@ public class CustOnboardinController {
 						/* Second Transaction - CASH ON HAND ACCOUNT CREDIT */
 						/* this account already existed in COA */
 						String acct_num = "1100001120";
-						Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaedit(acct_num);
+						Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaeditVALUES(leasy.getLoan_accountno());
 
 						TRAN_MAIN_TRM_WRK_ENTITY creditTrm = new TRAN_MAIN_TRM_WRK_ENTITY();
 
@@ -3095,7 +3094,7 @@ public class CustOnboardinController {
 						/* Second Transaction - office Loan Account CREDIT */
 						/* this account already existed in COA */
 						String acct_num = "2700002750";
-						Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaedit(acct_num);
+						Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaeditVALUES(leasy.getLoan_accountno());
 
 						TRAN_MAIN_TRM_WRK_ENTITY creditTrm = new TRAN_MAIN_TRM_WRK_ENTITY();
 
@@ -3326,7 +3325,7 @@ public class CustOnboardinController {
 					/* Second Transaction - office Loan Account CREDIT */
 					/* this account already existed in COA */
 					String acct_num = "2700002750";
-					Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaedit(acct_num);
+					Chart_Acc_Entity leasydebit = chart_Acc_Rep.getaeditVALUES(leasy.getLoan_accountno());
 
 					TRAN_MAIN_TRM_WRK_ENTITY creditTrm = new TRAN_MAIN_TRM_WRK_ENTITY();
 

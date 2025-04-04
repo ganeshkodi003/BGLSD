@@ -121,5 +121,6 @@ Object[] getglcode();
     String getpointingDetail(String accountNum);
 
 
-
+    @Query(value = "SELECT * FROM BGLS_CHART_OF_ACCOUNTS WHERE bank_acc_name =?1", nativeQuery = true)
+    Chart_Acc_Entity getaeditVALUES(String acct_num);
 }
