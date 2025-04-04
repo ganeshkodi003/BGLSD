@@ -39,6 +39,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,7 +66,8 @@ import com.bornfire.entities.BGLS_CONTROL_TABLE_REP;
  
 import com.bornfire.entities.BLMS_PERSONALDET_REPO;
 import com.bornfire.entities.BLMS_PERSONAL_LOAN_ENTITY;
- 
+import com.bornfire.entities.BLMS_VEHICLEDET_REPO;
+import com.bornfire.entities.BLMS_VEHICLE_DET_ENTITY;
 import com.bornfire.entities.Chart_Acc_Entity;
 import com.bornfire.entities.Chart_Acc_Rep;
 import com.bornfire.entities.CustomerRequest;
@@ -4587,5 +4589,108 @@ public class BGLSRestController {
 	public List<BLMS_PERSONAL_LOAN_ENTITY> NotApproved() {
 		return blms_PERSONALDET_REPO.getnotapproved();
 	}
+	
+	@Autowired
+	BLMS_VEHICLEDET_REPO bLMS_VEHICLEDET_REPO;
 
+	@GetMapping("AllApprovedVehicle")
+	public List<BLMS_VEHICLE_DET_ENTITY> AllApprovedVehicle() {
+		System.out.println("hellooooooooooooooooooooooooooo");
+			System.out.println(bLMS_VEHICLEDET_REPO.getApprovelist());
+		return bLMS_VEHICLEDET_REPO.getApprovelist();
+	}
+	
+
+	@RequestMapping(value = "RetailPersDetModify", method = RequestMethod.POST)
+@ResponseBody
+	public ResponseEntity<String> modifyPersonalLoanDetails(
+			@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY updatedLoanEntity,
+			HttpServletRequest request) {
+
+		try {
+			// Get the user ID from the session
+			String userId = (String) request.getSession().getAttribute("USERID");
+			if (userId == null) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+			}
+
+			// Fetch the existing record from the database
+			Optional<BLMS_PERSONAL_LOAN_ENTITY> existingEntityOptional = blms_PERSONALDET_REPO
+					.findById(updatedLoanEntity.getId());
+
+			// Get the existing entity
+			BLMS_PERSONAL_LOAN_ENTITY existingEntity = existingEntityOptional.get();
+
+			// **Using reflection to update only non-null fields**
+			for (java.lang.reflect.Field field : BLMS_PERSONAL_LOAN_ENTITY.class.getDeclaredFields()) {
+				field.setAccessible(true);
+				Object updatedValue = field.get(updatedLoanEntity);
+				if (updatedValue != null) {
+					field.set(existingEntity, updatedValue); // Update field if new value is not null
+				}
+			}
+
+			// Update modification details
+			existingEntity.setModify_user(userId);
+			existingEntity.setModify_time(new Date());
+			existingEntity.setModify_flg("Y");
+			existingEntity.setVerify_flg("N");
+
+			// Save updated entity
+			blms_PERSONALDET_REPO.save(existingEntity);
+
+			return ResponseEntity.ok("Modified Successfully");
+
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error occurred: " + e.getMessage());
+		}
+	}
+
+
+	@RequestMapping(value = "RetailVehicleDetModify", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> modifyVehicleLoanDetails(
+			@ModelAttribute BLMS_VEHICLE_DET_ENTITY updatedLoanEntity,
+			HttpServletRequest request) {
+
+		try {
+			// Get the user ID from the session
+			String userId = (String) request.getSession().getAttribute("USERID");
+			if (userId == null) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+			}
+
+			// Fetch the existing record from the database
+			Optional<BLMS_VEHICLE_DET_ENTITY> existingEntityOptional = bLMS_VEHICLEDET_REPO
+					.findById(updatedLoanEntity.getId());
+
+			// Get the existing entity
+			BLMS_VEHICLE_DET_ENTITY existingEntity = existingEntityOptional.get();
+
+			// **Using reflection to update only non-null fields**
+			for (java.lang.reflect.Field field : BLMS_VEHICLE_DET_ENTITY.class.getDeclaredFields()) {
+				field.setAccessible(true);
+				Object updatedValue = field.get(updatedLoanEntity);
+				if (updatedValue != null) {
+					field.set(existingEntity, updatedValue); // Update field if new value is not null
+				}
+			}
+
+			// Update modification details
+			existingEntity.setModify_user(userId);
+			existingEntity.setModify_time(new Date());
+			existingEntity.setModify_flg("Y");
+			existingEntity.setVerify_flg("N");
+
+			// Save updated entity
+			bLMS_VEHICLEDET_REPO.save(existingEntity);
+
+			return ResponseEntity.ok("Modified Successfully");
+
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error occurred: " + e.getMessage());
+		}
+	}
 }

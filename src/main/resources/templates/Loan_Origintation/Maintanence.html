@@ -1,0 +1,1286 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+	CREATED BY : SURIYA K
+	DATE : 04-04-25
+-->
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css"
+		th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}">
+	<link rel="stylesheet" type="text/css" href="/webjars/font-awesome/5.9.0/css/all.min.css"
+		th:href="@{/webjars/font-awesome/5.9.0/css/all.min.css}">
+	<link rel="stylesheet" type="text/css" href="/webjars/jquery-ui/1.12.1/jquery-ui.min.css"
+		th:href="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.css}">
+	<link rel="stylesheet" type="text/css" href="/webjars/datatables/1.10.19/css/jquery.dataTables.min.css"
+		th:href="@{/webjars/datatables/1.10.19/css/jquery.dataTables.min.css}">
+	<link rel="shortcut icon" th:href="@{/favicon.ico}" type="image/x-icon">
+	<link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
+
+	<script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"
+		th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+	<script src="/webjars/popper.js/1.14.7/umd/popper.min.js"
+		th:src="@{/webjars/popper.js/1.14.7/umd/popper.min.js}"></script>
+	<script src="/webjars/jquery/3.4.1/jquery.min.js" th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+	<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js"
+		th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+
+	<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js"
+		th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
+
+	<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js"
+		th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
+
+	<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js"
+		th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
+	<script src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js"
+		th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
+	<style>
+body {
+	font-size: 0.8rem;
+}
+
+.btn {
+	line-height: 0.5rem;
+}
+
+.table-bordered td, .table-bordered th {
+	font-size: smaller;
+}
+
+.container-manager {
+	width: 83.5%;
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: 17.3%;
+	margin-top: 80px;
+	margin-top: 80px;
+}
+
+.table .thead-light th {
+	color: #495057;
+	background-color: #e9ecef;
+	border-color: #dee2e6;
+	width: 23px;
+}
+
+  .loan-tabs button:hover {
+    background-color: #2084a9;
+    color: white;
+  }
+</style>
+	<style>
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: rgba(0, 0, 0, 0.4);
+			margin-left: 350px;
+
+		}
+
+		.modal-content {
+			background-color: #fefefe;
+			margin: 15% auto;
+			padding: 20px;
+			border: 1px solid #888;
+			width: 70%;
+			height: 50%;
+			margin-left: 200px;
+		}
+
+		.modal-pass {
+			background-color: #fefefe;
+			margin: 15% auto;
+			padding: 20px;
+			border: 1px solid #888;
+			width: 40%;
+			height: 25%;
+			margin-left: 400PX;
+			margin-right: auto;
+			border-radius: 10px;
+			box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+
+			font-family: Arial, sans-serif;
+
+		}
+
+
+		.close {
+			color: red;
+			font-size: 28px;
+			font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		.table-responsive {
+			max-height: 700px;
+			overflow-y: auto;
+
+		}
+
+		.table-responsive1 {
+			max-height: 400px;
+			overflow-y: auto;
+
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		thead {
+			position: sticky;
+			top: 0;
+			background-color: #f9f9f9;
+			z-index: 10;
+		}
+
+		th,
+		td {
+			padding: 12px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+	</style>
+	<style>
+.password-info {
+	visibility: hidden;
+	width: 320px;
+	background-color: #333;
+	color: #fff;
+	text-align: left;
+	border-radius: 10px;
+	padding: 10px;
+	position: absolute;
+	z-index: 1;
+	top: calc(100% + 10px);
+	left: 50%;
+	transform: translateX(-50%);
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+input:hover+.password-info {
+	visibility: visible;
+	opacity: 0.8;
+}
+
+.filterable .filters input[disabled] {
+	background-color: transparent;
+	border: none;
+	cursor: auto;
+	box-shadow: none;
+	padding: 0;
+	height: auto;
+}
+
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+	color: #333;
+}
+
+.filterable .filters input[disabled]::-moz-placeholder {
+	color: #333;
+}
+
+.filterable .filters input[disabled]:-ms-input-placeholder {
+	color: #333;
+}
+
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+	color: #333;
+}
+</style>
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+var formmode = [[${formmode}]];
+
+/*]]>*/
+	</script>
+	<script>
+		function Home() {
+
+			location.href = 'Dashboard';
+		}
+
+		function Back() {
+			window.history.back();
+		}
+
+		$(function() {
+			$(
+					"#doj,#dob,#date_of_offer,#date_of_appointment_letter,#aed,#ped,#dsd,#ded")
+					.datepicker({
+						dateFormat : "dd-mm-yy",
+						changeMonth : true,
+						changeYear : true
+
+					});
+		});
+	</script>
+	<script>
+	
+	function PersonalList(){ 
+			location.href = 'RetailloanMaintanence?formmode=listForPersonal';
+	}
+		function VehicleList(){ 
+			location.href = 'RetailloanMaintanence?formmode=listForVehicle';
+	}
+	
+	
+	document.addEventListener('DOMContentLoaded', function () {
+		
+    updateTable(); 
+});
+
+function updateTable(a) {
+
+		if(formmode == "listForPersonal"){
+        $.ajax({
+            url: './ApprovedPersonal', // Pick only one URL
+            type: 'GET',
+            success: function (data) {
+							
+                populateTable(data);
+            },
+            error: function (err) {
+                console.error('Error fetching data:', err);
+            }
+        });
+			}
+			else if(formmode == "listForVehicle"){
+				console.log("hello")
+				$.ajax({
+            url: './AllApprovedVehicle', // Pick only one URL
+            type: 'GET',
+            success: function (data) {
+							console.log(data);
+							populateTable(data);
+            },
+            error: function (err) {
+                console.error('Error fetching data:', err);
+            }
+        });
+			}
+   
+}
+
+function populateTable(data) {
+    // Clear the table body before appending new rows
+    $('#approvaltbody').empty();
+
+    if (!data || data.length === 0) {
+        // If no data is returned, append a row with "No data available"
+        const noDataRow = `
+            <tr style="font-size:14px">
+                <td colspan="8" style="text-align:center; color: red;">No data available</td>
+            </tr>
+        `;
+        $('#approvaltbody').append(noDataRow);
+        return; // Stop further execution
+    }
+
+    // Iterate over the data if available
+    data.forEach((trial, index) => {
+        const statusCell = trial.verify_flg === 'Y' 
+            ? '<td style="color: green; font-size: 12px; font-weight: bold;">APPROVED</td>' 
+            : '<td style="color: red; font-size: 12px; font-weight: bold;">NOT APPROVED</td>';
+
+       const row = `
+    <tr style="font-size:14px">
+        <td>${trial.id}</td>
+        <td>${trial.date_of_application}</td>
+        <td>${trial.name}</td>
+        <td>${trial.email_id}</td>
+        <td>${trial.employer}</td>
+        <td align="center">
+            <input type="radio"
+                data-id="${trial.id}"
+                onclick="${formmode === 'listForVehicle' ? 'listVehicleclick(this)' : 'listrpersonalclick(this)'}"
+                id="${trial.id}" 
+                name="btnradio">
+        </td>
+    </tr>
+`;
+        // Append the new row to the table body
+        $('#approvaltbody').append(row);
+    });
+}
+
+function listrpersonalclick(a) {
+    var id = a.getAttribute("data-id");
+    location.href = 'RetailloanMaintanence?formmode=ApprovalPersonalView&id=' + id;
+}
+function listVehicleclick(a) {
+	var id = a.getAttribute("data-id");
+	location.href = 'RetailloanMaintanence?formmode=ApprovalVehicleView&id=' + id;
+}
+</script>
+	<script>
+	$(document)
+	.ready(
+			function() {
+				$('.filterable .btn-filter')
+						.click(
+								function() {
+									var $panel = $(this).parents(
+											'.filterable'), $filters = $panel
+											.find('.filters input'), $tbody = $panel
+											.find('.table tbody');
+									if ($filters.prop('disabled') == true) {
+										$filters
+												.prop('disabled', false);
+										$filters.first().focus();
+									} else {
+										$filters.val('').prop(
+												'disabled', true);
+										$tbody.find('.no-result')
+												.remove();
+										$tbody.find('tr').show();
+									}
+								});
+
+				$('.filterable .filters input')
+						.keyup(
+								function(e) {
+									/* Ignore tab key */
+									var code = e.keyCode || e.which;
+									if (code == '9')
+										return;
+									/* Useful DOM data and selectors */
+									var $input = $(this), inputContent = $input
+											.val().toLowerCase(), $panel = $input
+											.parents('.filterable'), column = $panel
+											.find('.filters th')
+											.index($input.parents('th')), $table = $panel
+											.find('.table'), $rows = $table
+											.find('tbody tr');
+									/* Dirtiest filter function ever ;) */
+									var $filteredRows = $rows
+											.filter(function() {
+												var value = $(this)
+														.find('td').eq(
+																column)
+														.text()
+														.toLowerCase();
+												return value
+														.indexOf(inputContent) === -1;
+											});
+									/* Clean previous no-result if exist */
+									$table.find('tbody .no-result')
+											.remove();
+									/* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+									$rows.show();
+									$filteredRows.hide();
+									/* Prepend no-result row if all rows are filtered */
+									if ($filteredRows.length === $rows.length) {
+										$table
+												.find('tbody')
+												.prepend(
+														$('<tr class="no-result text-center"><td colspan="'
+																+ $table
+																		.find('.filters th').length
+																+ '">No result found</td></tr>'));
+									}
+								});
+			});
+
+
+function SubPersonal(a) { 
+    // Show the loader
+    $('#loader').show();
+
+    // If all validations pass, proceed with the AJAX request
+    $.ajax({
+        type: "POST",
+        url: './RetailPersDetModify',  
+        data: $("#PersonalForm").serialize(),
+        success: function (response) { 
+            $("#mypopup_alertmsg").html(response); 
+            $('#mypopup').modal('show');
+        },
+        complete: function() {
+            // Hide the loader regardless of success or error
+            $('#loader').hide();
+        }
+    }); 
+}
+
+function SubVehicle(a) { 
+    // Show the loader
+    $('#loader1').show();
+
+    // If all validations pass, proceed with the AJAX request
+    $.ajax({
+        type: "POST",
+        url: './RetailVehicleDetModify',  
+        data: $("#VehicleForm").serialize(),
+        success: function (response) { 
+            $("#mypopup_alertmsg").html(response); 
+            $('#mypopup').modal('show');
+        },
+        complete: function() {
+            // Hide the loader regardless of success or error
+            $('#loader1').hide();
+        }
+    }); 
+}
+
+function goback() {
+    window.history.back(); // This navigates to the previous page
+}
+
+
+
+	</script>
+
+</head>
+<body>
+
+	<div class="col-sm-2">
+		<div th:insert="BGLSHeaderMenu :: header"></div>
+	</div>
+	<!---------------------User List Starts------------------------------------------------------->
+	<!-- Start Content-->
+	<div class="container-manager">
+		<div class="row">
+			<div class="col-sm-11 ml-5 mt-2" style="font-size: 0.8rem;">
+				<!-- ------------------------------------Approval tab---------------------------------- -->
+				<div th:if="${formmode}=='tab'">
+					<div class="panel panel-primary filterable">
+							<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+									<h6 style="font-size: 1.2rem;">RETAIL LOAN - MAINTENANCE</h6>
+								</div>
+							</div>
+							<div class="card-body" >
+							
+								<div class="loan-tabs mt-2"
+									style="padding: 4px 4px; position: relative; display: flex; justify-content: space-around; margin-top: 10px; width: 100%; height: 43px">
+									<button class="tab"
+										style="font-size: 16px; padding: 4px 8px; height: 32px;" onclick="PersonalList();">Personal
+										Loan</button>
+									<button class="tab"
+										style="font-size: 16px; padding: 4px 8px; height: 32px;" onclick="VehicleList();"> Vehicle
+										Loan</button>
+									<button class="tab"
+										style="font-size: 16px; padding: 4px 8px; height: 32px;">Education
+										Loan</button>
+									<button 
+										style="font-size: 16px; padding: 4px 8px; height: 32px;">Housing
+										Loan</button>
+								</div>
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+  							   <button class="btn btn-primary p-2" onclick="Home();">Home</button>
+								<button class="btn btn-primary p-2" onclick="back()">Back</button>
+							</div>
+						</div>
+					</div>
+				</div>
+                <!--------------------------------------Approval Retail tab  ----------------------------->
+                
+<div th:if="${formmode}=='listForPersonal'">
+					<div class="panel panel-primary filterable">
+						<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+									<h6 style="font-size: 1.2rem;">RETAIL LOAN MAINTENANCE - LIST</h6>
+								</div>
+								<div class="float-right">
+
+									<button type="button"
+										class="btn btn-xs btn-primary btns p-2 border btn-filter ">Filter</button>
+								</div>
+							</div>
+							<div class="card-body">
+								<div class="table-responsive">
+									<table class="table table-bordered  table-hover table-sm"
+										style="table-layout: fixed; width: 100%;">
+										<thead>
+																	<tr class="filters">
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Appl Ref No" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Date of Application" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Name" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Email ID" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Employer" disabled></th>
+												 
+												<th style="font-size: 15px">Select</th>
+											</tr>
+										</thead>
+										<tbody id="approvaltbody">
+											
+										</tbody>
+									</table>
+								</div>
+
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+
+
+								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+
+							</div>
+						</div>
+
+					</div>
+
+
+		
+		
+		
+				</div>
+				<div th:if="${formmode}=='listForVehicle'">
+					<div class="panel panel-primary filterable">
+						<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+									<h6 style="font-size: 1.2rem;">RETAIL VEHICLE LOAN MAINTENANCE - LIST</h6>
+								</div>
+								<div class="float-right">
+
+									<button type="button"
+										class="btn btn-xs btn-primary btns p-2 border btn-filter ">Filter</button>
+								</div>
+							</div>
+							<div class="card-body">
+								<div class="table-responsive">
+									<table class="table table-bordered  table-hover table-sm"
+										style="table-layout: fixed; width: 100%;">
+										<thead>
+																	<tr class="filters">
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Appl Ref No" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Date of Application" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Name" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Email ID" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Employer" disabled></th>
+												 
+												<th style="font-size: 15px">Select</th>
+											</tr>
+										</thead>
+										<tbody id="approvaltbody">
+											
+										</tbody>
+									</table>
+								</div>
+
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+
+
+								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div th:if="${formmode}=='ApprovalPersonalView'">
+					<div class="panel panel-primary filterable">
+						<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+								<h6 style="font-size: 1.2rem;">Retail Loan personal - Modify</h6>
+							    </div>
+								<div class="float-right">
+								<font Style="font-size: 13px; color: #3C6EAC"> <B>
+										App Ref No : </B>
+								</font> <input type="text"
+									Style="font-size: 13px; background-color: transparent; border: none; outline-style: none; box-shadow: none; width: 100px;"
+									id="appl_ref_no" th:value="${personal?.id}" />
+							    </div>
+							</div>
+							<div class="card-body">
+							 <form class=" border border-secondary" action="#" method="post"
+									id="PersonalForm" autocomplete="off">
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Applicant
+											Personal Details</div>
+									</div>
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Appl Ref No</div> 
+										<div class="col-sm-2">
+											<input type="text" name="id" id="id"  th:value="${personal?.id}" readonly 
+												class="form-control form-control-sm bg-white border border-dark" /> 
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Application</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_application" id="date_of_application"
+    class="form-control form-control-sm bg-white border border-dark" 
+    th:value="${#dates.format(personal?.date_of_application, 'yyyy-MM-dd')}" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Name</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="name" id="name"
+												class="form-control form-control-sm bg-white border border-dark" readonly  th:value="${personal?.name}"/>
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Birth</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_birth" id="date_of_birth"
+    class="form-control form-control-sm bg-white border border-dark" 
+    th:value="${#dates.format(personal?.date_of_birth, 'yyyy-MM-dd')}" />
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Phone Number</div>
+
+
+										<div class="col-sm-2">
+											<input type="number" name="phone_number" id="phone_number"
+												class="form-control form-control-sm bg-white border border-dark" th:value="${personal?.phone_number}"/>
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Email ID</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="email_id" id="email_id"
+												class="form-control form-control-sm bg-white border border-dark" th:value="${personal?.email_id}" />
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Home Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="home_address" id="home_address"
+												class="form-control form-control-sm bg-white border border-dark" th:value="${personal?.home_address}"/>
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Marital Status</div>
+									<div class="col-sm-2">
+    <select name="marital_status" id="marital_status"
+        onkeyup="this.value = this.value.toUpperCase(); handleIn(this)"
+        class="form-control form-control-sm bg-white border border-dark">
+        
+        <option value="">SELECT</option>
+        <option value="Single" th:selected="${personal?.marital_status == 'Single'}">Single</option>
+        <option value="Married" th:selected="${personal?.marital_status == 'Married'}">Married</option>
+        <option value="Seperated" th:selected="${personal?.marital_status == 'Seperated'}">Seperated</option>
+        <option value="Divorced" th:selected="${personal?.marital_status == 'Divorced'}">Divorced</option>
+        <option value="Widowed" th:selected="${personal?.marital_status == 'Widowed'}">Widowed</option>
+    </select>
+</div>
+
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Place of Work</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="place_of_work" id="place_of_work" th:value="${personal?.place_of_work}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Job Title</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="job_title" id="job_title" th:value="${personal?.job_title}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Work Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="work_address" id="work_address" th:value="${personal?.work_address}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Service</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="service" id="service" th:value="${personal?.service}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Monthly Income</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="monthly_income" id="monthly_income" th:value="${personal?.monthly_income}"
+												onchange="formatAndSetValue(this)" 
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Annual Income</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="annual_income" id="annual_income" th:value="${personal?.annual_income}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Employer</div>
+
+
+										<div class="col-sm-2">
+    <select name="employer" id="employer"
+        onkeyup="this.value = this.value.toUpperCase(); handleIn(this)"
+        class="form-control form-control-sm bg-white border border-dark">
+        
+        <option value="">SELECT</option>
+        <option value="Private Limited" th:selected="${personal?.employer == 'Private Limited'}">Private Limited</option>
+        <option value="Public Sector" th:selected="${personal?.employer == 'Public Sector'}">Public Sector</option>
+        <option value="Central Government" th:selected="${personal?.employer == 'Central Government'}">Central Government</option>
+        <option value="State Government" th:selected="${personal?.employer == 'State Government'}">State Government</option>
+        <option value="Local Bodies" th:selected="${personal?.employer == 'Local Bodies'}">Local Bodies</option>
+    </select>
+</div>
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Employment Nature</div>
+									<div class="col-sm-2">
+    <select name="employment_nature" id="employment_nature"
+        onkeyup="this.value = this.value.toUpperCase(); handleIn(this)"
+        class="form-control form-control-sm bg-white border border-dark">
+        
+        <option value="">SELECT</option>
+        <option value="Salaried" th:selected="${personal?.employment_nature == 'Salaried'}">Salaried</option>
+        <option value="Self-Employed" th:selected="${personal?.employment_nature == 'Self-Employed'}">Self-Employed</option>
+        <option value="Government Employee" th:selected="${personal?.employment_nature == 'Government Employee'}">Government Employee</option>
+        <option value="Contractual/Temporary Employee" th:selected="${personal?.employment_nature == 'Contractual/Temporary Employee'}">Contractual/Temporary Employee</option>
+        <option value="Retired/Pensioner" th:selected="${personal?.employment_nature == 'Retired/Pensioner'}">Retired/Pensioner</option>
+    </select>
+</div>
+
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Personal
+											Loan Details</div>
+									</div>
+
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Purpose of Personal Loan</div>
+
+
+										<div class="col-sm-2">
+    <select name="purpose_of_personal_loan" id="purpose_of_personal_loan"
+        onkeyup="this.value = this.value.toUpperCase(); handleIn(this)"
+        class="form-control form-control-sm bg-white border border-dark">
+        
+        <option value="">SELECT</option>
+        <option value="Purchase of vehicle" th:selected="${personal?.purpose_of_personal_loan == 'Purchase of vehicle'}">Purchase of vehicle</option>
+        <option value="Purchase of office equipment" th:selected="${personal?.purpose_of_personal_loan == 'Purchase of office equipment'}">Purchase of office equipment</option>
+        <option value="Travel" th:selected="${personal?.purpose_of_personal_loan == 'Travel'}">Travel</option>
+        <option value="Takeover of existing personal loan" th:selected="${personal?.purpose_of_personal_loan == 'Takeover of existing personal loan'}">Takeover of existing personal loan</option>
+        <option value="Other" th:selected="${personal?.purpose_of_personal_loan == 'Other'}">Other</option>
+    </select>
+</div>
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Loan Amount</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="loan_amount" id="loan_amount"
+												onchange="formatAndSetValue(this)" th:value="${personal?.loan_amount}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Rate of Interest</div>
+
+
+										<div class="col-sm-2">
+											<input type="number" name="rate_of_interest" th:value="${personal?.rate_of_interest}"
+												id="rate_of_interest"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Repayment Period</div>
+										<div class="col-sm-2">
+
+											<input type="number" name="repayment_period" th:value="${personal?.repayment_period}"
+												id="repayment_period"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Monthly Installment</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="monthly_installment" th:value="${personal?.monthly_installment}"
+												id="monthly_installment"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Remarks</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="remarks" id="remarks" th:value="${personal?.remarks}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+
+								</form>
+							
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+								<button class="btn btn-primary p-2" onclick="SubPersonal();">Submit</button>
+								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+
+				<div th:if="${formmode}=='ApprovalVehicleView'">
+					<div class="panel panel-primary filterable">
+						<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+								<h6 style="font-size: 1.2rem;">Retail Vehicle Loan  - Modify</h6>
+							    </div>
+								<div class="float-right">
+								<font Style="font-size: 13px; color: #3C6EAC"> <B>
+										App Ref No : </B>
+								</font> <input type="text"
+									Style="font-size: 13px; background-color: transparent; border: none; outline-style: none; box-shadow: none; width: 100px;"
+									id="appl_ref_no" th:value="${Vehicle?.id}" />
+							    </div>
+							</div>
+							<div class="card-body">
+									<form class=" border border-secondary" action="#" method="post"
+									id="VehicleForm" autocomplete="off">
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Applicant
+											Personal Details</div>
+									</div>
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Appl Ref No</div> 
+										<div class="col-sm-2">
+											<input type="text" name="id" id="id"  th:value="${Vehicle?.id}"
+												class="form-control form-control-sm bg-white border border-dark" /> 
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Application</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_application" id="date_of_application" 
+    th:value="${#dates.format(Vehicle?.date_of_application, 'yyyy-MM-dd')}"
+    class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Name</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="name" id="name" th:value="${Vehicle?.name}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Birth</div>
+										<div class="col-sm-2">
+									<input type="date" name="date_of_birth" id="date_of_birth" 
+    th:value="${#dates.format(Vehicle?.date_of_birth, 'yyyy-MM-dd')}"
+    class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Phone Number</div>
+
+
+										<div class="col-sm-2">
+											<input type="number" name="phone_number" id="phone_number" th:value="${Vehicle?.phone_number}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Email ID</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="email_id" id="email_id" th:value="${Vehicle?.email_id}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Home Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="home_address" id="home_address" th:value="${Vehicle?.home_address}"
+												class="form-control form-control-sm bg-white border border-dark" />
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Marital Status</div>
+										<div class="col-sm-2">
+											<select name="marital_status" id="marital_status" th:value="${Vehicle?.marital_status}"
+												onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+												class="form-control form-control-sm bg-white border border-dark">
+												<option>SELECT</option>
+												<option value="Single">Single</option>
+												<option value="Married">Married</option>
+												<option value="Seperated">Seperated</option>
+												<option value="Divorced ">Divorced</option>
+												<option value="Widowed">Widowed</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Place of Work</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="place_of_work" id="place_of_work" th:value="${Vehicle?.place_of_work}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Job Title</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="job_title" id="job_title" th:value="${Vehicle?.job_title}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Work Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="work_address" id="work_address" th:value="${Vehicle?.work_address}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Service</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="service" id="service" th:value="${Vehicle?.service}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Monthly Income</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="monthly_income" id="monthly_income" onchange="formatAndSetValue(this)" th:value="${Vehicle?.monthly_income}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Annual Income</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="annual_income" id="annual_income"  th:value="${Vehicle?.annual_income}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Employer</div>
+
+
+							<div class="col-sm-2">
+    <select name="employer" id="employer"
+        onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+        class="form-control form-control-sm bg-white border border-dark">
+        
+        <option value="" th:selected="${Vehicle?.employer == null}">SELECT</option>
+        <option value="Private Limited" th:selected="${Vehicle?.employer == 'Private Limited'}">Private Limited</option>
+        <option value="Public Sector" th:selected="${Vehicle?.employer == 'Public Sector'}">Public Sector</option>
+        <option value="Central Government" th:selected="${Vehicle?.employer == 'Central Government'}">Central Government</option>
+        <option value="State Government" th:selected="${Vehicle?.employer == 'State Government'}">State Government</option>
+        <option value="Local Bodies" th:selected="${Vehicle?.employer == 'Local Bodies'}">Local Bodies</option>
+    </select>
+</div>
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Employment Nature</div>
+										<div class="col-sm-2">
+    <select name="employment_nature" id="employment_nature"
+        onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+        class="form-control form-control-sm bg-white border border-dark">
+        
+        <option value="" th:selected="${Vehicle?.employment_nature == null}">SELECT</option>
+        <option value="Salaried" th:selected="${Vehicle?.employment_nature == 'Salaried'}">Salaried</option>
+        <option value="Self-Employed" th:selected="${Vehicle?.employment_nature == 'Self-Employed'}">Self-Employed</option>
+        <option value="Government Employee" th:selected="${Vehicle?.employment_nature == 'Government Employee'}">Government Employee</option>
+        <option value="Contractual/Temporary Employee" th:selected="${Vehicle?.employment_nature == 'Contractual/Temporary Employee'}">Contractual/Temporary Employee</option>
+        <option value="Retired/Pensioner" th:selected="${Vehicle?.employment_nature == 'Retired/Pensioner'}">Retired/Pensioner</option>
+    </select>
+</div>
+
+									</div>
+
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Vehicle
+											Loan Details</div>
+									</div>
+
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Vehicle type</div>
+
+
+										<div class="col-sm-2">
+										<select name="vehicle_type" id="vehicle_type"
+    onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+    class="form-control form-control-sm bg-white border border-dark">
+    
+    <option value="" th:selected="${Vehicle?.vehicle_type == null}">SELECT</option>
+    <option value="Car" th:selected="${Vehicle?.vehicle_type == 'Car'}">Car</option>
+    <option value="Bike" th:selected="${Vehicle?.vehicle_type == 'Bike'}">Bike</option>
+    <option value="Commercial Vehicle" th:selected="${Vehicle?.vehicle_type == 'Commercial Vehicle'}">Commercial Vehicle</option>
+</select>
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Vehicle Value</div>
+										<div class="col-sm-2">
+											<input type="text" name="vehicle_value" id="vehicle_value" onchange="formatAndSetValue(this)" th:value="${Vehicle?.vehicle_value}"
+												class="form-control form-control-sm bg-white border border-dark" />
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Vehicle model</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="vehicle_model" id="vehicle_model" th:value="${Vehicle?.vehicle_model}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Registration Number</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="registration_number" th:value="${Vehicle?.registration_number}"
+												id="registration_number"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Dealer Name</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="dealer_name" id="dealer_name" th:value="${Vehicle?.dealer_name}"
+												class="form-control form-control-sm bg-white border border-dark" />
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Dealer Address</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="dealer_address" id="dealer_address" th:value="${Vehicle?.dealer_address}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+
+										</div>
+									</div>
+
+
+								</form>
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+								<button class="btn btn-primary p-2" onclick="SubVehicle(this);">Submit</button>
+								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+			</div>
+
+		</div>
+	</div>
+<div class="modal fade" data-backdrop="false" data-keyboard="false"
+		tabindex="-1" role="dialog" aria-hidden="true"
+		style="padding-right: 850px" id="mypopup">
+		<div
+			class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+			style="height: 20%">
+			<div class="modal-content">
+				<div class="modal-body" style="text-align: center">
+					<p id="mypopup_alertmsg"></p>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="goback()">Close</button>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+
+</html>
