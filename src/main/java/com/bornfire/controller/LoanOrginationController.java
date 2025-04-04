@@ -37,9 +37,9 @@ public class LoanOrginationController {
 		if (formmode == null || formmode.equals("tab")) {
 			md.addAttribute("formmode", "tab");
 			
-		} else if (formmode.equals("ModifyHead")) {
-			md.addAttribute("formmode", "ModifyHead");
-		} 
+		}else if (formmode.equals("listForPersonal")) {
+			md.addAttribute("formmode", "listForPersonal");
+		}
 		return "Loan_Origintation/APPROVAL";
 	}
 	
