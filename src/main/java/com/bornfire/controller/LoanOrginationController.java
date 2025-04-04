@@ -1,10 +1,8 @@
 package com.bornfire.controller;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,13 +22,10 @@ import com.bornfire.entities.BLMS_PERSONALDET_REPO;
 import com.bornfire.entities.BLMS_PERSONAL_LOAN_ENTITY;
 import com.bornfire.entities.BLMS_VEHICLEDET_REPO;
 import com.bornfire.entities.BLMS_VEHICLE_DET_ENTITY;
+
 import com.bornfire.entities.Chart_Acc_Entity;
+ 
 import com.bornfire.entities.CustomerRequest;
-import com.bornfire.entities.DMD_TABLE;
-import com.bornfire.entities.DepositEntity;
-import com.bornfire.entities.Lease_Loan_Work_Entity;
-import com.bornfire.entities.TRAN_MAIN_TRM_WRK_ENTITY;
-import com.bornfire.entities.Td_defn_table;
 
 
 
@@ -47,6 +40,7 @@ public class LoanOrginationController {
 	@Autowired
 	BLMS_VEHICLEDET_REPO bLMS_VEHICLEDET_REPO;
 	
+
 	
 	@RequestMapping(value = "RetailloanApproval", method = { RequestMethod.GET, RequestMethod.POST })
 	public String Retailloan(@RequestParam(required = false) String formmode,
@@ -62,6 +56,11 @@ public class LoanOrginationController {
 		}else if (formmode.equals("ApprovalPersonalView")) {
 			md.addAttribute("formmode", "ApprovalPersonalView");
 			md.addAttribute("personal", blms_PERSONALDET_REPO.getRefNo(id));
+		}else if (formmode.equals("listForVehicle")) {
+			md.addAttribute("formmode", "listForVehicle");
+		}else if (formmode.equals("ApprovalVehicleView")) {
+			md.addAttribute("formmode", "ApprovalVehicleView");
+			md.addAttribute("vehicle", bLMS_VEHICLEDET_REPO.getRefNo(id));
 		}
 		return "Loan_Origintation/RETAIL_LOANAPPROVAL";
 	}
@@ -70,44 +69,81 @@ public class LoanOrginationController {
 	@ResponseBody
 	public Map<String, String> approvefuncs(@RequestParam(required = false) String formmode,
 			@RequestParam(required = false) String ApprefNO,
-			HttpServletRequest rq, @RequestParam(required = false) String reject_remarks,
+			HttpServletRequest rq, @RequestParam(required = false) String reject_remarks, @RequestParam(required = false) String loan,
 			@RequestParam(required = false) String hold_remarks) {
 		String user = (String) rq.getSession().getAttribute("USERID");
 		String msg = "";
 		String username = (String) rq.getSession().getAttribute("USERNAME");
 		SimpleDateFormat compDate = new SimpleDateFormat("dd-MM-yyyy");
 		String Date = compDate.format(new Date());
+		
 		BLMS_PERSONAL_LOAN_ENTITY up = blms_PERSONALDET_REPO.getRefNo(ApprefNO);
+		BLMS_VEHICLE_DET_ENTITY   up1 =  bLMS_VEHICLEDET_REPO.getRefNo(ApprefNO);
+		
 		if (formmode.equals("approveAcc")) {
+
 			up.setVerify_flg("Y");
 			up.setVerify_time(new Date());
 			up.setVerify_user(user);
+
+
+			if(loan.equals("personal")) {
+				
+				up.setVerify_flg("Y");
+				up.setVerify_time(new Date());
+				up.setVerify_user(user);
+				blms_PERSONALDET_REPO.save(up);
+			}else {
+				
+				up.setVerify_flg("Y");
+				up.setVerify_time(new Date());
+				up.setVerify_user(user);
+				bLMS_VEHICLEDET_REPO.save(up1);
+			}
+			
+	
 
 			msg += "Reference No: " + ApprefNO + "<br>";
 			msg += "Approved Name: " + username + " <br>";
 			msg += "Approved Date: " + Date + " ";
 
 		} else if (formmode.equals("Holdfin")) {
-			/*
-			 * up.setStatus("HOLD"); up.getCa_preferred_name(); SimpleDateFormat compDate =
-			 * new SimpleDateFormat("dd-MM-yyyy"); String ComplianceDate =
-			 * compDate.format(new Date()); up.setHold_remarks(hold_remarks);
-			 * up.setVerify_time(new Date()); up.setVerify_user(user);
-			 * bACP_CUS_PROFILE_REPO.save(up); msg = "Reference No: " + ApprefNO +
-			 * " has been moved to HOLD LIST ";
-			 */
+            if(loan.equals("personal")) {
+				up.setHold_flg("Y");
+				up.setVerify_flg("Y");
+				up.setHold_date(new Date());
+				up.setHold_user(user);
+				up.setHold_remarks(hold_remarks);
+				blms_PERSONALDET_REPO.save(up);
+			}else {
+				
+				up.setVerify_flg("Y");
+				up.setVerify_time(new Date());
+				up.setVerify_user(user);
+				up.setHold_remarks(hold_remarks);
+				bLMS_VEHICLEDET_REPO.save(up1);
+			}
+			msg = "Reference No: " + ApprefNO + " has been moved to HOLD LIST ";
 
 		} else if (formmode.equals("Reject_acc")) {
-			/*
-			 * CustomerRequest up = bACP_CUS_PROFILE_REPO.findByref_norec(ApprefNO, rec_no);
-			 * up.setStatus("REJECT"); up.getCa_preferred_name();
-			 * 
-			 * up.setVerify_time(new Date()); up.setVerify_user(user); SimpleDateFormat
-			 * compDate = new SimpleDateFormat("dd-MM-yyyy"); String ComplianceDate =
-			 * compDate.format(new Date()); up.setReject_remarks(reject_remarks);
-			 * bACP_CUS_PROFILE_REPO.save(up); msg = "Reference No: " + ApprefNO +
-			 * "  Rejected";
-			 */
+			/* if(loan.equals("personal")) { */
+					up.setReject_flg("Y");
+					up.setVerify_flg("N");
+					up.setReject_date(new Date());
+					up.setReject_user(user);
+					up.setReject_remarks(reject_remarks);
+					blms_PERSONALDET_REPO.save(up);
+
+					
+			/*	}else {
+					up.setReject_flg("Y");
+					up.setVerify_flg("N");
+					up.setReject_date(new Date());
+					up.setReject_user(user);
+					up.setReject_remarks(reject_remarks);
+					bLMS_VEHICLEDET_REPO.save(up1);
+				}*/
+			 msg = "Reference No: " + ApprefNO + " has been REJECTED and moved to HOLD LIST ";
 		}
 
 		else {

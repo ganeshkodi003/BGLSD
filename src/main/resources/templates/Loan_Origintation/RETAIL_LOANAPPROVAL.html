@@ -228,14 +228,24 @@ input:hover+.password-info {
 
 					});
 		});
+		
+		
+		  function showError(element, message) {
+		        var errorSpan = $('<span class="error-message"></span>').text(message);
+		        errorSpan.css('color', 'red');
+		        element.after(errorSpan);
+		    }
+
+		    function hideError(element) {
+		        element.next('.error-message').remove();
+		    }
 	</script>
+	<!-- for personal list  -->
 	<script>
 	
 	function PersonalList(){ 
 			location.href = 'RetailloanApproval?formmode=listForPersonal';
 	}
-	
-	
 	document.addEventListener('DOMContentLoaded', function() {
 	    const filterElement = document.getElementById('approvedfilter');
 
@@ -332,29 +342,360 @@ input:hover+.password-info {
 		location.href = 'RetailloanApproval?formmode=ApprovalPersonalView&id=' + id;
 	}
 	
-    function approveclick(event) { 
-	    var appl_ref_no = document.getElementById('appl_ref_no').value;
-	    $('#loader').show();
-	  
-	  $.ajax({
-	        type: 'POST',
-	        url: './approvefuncloan?formmode=approveAcc&ApprefNO=' + appl_ref_no,
-	        success: function(response) {
-	        	   var message = response.message;
-	            $("#mypopup_body").html(message);
-	            $('#mypopup').modal('show');
-	        },
-	        error: function(xhr, status, error) {
-	            console.error("Error during approval:", error);
-	            alert("An error occurred during approval.");
-	        },
-	        complete: function() {
-	            // Hide the loader after the AJAX call is complete, regardless of success or error
-	            $('#loader').hide();
-	        }
-	    });
-	}
+	 function approveclick(event) { 
+		    var appl_ref_no = document.getElementById('appl_ref_no').value;
+		    $('#loader').show();
+		  
+		  $.ajax({
+		        type: 'POST',
+		        url: './approvefuncloan?formmode=approveAcc&ApprefNO=' + appl_ref_no + '&loan=' + event,
+		        success: function(response) {
+		        	   var message = response.message;
+		            $("#mypopup_body").html(message);
+		            $('#mypopup').modal('show');
+		        },
+		        error: function(xhr, status, error) {
+		            console.error("Error during approval:", error);
+		            alert("An error occurred during approval.");
+		        },
+		        complete: function() {
+		            // Hide the loader after the AJAX call is complete, regardless of success or error
+		            $('#loader').hide();
+		        }
+		    }); 
+		}
+	 
+	 function showConfirmationModal(event) {
+		 alert("Button ID: " + event.id);
+		 if(event.id == "personal"){
+			 alert("979")
+			 $('#confirmationModalForpersonal').modal('show');
+		 }else{
+			 $('#confirmationModalforVehicle').modal('show');
+		 }
+	       
+	    } 
+	 
 
+	  
+	</script>
+	<script>
+	
+	  function holdfinForPer() { 
+		 
+	       var hasError = false;
+
+	        if ($("#hold_remarks").val() === "") {
+	            showError($("#hold_remarks"), 'Required');
+	            hasError = true;
+	        } else {
+	            hideError($("#hold_remarks"));
+	        }
+
+	        if (hasError) {
+	            $('#myrequired').modal("toggle");
+	            $('#myrequired .modal-body').text("Enter the Required fields...!");
+	        } else {
+	        	
+	            var appl_ref_no = document.getElementById('appl_ref_no').value; 
+	            $('#loader').show();
+	            var loan = "personal";
+	            $.ajax({
+	                type: 'POST',
+	                url: './approvefuncloan',
+	                data: {
+	                    formmode: 'Holdfin',
+	                    ApprefNO: appl_ref_no,
+	                    hold_remarks: hold_remarks.value,
+	                    loan : loan
+	                },
+	                success: function(response) {
+	                    var formattedResponse = response.message;
+	                    $('#mypopup22').modal("toggle");
+	                    $('#popupmsg_body').html(formattedResponse);
+	                },
+	                error: function(xhr, status, error) {
+	                    console.error("Error:", error);
+	                    $('#mypopup22').modal("toggle");
+	                    $('#popupmsg_body').text("An error occurred.");
+	                },
+	                complete: function() {
+	                    // Hide loader
+	                    $('#loader').hide();
+	                }
+	            });
+
+	            $('#confirmationModalForpersonal').modal('hide');  
+	        }  
+	        
+	    }
+	  
+	  
+	  
+	  function holdfinForVeh() { 
+			 
+	       var hasError = false;
+
+	        if ($("#hold_remarks").val() === "") {
+	            showError($("#hold_remarks"), 'Required');
+	            hasError = true;
+	        } else {
+	            hideError($("#hold_remarks"));
+	        }
+
+	        if (hasError) {
+	            $('#myrequired').modal("toggle");
+	            $('#myrequired .modal-body').text("Enter the Required fields...!");
+	        } else {
+	        	
+	            var appl_ref_no = document.getElementById('appl_ref_no').value; 
+	            $('#loader').show();
+	            var loan = "vehicle";
+	            $.ajax({
+	                type: 'POST',
+	                url: './approvefuncloan',
+	                data: {
+	                    formmode: 'Holdfin',
+	                    ApprefNO: appl_ref_no,
+	                    hold_remarks: hold_remarks.value,
+	                    loan : loan
+	                },
+	                success: function(response) {
+	                    var formattedResponse = response.message;
+	                    $('#mypopup22').modal("toggle");
+	                    $('#popupmsg_body').html(formattedResponse);
+	                },
+	                error: function(xhr, status, error) {
+	                    console.error("Error:", error);
+	                    $('#mypopup22').modal("toggle");
+	                    $('#popupmsg_body').text("An error occurred.");
+	                },
+	                complete: function() {
+	                    // Hide loader
+	                    $('#loader').hide();
+	                }
+	            });
+
+	            $('#confirmationModalForpersonal').modal('hide');  
+	        }  
+	        
+	    }
+	</script>
+	<script>
+
+   
+
+    function showConfirmationModalreject() {
+		 if(event.id == "personal"){
+			 alert("979")
+			 $('#confirmationModalrejectForpersonal').modal('show');
+		 }else{
+			 $('#confirmationModalrejectforVehicle').modal('show');
+		 }
+	  }
+    function RejectAccForPer() { 
+        var hasError = false;
+
+        if ($("#reject_remarks").val() === "") {
+            showError($("#reject_remarks"), 'Required');
+            hasError = true;
+        } else {
+            hideError($("#reject_remarks"));
+        }
+
+        if (hasError) {
+            $('#myrequired').modal("toggle");
+            $('#myrequired .modal-body').text("Enter the Required fields...!");
+        } else {
+            var appl_ref_no = document.getElementById('appl_ref_no').value;
+            var loan = "personal"
+            // Show loader
+            $('#loader').show();
+
+            $.ajax({
+                type: 'POST',
+                url: './approvefuncloan',
+                data: {
+                    formmode: 'Reject_acc',
+                    ApprefNO: appl_ref_no,
+                    reject_remarks: reject_remarks.value,
+                    loan : loan
+                },
+                success: function(response) {
+                    var formattedResponse = response.message;
+                    $('#mypopup22').modal('show'); 
+                    $("#popupmsg_body").html(formattedResponse); 
+                   
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                    $("#popupmsg_body").text("Error is Occured"); 
+                    $('#mypopup22').modal('show'); 
+                },
+                complete: function() {
+                    // Hide loader
+                    $('#loader').hide();
+                }
+            });
+
+            $('#confirmationModalrejectForpersonal').modal('hide'); // Hide confirmation modal after Confirm
+        }
+    }
+    
+    
+    
+    
+    function RejectAccForVeh() { 
+        var hasError = false;
+
+        if ($("#reject_remarks").val() === "") {
+            showError($("#reject_remarks"), 'Required');
+            hasError = true;
+        } else {
+            hideError($("#reject_remarks"));
+        }
+
+        if (hasError) {
+            $('#myrequired').modal("toggle");
+            $('#myrequired .modal-body').text("Enter the Required fields...!");
+        } else {
+            var appl_ref_no = document.getElementById('appl_ref_no').value;
+            var loan = "vehicle"
+            // Show loader
+            $('#loader').show();
+
+            $.ajax({
+                type: 'POST',
+                url: './approvefuncloan',
+                data: {
+                    formmode: 'Reject_acc',
+                    ApprefNO: appl_ref_no,
+                    reject_remarks: reject_remarks.value,
+                    loan : loan
+                },
+                success: function(response) {
+                    var formattedResponse = response.message;
+                    $('#mypopup22').modal('show'); 
+                    $("#popupmsg_body").html(formattedResponse); 
+                   
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                    $("#popupmsg_body").text("Error is Occured"); 
+                    $('#mypopup22').modal('show'); 
+                },
+                complete: function() {
+                    // Hide loader
+                    $('#loader').hide();
+                }
+            });
+
+            $('#confirmationModalrejectforVehicle').modal('hide'); // Hide confirmation modal after Confirm
+        }
+    }
+	</script>
+	<!-- for Vehicle list  -->
+	<script>
+	function VehicleList(){ 
+			location.href = 'RetailloanApproval?formmode=listForVehicle';
+	}
+	
+	
+	document.addEventListener('DOMContentLoaded', function() {
+	    const filterElement = document.getElementById('approvedfilterVeh');
+
+	    if (filterElement) {
+	    	handleFilterChangeVeh(); // Ensure data loads initially
+	        
+	        // Reapply the selected value when navigating back
+	        filterElement.addEventListener('change', handleFilterChangeVeh);
+	    }
+	}); 
+
+	function handleFilterChangeVeh(){
+	    var a = document.getElementById('approvedfilterVeh').value;
+	    
+	    if (a === 'ALL') {
+	        $.ajax({
+	            url: './AllApprovedVeh',
+	            type: 'GET',
+	            success: function(data) {
+	            	updateTableVeh(data);
+	            },
+	            error: function(err) {
+	                console.error('Error fetching data:', err);
+	            }
+	        });
+	    } else if (a === 'APPROVED') {
+	        $.ajax({
+	            url: './ApprovedVeh',
+	            type: 'GET',
+	            success: function(data) {
+	            	updateTableVeh(data);
+	            },
+	            error: function(err) {
+	                console.error('Error fetching data:', err);
+	            }
+	        });
+	    } else if (a === 'NOTAPPROVED') {
+	     
+	        $.ajax({
+	            url: './NotApprovedVeh',
+	            type: 'GET',
+	            success: function(data) {
+	            	updateTableVeh(data);
+	            },
+	            error: function(err) {
+	                console.error('Error fetching data:', err);
+	            }
+	        });
+	    }
+	}
+	function updateTableVeh(data) {
+	    // Clear the table body before appending new rows
+	    $('#approvaltbodyVeh').empty();
+	    
+	    if (data.length === 0) {
+	        // If no data is returned, append a row with "No data available"
+	        const noDataRow = `
+	            <tr style="font-size:14px">
+	                <td colspan="8" style="text-align:center; color: red;">No data available</td>
+	            </tr>
+	        `;
+	        $('#approvaltbodyVeh').append(noDataRow);
+	    } else {
+	        // Iterate over the data if available
+	        data.forEach((trial, index) => {
+	        const statusCell = trial.verify_flg === 'Y' ? '<td style="color: green; font-size: 12px; font-weight: bold;">APPROVED</td>' :
+	                                 '<td style="color: red; font-size: 12px; font-weight: bold;">NOT APPROVED</td>';
+	            const row = `
+	                <tr style="font-size:14px">
+	                    <td>${index + 1}</td>
+	                    <td>${trial.id}</td>
+	                    <td>${trial.date_of_application}</td>
+	                    <td>${trial.name}</td>
+	                    <td>${trial.email_id}</td>
+	                    <td>${trial.employer}</td>
+	                    ${statusCell}
+	                    <td align="center">
+	                        <input type="radio"
+	                            data-id="${trial.id}"
+	                            onclick="listrVehicleclick(this);"
+	                            id="${trial.id}" 
+	                            name="btnradio">
+	                    </td>
+	                </tr>
+	            `;
+	            // Append the new row to the table body
+	            $('#approvaltbodyVeh').append(row);
+	        });
+	    }
+	}
+	
+	function listrVehicleclick(a){
+		var id = a.getAttribute("data-id");
+		location.href = 'RetailloanApproval?formmode=ApprovalVehicleView&id=' + id;
+	}
 	</script>
 	<script>
 	$(document)
@@ -453,10 +794,10 @@ input:hover+.password-info {
 								<div class="loan-tabs mt-2"
 									style="padding: 4px 4px; position: relative; display: flex; justify-content: space-around; margin-top: 10px; width: 100%; height: 43px">
 									<button class="tab"
-										style="font-size: 16px; padding: 4px 8px; height: 32px;" onclick="PersonalList();">Personal
+										style="font-size: 16px; padding: 4px 8px; height: 32px;" onclick="PersonalList();" >Personal
 										Loan</button>
 									<button class="tab"
-										style="font-size: 16px; padding: 4px 8px; height: 32px;">Vehicle
+										style="font-size: 16px; padding: 4px 8px; height: 32px;" onclick="VehicleList();" >Vehicle
 										Loan</button>
 									<button class="tab"
 										style="font-size: 16px; padding: 4px 8px; height: 32px;">Education
@@ -562,6 +903,280 @@ input:hover+.password-info {
 							    </div>
 							</div>
 							<div class="card-body">
+							 <form class=" border border-secondary" action="#" method="post"
+									id="HoldForm" autocomplete="off">
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Applicant
+											Personal Details</div>
+									</div>
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Appl Ref No</div>
+										<div class="col-sm-2">
+											<input type="text" name="id" id="id"
+												th:value="${personal?.id}" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Application</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_application"
+												id="date_of_application"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${#dates.format(personal?.date_of_application, 'yyyy-MM-dd')}" readonly/>
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Name</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="name" id="name"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly th:value="${personal?.name}" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Birth</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_birth" id="date_of_birth"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${#dates.format(personal?.date_of_birth, 'yyyy-MM-dd')}"  readonly/>
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Phone Number</div>
+
+
+										<div class="col-sm-2">
+											<input type="number" name="phone_number" id="phone_number"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${personal?.phone_number}"  readonly/>
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Email ID</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="email_id" id="email_id"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${personal?.email_id}"  readonly/>
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Home Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="home_address" id="home_address"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${personal?.home_address}"  readonly/>
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Marital Status</div>
+										<div class="col-sm-2"> 
+												<input type="text" name="marital_status" id="marital_status"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${personal?.marital_status}"  readonly/>
+										</div>
+
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Place of Work</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="place_of_work" id="place_of_work"
+												th:value="${personal?.place_of_work}"
+												class="form-control form-control-sm bg-white border border-dark"  readonly/>
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Job Title</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="job_title" id="job_title"
+												th:value="${personal?.job_title}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Work Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="work_address" id="work_address"
+												th:value="${personal?.work_address}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Service</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="service" id="service"
+												th:value="${personal?.service}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Monthly Income</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="monthly_income" id="monthly_income"
+												th:value="${personal?.monthly_income}"
+												onchange="formatAndSetValue(this)"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Annual Income</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="annual_income" id="annual_income"
+												th:value="${personal?.annual_income}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Employer</div>
+
+
+										<div class="col-sm-2"> 
+											<input type="text" name="employer" id="employer"
+												th:value="${personal?.employer}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+										</div>
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Employment Nature</div>
+										<div class="col-sm-2"> 
+											<input type="text" name="employment_nature" id="employment_nature"
+												th:value="${personal?.employment_nature}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+										</div>
+
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Personal
+											Loan Details</div>
+									</div>
+
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Purpose of Personal Loan</div>
+
+
+										<div class="col-sm-2"> 
+											<input type="text" name="purpose_of_personal_loan" id="purpose_of_personal_loan"
+												th:value="${personal?.purpose_of_personal_loan}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+										</div>
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Loan Amount</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="loan_amount" id="loan_amount"
+												onchange="formatAndSetValue(this)"
+												th:value="${personal?.loan_amount}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Rate of Interest</div>
+
+
+										<div class="col-sm-2">
+											<input type="number" name="rate_of_interest"
+												th:value="${personal?.rate_of_interest}"
+												id="rate_of_interest" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Repayment Period</div>
+										<div class="col-sm-2">
+
+											<input type="number" name="repayment_period"
+												th:value="${personal?.repayment_period}"
+												id="repayment_period" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline mb-2" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Monthly Installment</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="monthly_installment"
+												th:value="${personal?.monthly_installment}"
+												id="monthly_installment" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Remarks</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="remarks" id="remarks"
+												th:value="${personal?.remarks}" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+
+								</form>
 							 
 							
 							</div>
@@ -580,12 +1195,132 @@ input:hover+.password-info {
 								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
 								<button type="button" class="btn btn-xs btn-primary p-2"
 									th:if="${personal?.verify_flg != 'Y'}" 
-									id="btnHome" onclick="approveclick(this);">Approve</button>
+									id="personal" onclick="approveclick(this.id);">Approve</button>
 								<button type="button" class="btn btn-xs btn-primary p-2"
-									th:if="${personal?.verify_flg != 'Y'}" id="btnSubmit"
+									th:if="${personal?.verify_flg != 'Y'}" id="personal"
 									onclick="showConfirmationModalreject();">Reject</button>
 								<button type="button" class="btn btn-xs btn-primary p-2"
-									th:if="${personal?.verify_flg!= 'Y'}" id="btnBack"
+									th:if="${personal?.verify_flg!= 'Y'}" id="personal"
+									onclick="showConfirmationModal(this);">Hold</button>
+								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+				<!-------------------------------------------VEHICLE LIST  ----------------------------------------------->
+				 <div th:if="${formmode}=='listForVehicle'">
+					<div class="panel panel-primary filterable">
+						<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+									<h6 style="font-size: 1.2rem;">VEHICLE LOAN APPROVAL - LIST</h6>
+								</div>
+								<div class="float-right">
+									<select class="form-control-sm bg-white mr-2"
+										id="approvedfilterVeh" onchange="handleFilterChangeVeh()"
+										style="background-color: #e3e3e4;">
+										<option value="ALL">All</option>
+										<option value="APPROVED">APPROVED</option>
+										<option value="NOTAPPROVED" selected>NOT APPROVED</option>
+									</select>
+									<button type="button"
+										class="btn btn-xs btn-primary btns p-2 border btn-filter ">Filter</button>
+								</div>
+							</div>
+							<div class="card-body">
+								<div class="table-responsive">
+									<table class="table table-bordered  table-hover table-sm"
+										style="table-layout: fixed; width: 100%;">
+										<thead>
+											<tr class="filters">
+												<th style="width: 8%"><input type="text"
+													class="form-control font-weight-bold" placeholder="Sl_No"
+													disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold"
+													placeholder="Appl Ref No" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Date of Application" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Customer Name" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Email ID" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold bg-white"
+													placeholder="Employer" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold" placeholder="Status"
+													disabled></th>
+												<th style="font-weight: bold; font-size: 14px; width: 8%">Select</th>
+											</tr>
+										</thead>
+										<tbody id="approvaltbodyVeh">
+										</tbody>
+									</table>
+								</div>
+
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+				<!--for view  -->
+				 <div th:if="${formmode}=='ApprovalVehicleView'">
+					<div class="panel panel-primary filterable">
+						<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+								<h6 style="font-size: 1.2rem;">APPROVAL- VIEW</h6>
+							    </div>
+								<div class="float-right">
+								<font Style="font-size: 13px; color: #3C6EAC"> <B>
+										App Ref No : </B>
+								</font> <input type="text"
+									Style="font-size: 13px; background-color: transparent; border: none; outline-style: none; box-shadow: none; width: 100px;"
+									id="appl_ref_no" th:value="${vehicle?.id}" />
+							    </div>
+							</div>
+							<div class="card-body">
+							 
+							
+							</div>
+						   <!-- Loader HTML -->
+							<div id="loader"
+								style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background-color: rgba(211, 211, 211, 0.6); /* Light gray with more transparency */ padding: 20px; /* Padding around the loader */ border-radius: 8px; /* Rounded corners */ text-align: center;">
+								<!-- Center text in the loader -->
+								<div
+									style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+									<img style="width: 50px; height: 50px;"
+										th:src="@{/images/loader.gif}" alt="Loading..." />
+								</div>
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+								<button type="button" class="btn btn-xs btn-primary p-2"
+									th:if="${vehicle?.verify_flg != 'Y'}" 
+									id="vehicle" onclick="approveclick(this);">Approve</button>
+								<button type="button" class="btn btn-xs btn-primary p-2"
+									th:if="${vehicle?.verify_flg != 'Y'}"  id="vehicle"
+									onclick="showConfirmationModalreject();">Reject</button>
+								<button type="button" class="btn btn-xs btn-primary p-2"
+									th:if="${vehicle?.verify_flg!= 'Y'}" id="vehicle"
 									onclick="showConfirmationModal();">Hold</button>
 								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
 							</div>
@@ -618,6 +1353,208 @@ input:hover+.password-info {
 			</div>
 		</div>
 	</div>
+
+<div class="modal fade" data-backdrop="false" data-keyboard="false"
+	tabindex="-1" role="dialog" aria-hidden="true"
+	style="padding-left: 10%" id="mypopup22">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+		style="height: 20%">
+		<div class="modal-content">
+			<div class="modal-body" style="text-align: center">
+				<p id="popupmsg_body"></p>
+				<button type="button" class="btn btn-primary" data-dismiss="modal"
+					onclick="Back();">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="confirmationModalrejectForpersonal" tabindex="-1"
+	role="dialog" aria-labelledby="confirmationModalLabel"
+	aria-hidden="true" data-backdrop="false">
+	<div class="modal-dialog modal-lg" role="document">
+		<!-- Added modal-lg for larger size -->
+
+		<div class="modal-content">
+			<div class="card">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmationModalLabel"
+						style="font-size: 14px; padding-top: 5px">REJECT CONFIRMATION</h5>
+					<!-- Removed close button -->
+				</div>
+				<div class="modal-body" style="height: auto; padding-top: 15px;">
+					<!-- Removed fixed height for flexibility -->
+					<div>
+						<!-- Centered the confirmation text -->
+						<label style="font-size: 14px;">Are you sure to Reject
+							this record?</label>
+					</div>
+					<div class="row formline" style="font-weight: 500; margin-top: 5px">
+						<label class="col-form-label ml-3" style="font-size: 14px;">
+							Reject Remarks </label>
+						<!-- Adjusted label to align -->
+						<div class="col-sm-6">
+							<!-- Increased input width for better alignment -->
+							<input type="text" id="reject_remarks" style="font-weight: 500"
+								onkeyup="this.value = this.value.toUpperCase();"
+								class="form-control form-control-sm bg-white border border-dark"
+								name="reject_remarks" autocomplete="off">
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer mt-2">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" onclick="back();">Cancel</button>
+					<button type="button" class="btn btn-primary"
+						onclick="RejectAccForPer();">Confirm</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="confirmationModalrejectforVehicle" tabindex="-1"
+	role="dialog" aria-labelledby="confirmationModalLabel"
+	aria-hidden="true" data-backdrop="false">
+	<div class="modal-dialog modal-lg" role="document">
+		<!-- Added modal-lg for larger size -->
+
+		<div class="modal-content">
+			<div class="card">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmationModalLabel"
+						style="font-size: 14px; padding-top: 5px">REJECT CONFIRMATION</h5>
+					<!-- Removed close button -->
+				</div>
+				<div class="modal-body" style="height: auto; padding-top: 15px;">
+					<!-- Removed fixed height for flexibility -->
+					<div>
+						<!-- Centered the confirmation text -->
+						<label style="font-size: 14px;">Are you sure to Reject
+							this record?</label>
+					</div>
+					<div class="row formline" style="font-weight: 500; margin-top: 5px">
+						<label class="col-form-label ml-3" style="font-size: 14px;">
+							Reject Remarks </label>
+						<!-- Adjusted label to align -->
+						<div class="col-sm-6">
+							<!-- Increased input width for better alignment -->
+							<input type="text" id="reject_remarks" style="font-weight: 500"
+								onkeyup="this.value = this.value.toUpperCase();"
+								class="form-control form-control-sm bg-white border border-dark"
+								name="reject_remarks" autocomplete="off">
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer mt-2">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" onclick="back();">Cancel</button>
+					<button type="button" class="btn btn-primary"
+						onclick="RejectAccForVeh();">Confirm</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!--  -->
+	
+<div class="modal fade mt-5" id="confirmationModalForpersonal" tabindex="-1"
+	role="dialog" aria-labelledby="confirmationModalLabel"
+	aria-hidden="true" data-backdrop="false">
+	<div class="modal-dialog modal-lg" role="document">
+		<!-- Added modal-lg for larger size -->
+
+		<div class="modal-content ">
+			<div class="card">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmationModalLabel"
+						style="font-size: 14px;  ">HOLD CONFIRMATION</h5>
+					<!-- Removed close button -->
+				</div>
+				<div class="modal-body" style="height: auto; padding-top: 15px;">
+					<!-- Removed fixed height for flexibility -->
+					<div>
+						<!-- Centered the confirmation text -->
+						<label style="font-size: 14px;">Are you sure to Hold this
+							record?</label>
+					</div>
+					<div class="row formline" style="font-weight: 500; margin-top: 5px">
+						<label class="col-form-label ml-3" style="font-size: 14px;">
+							Hold Remarks </label>
+						<!-- Adjusted label to align -->
+						<div class="col-sm-6">
+							<!-- Increased input width for better alignment -->
+							<input type="text" id="hold_remarks" style="font-weight: 500"
+								onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+								class="form-control form-control-sm bg-white border border-dark"
+								name="hold_remarks" autocomplete="off">
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer mt-2">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" onclick="back();">Cancel</button>
+					<button type="button" class="btn btn-primary" onclick="holdfinForPer();">Confirm</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- for vehicle hold   -->
+<div class="modal fade mt-5" id="confirmationModalforVehicle" tabindex="-1"
+	role="dialog" aria-labelledby="confirmationModalLabel"
+	aria-hidden="true" data-backdrop="false">
+	<div class="modal-dialog modal-lg" role="document">
+		<!-- Added modal-lg for larger size -->
+
+		<div class="modal-content ">
+			<div class="card">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmationModalLabel"
+						style="font-size: 14px;  ">HOLD CONFIRMATION</h5>
+					<!-- Removed close button -->
+				</div>
+				<div class="modal-body" style="height: auto; padding-top: 15px;">
+					<!-- Removed fixed height for flexibility -->
+					<div>
+						<!-- Centered the confirmation text -->
+						<label style="font-size: 14px;">Are you sure to Hold this
+							record?</label>
+					</div>
+					<div class="row formline" style="font-weight: 500; margin-top: 5px">
+						<label class="col-form-label ml-3" style="font-size: 14px;">
+							Hold Remarks </label>
+						<!-- Adjusted label to align -->
+						<div class="col-sm-6">
+							<!-- Increased input width for better alignment -->
+							<input type="text" id="hold_remarks" style="font-weight: 500"
+								onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
+								class="form-control form-control-sm bg-white border border-dark"
+								name="hold_remarks" autocomplete="off">
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer mt-2">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" onclick="back();">Cancel</button>
+					<button type="button" class="btn btn-primary" onclick="holdfinForVeh();">Confirm</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
 </body>
 
 </html>

@@ -61,9 +61,7 @@ import com.bornfire.entities.BGLSAuditTable;
 import com.bornfire.entities.BGLSAuditTable_Rep;
 import com.bornfire.entities.BGLSBusinessTable_Entity;
 import com.bornfire.entities.BGLSBusinessTable_Rep;
- 
 import com.bornfire.entities.BGLS_CONTROL_TABLE_REP;
- 
 import com.bornfire.entities.BLMS_PERSONALDET_REPO;
 import com.bornfire.entities.BLMS_PERSONAL_LOAN_ENTITY;
 import com.bornfire.entities.BLMS_VEHICLEDET_REPO;
@@ -232,6 +230,9 @@ public class BGLSRestController {
 
 	@Autowired
 	BGLS_CONTROL_TABLE_REP bGLS_CONTROL_TABLE_REP;
+	
+	@Autowired
+	BLMS_VEHICLEDET_REPO blsm_VEHICLEDET_REPO;
 
 	/* THANVEER */
 	@RequestMapping(value = "employeeAdd", method = RequestMethod.POST)
@@ -4589,9 +4590,27 @@ public class BGLSRestController {
 	public List<BLMS_PERSONAL_LOAN_ENTITY> NotApproved() {
 		return blms_PERSONALDET_REPO.getnotapproved();
 	}
+
 	
 	@Autowired
 	BLMS_VEHICLEDET_REPO bLMS_VEHICLEDET_REPO;
+
+	//start vehicle 
+	@GetMapping("AllApprovedVeh")
+	public List<BLMS_VEHICLE_DET_ENTITY> AllApprovedVeh() {
+		return blsm_VEHICLEDET_REPO.getApprovelist();
+	}
+
+	@GetMapping("ApprovedVeh")
+	public List<BLMS_VEHICLE_DET_ENTITY> ApprovedVeh() {
+		return blsm_VEHICLEDET_REPO.getapproved();
+	}
+
+	@GetMapping("NotApprovedVeh")
+	public List<BLMS_VEHICLE_DET_ENTITY> NotApprovedVeh() {
+		return blsm_VEHICLEDET_REPO.getnotapproved();
+	}
+
 
 	@GetMapping("AllApprovedVehicle")
 	public List<BLMS_VEHICLE_DET_ENTITY> AllApprovedVehicle() {
