@@ -30,7 +30,7 @@ public class LoanOrginationController {
 	
 	@RequestMapping(value = "RetailloanApproval", method = { RequestMethod.GET, RequestMethod.POST })
 	public String Retailloan(@RequestParam(required = false) String formmode,
-    Model md, HttpServletRequest req) {
+    Model md, HttpServletRequest req,@RequestParam(required = false) String id) {
 		String userid = (String) req.getSession().getAttribute("USERID");
 		md.addAttribute("menu", "BAJHeaderMenu");
 
@@ -39,26 +39,13 @@ public class LoanOrginationController {
 			
 		}else if (formmode.equals("listForPersonal")) {
 			md.addAttribute("formmode", "listForPersonal");
+		}else if (formmode.equals("ApprovalPersonalView")) {
+			md.addAttribute("formmode", "ApprovalPersonalView");
+			md.addAttribute("personal", blms_PERSONALDET_REPO.getRefNo(id));
 		}
-		return "Loan_Origintation/APPROVAL";
+		return "Loan_Origintation/RETAIL_LOANAPPROVAL";
 	}
 	
 	
-	/* SURIYA */
-	@GetMapping("AllApprovedPersonal")
-	public List<BLMS_PERSONAL_LOAN_ENTITY> AllApproved(@RequestParam(required = false) String tran_id) {
-		return blms_PERSONALDET_REPO.getApprovelist();
-	}
-
-	@GetMapping("ApprovedPersonal")
-	public List<BLMS_PERSONAL_LOAN_ENTITY> Approved(@RequestParam(required = false) String tran_id,
-			@RequestParam(required = false) String part_tran_id) {
-		return blms_PERSONALDET_REPO.getapproved();
-	}
-
-	@GetMapping("NotApprovedPersonal")
-	public List<BLMS_PERSONAL_LOAN_ENTITY> NotApproved(@RequestParam(required = false) String tran_id,
-			@RequestParam(required = false) String part_tran_id) {
-		return blms_PERSONALDET_REPO.getnotapproved();
-	}
+	
 }

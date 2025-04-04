@@ -60,7 +60,12 @@ import com.bornfire.entities.BGLSAuditTable;
 import com.bornfire.entities.BGLSAuditTable_Rep;
 import com.bornfire.entities.BGLSBusinessTable_Entity;
 import com.bornfire.entities.BGLSBusinessTable_Rep;
+ 
 import com.bornfire.entities.BGLS_CONTROL_TABLE_REP;
+ 
+import com.bornfire.entities.BLMS_PERSONALDET_REPO;
+import com.bornfire.entities.BLMS_PERSONAL_LOAN_ENTITY;
+ 
 import com.bornfire.entities.Chart_Acc_Entity;
 import com.bornfire.entities.Chart_Acc_Rep;
 import com.bornfire.entities.CustomerRequest;
@@ -219,6 +224,9 @@ public class BGLSRestController {
 
 	@Autowired
 	Transaction_Reversed_Table_Repo transaction_Reversed_Table_Repo;
+	
+	@Autowired
+	BLMS_PERSONALDET_REPO blms_PERSONALDET_REPO;
 
 	@Autowired
 	BGLS_CONTROL_TABLE_REP bGLS_CONTROL_TABLE_REP;
@@ -4285,6 +4293,7 @@ public class BGLSRestController {
 		return tranRefRecords;
 	}
 
+
 	@GetMapping("fetchacctbalance")
 	public ResponseEntity<String> fetchacctbalance(@RequestParam String acctnum) {
 		System.out.println("Fetching account balance for: " + acctnum);
@@ -4559,6 +4568,24 @@ public class BGLSRestController {
 		response.put("flow_id", flowIdCounter.getAndIncrement()); // Ensure correct sequence
 
 		return response;
+	}
+
+
+	
+	/* SURIYA */
+	@GetMapping("AllApprovedPersonal")
+	public List<BLMS_PERSONAL_LOAN_ENTITY> AllApproved() {
+		return blms_PERSONALDET_REPO.getApprovelist();
+	}
+
+	@GetMapping("ApprovedPersonal")
+	public List<BLMS_PERSONAL_LOAN_ENTITY> Approved() {
+		return blms_PERSONALDET_REPO.getapproved();
+	}
+
+	@GetMapping("NotApprovedPersonal")
+	public List<BLMS_PERSONAL_LOAN_ENTITY> NotApproved() {
+		return blms_PERSONALDET_REPO.getnotapproved();
 	}
 
 }
