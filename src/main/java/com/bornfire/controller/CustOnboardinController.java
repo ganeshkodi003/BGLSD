@@ -5987,6 +5987,8 @@ public class CustOnboardinController {
 		BLMS_PERSONAL_LOAN_ENTITY.setModify_flg("N");
 		BLMS_PERSONAL_LOAN_ENTITY.setVerify_flg("N");
 		BLMS_PERSONAL_LOAN_ENTITY.setDel_flg("N");
+		BLMS_PERSONAL_LOAN_ENTITY.setHold_flg("N");
+		BLMS_PERSONAL_LOAN_ENTITY.setReject_flg("N");
 		bLMS_PERSONALDET_REPO.save(BLMS_PERSONAL_LOAN_ENTITY);
 		return "Submitted Successfully";
 	}
@@ -6005,6 +6007,8 @@ public class CustOnboardinController {
 		BLMS_VEHICLE_DET_ENTITY.setModify_flg("N");
 		BLMS_VEHICLE_DET_ENTITY.setVerify_flg("N");
 		BLMS_VEHICLE_DET_ENTITY.setDel_flg("N");
+		BLMS_VEHICLE_DET_ENTITY.setHold_flg("N");
+		BLMS_VEHICLE_DET_ENTITY.setReject_flg("N");
 		bLMS_VEHICLEDET_REPO.save(BLMS_VEHICLE_DET_ENTITY);
 		return "Submitted Successfully";
 	}
