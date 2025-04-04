@@ -1,0 +1,454 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+	CREATED BY : SURIYA K
+	DATE : 04-04-25
+-->
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css"
+		th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}">
+	<link rel="stylesheet" type="text/css" href="/webjars/font-awesome/5.9.0/css/all.min.css"
+		th:href="@{/webjars/font-awesome/5.9.0/css/all.min.css}">
+	<link rel="stylesheet" type="text/css" href="/webjars/jquery-ui/1.12.1/jquery-ui.min.css"
+		th:href="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.css}">
+	<link rel="stylesheet" type="text/css" href="/webjars/datatables/1.10.19/css/jquery.dataTables.min.css"
+		th:href="@{/webjars/datatables/1.10.19/css/jquery.dataTables.min.css}">
+	<link rel="shortcut icon" th:href="@{/favicon.ico}" type="image/x-icon">
+	<link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
+
+	<script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"
+		th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+	<script src="/webjars/popper.js/1.14.7/umd/popper.min.js"
+		th:src="@{/webjars/popper.js/1.14.7/umd/popper.min.js}"></script>
+	<script src="/webjars/jquery/3.4.1/jquery.min.js" th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+	<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js"
+		th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+
+	<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js"
+		th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
+
+	<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js"
+		th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
+
+	<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js"
+		th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
+	<script src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js"
+		th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
+	<style>
+body {
+	font-size: 0.8rem;
+}
+
+.btn {
+	line-height: 0.5rem;
+}
+
+.table-bordered td, .table-bordered th {
+	font-size: smaller;
+}
+
+.container-manager {
+	width: 83.5%;
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: 17.3%;
+	margin-top: 80px;
+	margin-top: 80px;
+}
+
+.table .thead-light th {
+	color: #495057;
+	background-color: #e9ecef;
+	border-color: #dee2e6;
+	width: 23px;
+}
+
+  .loan-tabs button:hover {
+    background-color: #2084a9;
+    color: white;
+  }
+</style>
+	<style>
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: rgba(0, 0, 0, 0.4);
+			margin-left: 350px;
+
+		}
+
+		.modal-content {
+			background-color: #fefefe;
+			margin: 15% auto;
+			padding: 20px;
+			border: 1px solid #888;
+			width: 70%;
+			height: 50%;
+			margin-left: 200px;
+		}
+
+		.modal-pass {
+			background-color: #fefefe;
+			margin: 15% auto;
+			padding: 20px;
+			border: 1px solid #888;
+			width: 40%;
+			height: 25%;
+			margin-left: 400PX;
+			margin-right: auto;
+			border-radius: 10px;
+			box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+
+			font-family: Arial, sans-serif;
+
+		}
+
+
+		.close {
+			color: red;
+			font-size: 28px;
+			font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		.table-responsive {
+			max-height: 700px;
+			overflow-y: auto;
+
+		}
+
+		.table-responsive1 {
+			max-height: 400px;
+			overflow-y: auto;
+
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		thead {
+			position: sticky;
+			top: 0;
+			background-color: #f9f9f9;
+			z-index: 10;
+		}
+
+		th,
+		td {
+			padding: 12px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+	</style>
+	<style>
+		.password-info {
+			visibility: hidden;
+			width: 320px;
+			background-color: #333;
+			color: #fff;
+			text-align: left;
+			border-radius: 10px;
+			padding: 10px;
+			position: absolute;
+			z-index: 1;
+			top: calc(100% + 10px);
+			left: 50%;
+			transform: translateX(-50%);
+			opacity: 0;
+			transition: opacity 0.3s;
+		}
+
+		input:hover+.password-info {
+			visibility: visible;
+			opacity: 0.8;
+		}
+	</style>
+	<script>
+		function Home() {
+
+			location.href = 'Dashboard';
+		}
+
+		function Back() {
+			window.history.back();
+		}
+
+		$(function () {
+			$(
+				"#doj,#dob,#date_of_offer,#date_of_appointment_letter,#aed,#ped,#dsd,#ded")
+				.datepicker({
+					dateFormat: "dd-mm-yy",
+					changeMonth: true,
+					changeYear: true
+
+				});
+		});
+	</script>
+	<script>
+	
+	document.addEventListener('DOMContentLoaded', function() {
+	    handleFilterChange(); 
+	});
+
+	function handleFilterChange(){
+	    var a = document.getElementById('approvedfilter').value;
+	    
+	    if (a === 'ALL') {
+	        $.ajax({
+	            url: './AllApproved',
+	            type: 'GET',
+	            success: function(data) {
+	                updateTable(data);
+	            },
+	            error: function(err) {
+	                console.error('Error fetching data:', err);
+	            }
+	        });
+	    } else if (a === 'APPROVED') {
+	        $.ajax({
+	            url: './Approved',
+	            type: 'GET',
+	            success: function(data) {
+	                updateTable(data);
+	            },
+	            error: function(err) {
+	                console.error('Error fetching data:', err);
+	            }
+	        });
+	    } else if (a === 'NOTAPPROVED') {
+	        $.ajax({
+	            url: './NotApproved',
+	            type: 'GET',
+	            success: function(data) {
+	                updateTable(data);
+	            },
+	            error: function(err) {
+	                console.error('Error fetching data:', err);
+	            }
+	        });
+	    }
+	}
+	</script>
+
+</head>
+<body>
+
+	<div class="col-sm-2">
+		<div th:insert="BGLSHeaderMenu :: header"></div>
+	</div>
+	<!---------------------User List Starts------------------------------------------------------->
+	<!-- Start Content-->
+	<div class="container-manager">
+		<div class="row">
+			<div class="col-sm-11 ml-5 mt-2" style="font-size: 0.8rem;">
+				<!-- ------------------------------------Approval tab---------------------------------- -->
+				<div th:if="${formmode}=='tab'">
+
+
+					<div class="panel panel-primary filterable">
+
+						<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+									<h6 style="font-size: 1.2rem;">APPROVAL</h6>
+								</div>
+							</div>
+							<div class="card-body" >
+							
+								<div class="loan-tabs mt-2"
+									style="padding: 4px 4px; position: relative; display: flex; justify-content: space-around; margin-top: 10px; width: 100%; height: 43px">
+									<button class="tab"
+										style="font-size: 16px; padding: 4px 8px; height: 32px; ">Personal
+										Loan</button>
+									<button class="tab"
+										style="font-size: 16px; padding: 4px 8px; height: 32px;">Vehicle
+										Loan</button>
+									<button class="tab"
+										style="font-size: 16px; padding: 4px 8px; height: 32px;">Education
+										Loan</button>
+									<button 
+										style="font-size: 16px; padding: 4px 8px; height: 32px;">Housing
+										Loan</button>
+								</div>
+
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+
+
+								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+								<button class="btn btn-primary p-2" onclick="back()">Back</button>
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+
+
+                <!--------------------------------------Approval Retail tab  ----------------------------->
+                
+                <div th:if="${formmode}=='listForPersonal'">
+
+
+					<div class="panel panel-primary filterable">
+
+						<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+									<h6 style="font-size: 1.2rem;">APPROVAL - LIST</h6>
+								</div>
+								<div class="float-right">
+									<select class="form-control-sm bg-white mr-2"
+										id="approvedfilter" onchange="handleFilterChange()"
+										style="background-color: #e3e3e4;">
+
+										<option value="ALL">All</option>
+										<option value="APPROVED">APPROVED</option>
+										<option value="NOTAPPROVED" selected>NOT APPROVED</option>
+									</select>
+									<button type="button"
+										class="btn btn-xs btn-primary btns p-2 border btn-filter ">Filter</button>
+								</div>
+							</div>
+							<div class="card-body">
+
+
+
+								<div class="table-responsive">
+									<table class="table table-bordered  table-hover table-sm"
+										style="table-layout: fixed; width: 100%;">
+										<thead>
+											<tr class="filters">
+												<th style="width: 8%"><input type="text"
+													class="form-control font-weight-bold" placeholder="Sl_No"
+													disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold"
+													placeholder="Cust Group    " disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold"
+													placeholder="App Ref No" disabled></th>
+												<!-- <th><input type="text"
+																	class="form-control font-weight-bold"
+																	placeholder="Request Date" disabled></th> -->
+												<th><input type="text"
+													class="form-control font-weight-bold"
+													placeholder="Account Type" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold"
+													placeholder="Customer Name" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold"
+													placeholder="National Id" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold" placeholder="Status"
+													disabled></th>
+
+												<th style="font-weight: bold; font-size: 14px; width: 8%">Select</th>
+											</tr>
+										</thead>
+										<tbody id="approvaltbody">
+											<!-- 
+											<tr th:each="customerrequest, iterator : ${customerRequest}"
+												class="userlist">
+												<td style="font-size: 14px" th:text="${iterator.index +1}"></td>
+
+												Customer Type
+												<td style="width: 125px; font-size: 14px"
+													th:text="${customerrequest.ca_customer_type}">456</td>
+
+												Application Reference Number
+												<td style="font-size: 14px"
+													th:text="${customerrequest.appl_ref_no}">TEST</td>
+
+												Account Type
+												<td style="font-size: 14px"
+													th:text="${customerrequest.ca_acct_type}">l</td>
+
+												Conditionally Show Corporate Name or Preferred Name Based on ca_customer_type
+												<td style="font-size: 14px"><span
+													th:if="${customerrequest.ca_customer_type == 'CORPORATE'}"
+													th:text="${customerrequest.corporateName}">Corporate
+														Name</span> <span
+													th:if="${customerrequest.ca_customer_type == 'RETAIL'}"
+													th:text="${customerrequest.ca_preferred_name}">Preferred
+														Name</span> <span
+													th:if="${customerrequest.ca_customer_type == 'RETAIL'}"
+													th:text="${customerrequest.ca_full_name_1}">Full
+														Name</span></td>
+
+												Identification Number
+												<td style="font-size: 14px"
+													th:text="${customerrequest.ca_idenditification_number}">l</td>
+
+												Status Handling
+												<th:block th:switch="${customerrequest.status}">
+													<td th:case="'APPROVED'"
+														style="color: green; font-size: 12px; font-weight: bold;">APPROVED</td>
+													<td th:case="*"
+														style="color: red; font-size: 12px; font-weight: bold;">NOT
+														APPROVED</td>
+												</th:block>
+
+												Radio Button
+												<td align="center"><input type="radio"
+													th:attr="data-appl_ref_no = ${customerrequest?.appl_ref_no},
+                        data-account_type = ${customerrequest?.ca_acct_type},
+                        data-rec_no = ${customerrequest?.rec_no}"
+													onclick="listradioclick(this);"
+													th:id="${customerrequest.appl_ref_no}" name="btnradio">
+												</td>
+											</tr> -->
+
+										</tbody>
+									</table>
+								</div>
+
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+
+
+								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+
+</body>
+
+</html>
