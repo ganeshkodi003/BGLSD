@@ -9,16 +9,22 @@ import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +39,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -53,6 +60,7 @@ import com.bornfire.entities.BGLSAuditTable;
 import com.bornfire.entities.BGLSAuditTable_Rep;
 import com.bornfire.entities.BGLSBusinessTable_Entity;
 import com.bornfire.entities.BGLSBusinessTable_Rep;
+import com.bornfire.entities.BGLS_CONTROL_TABLE_REP;
 import com.bornfire.entities.Chart_Acc_Entity;
 import com.bornfire.entities.Chart_Acc_Rep;
 import com.bornfire.entities.CustomerRequest;
@@ -211,6 +219,9 @@ public class BGLSRestController {
 
 	@Autowired
 	Transaction_Reversed_Table_Repo transaction_Reversed_Table_Repo;
+
+	@Autowired
+	BGLS_CONTROL_TABLE_REP bGLS_CONTROL_TABLE_REP;
 
 	/* THANVEER */
 	@RequestMapping(value = "employeeAdd", method = RequestMethod.POST)
@@ -1292,15 +1303,15 @@ public class BGLSRestController {
 	@ResponseBody
 	public String GeneralLedgerAdd(@RequestParam("formmode") String formmode,
 			@RequestParam(required = false) String glcode, @ModelAttribute GeneralLedgerEntity generalLedgerEntity,
-			@RequestParam(required = false) String glsh_code,Model md, HttpServletRequest rq) {
+			@RequestParam(required = false) String glsh_code, Model md, HttpServletRequest rq) {
 		String userid = (String) rq.getSession().getAttribute("USERID");
 
 		String value1 = generalLedgerEntity.getGlCode();
 
 		System.out.println("the getting gl code is " + glcode);
 		System.out.println("the getting glsh code is " + glsh_code);
-		
-		String msg = adminOperServices.addGeneralLedger(generalLedgerEntity, formmode,glsh_code, glcode, userid);
+
+		String msg = adminOperServices.addGeneralLedger(generalLedgerEntity, formmode, glsh_code, glcode, userid);
 		return msg;
 	}
 
@@ -4272,6 +4283,282 @@ public class BGLSRestController {
 				.getTranRefRecords(accountNum);
 
 		return tranRefRecords;
+	}
+
+	@GetMapping("fetchacctbalance")
+	public ResponseEntity<String> fetchacctbalance(@RequestParam String acctnum) {
+		System.out.println("Fetching account balance for: " + acctnum);
+
+		Object balanceObj = chart_Acc_Rep.getaccbal(acctnum);
+
+		if (balanceObj == null) {
+			return ResponseEntity.notFound().build(); // Return 404 if no balance found
+		}
+
+		String balance = balanceObj.toString(); // Convert Object to String
+		return ResponseEntity.ok(balance);
+	}
+
+	// Utility method for safe conversion to BigDecimal
+	private BigDecimal convertToBigDecimal(Object value) {
+		if (value instanceof BigDecimal) {
+			return (BigDecimal) value;
+		} else if (value instanceof Integer) {
+			return BigDecimal.valueOf((Integer) value);
+		} else if (value instanceof Double) {
+			return BigDecimal.valueOf((Double) value);
+		}
+		return BigDecimal.ZERO;
+	}
+
+	public static BigDecimal customRound(BigDecimal value) {
+		return value.setScale(0, RoundingMode.HALF_UP); // Standard rounding (0.50 and above rounds up, below rounds
+														// down)
+	}
+
+	@GetMapping("getloanclosetdatas51")
+	public Map<String, Object> getloanclosetdatas51(@RequestParam(required = false) String accountNumber) {
+		System.out.println("THE GETTING ACCOUNT NUMBER IS HERE " + accountNumber);
+
+		Map<String, Object> response = new HashMap<>();
+
+		// Fetch transaction records
+		List<DMD_TABLE> loanFlowRecords = dMD_TABLE_REPO.gettranpopvalues11(accountNumber);
+
+		// If no data found, return empty list with message
+		if (loanFlowRecords == null || loanFlowRecords.isEmpty()) {
+			response.put("message", "No loan flow data found for the provided account number.");
+			response.put("flow_total_amt", 0);
+			response.put("loan_flows", Collections.emptyList());
+			return response;
+		}
+
+		System.out.println("the getting database values are here " + loanFlowRecords.get(0).getFlow_code());
+
+		double totalFlowAmount = 0.0;
+		List<Map<String, Object>> formattedRecords = new ArrayList<>();
+
+		// Fetch latest TRAN_DATE
+		Date tranDateObj = bGLS_CONTROL_TABLE_REP.getLatestTranDate();
+		System.out.println("The fetched TRAN_DATE is: " + tranDateObj);
+
+		if (tranDateObj == null) {
+			throw new IllegalStateException("TRAN_DATE cannot be null.");
+		}
+
+		// Convert TRAN_DATE to LocalDate
+		LocalDate tranDate = (tranDateObj instanceof java.sql.Date) ? ((java.sql.Date) tranDateObj).toLocalDate()
+				: tranDateObj.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+		// Find latest due_date before tranDate and its INDEM amount
+		LocalDate latestDueDateBeforeTranDate = null;
+		BigDecimal indemAmount = BigDecimal.ZERO;
+		BigDecimal perDayInterest = BigDecimal.ZERO;
+
+		for (DMD_TABLE record : loanFlowRecords) {
+			LocalDate dueDate = ((Date) record.getFlow_date()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			String flowCode = record.getFlow_code();
+
+			if (dueDate.isBefore(tranDate) && "INDEM".equals(flowCode)) {
+				BigDecimal flowAmt = convertToBigDecimal(record.getFlow_amt());
+
+				if (latestDueDateBeforeTranDate == null || dueDate.isAfter(latestDueDateBeforeTranDate)) {
+					latestDueDateBeforeTranDate = dueDate;
+					indemAmount = flowAmt;
+				}
+			}
+		}
+
+		// Calculate per-day interest
+		if (latestDueDateBeforeTranDate != null) {
+			YearMonth yearMonth = YearMonth.from(latestDueDateBeforeTranDate);
+			int totalDaysInMonth = yearMonth.lengthOfMonth();
+			perDayInterest = indemAmount.divide(BigDecimal.valueOf(totalDaysInMonth), 2, RoundingMode.HALF_UP);
+		}
+
+		System.out.println("Latest due_date before tranDate: " + latestDueDateBeforeTranDate);
+		System.out.println("Monthly INDEM Amount: " + indemAmount);
+		System.out.println("Per-Day Interest: " + perDayInterest);
+
+		// Loop and build response
+		for (DMD_TABLE record : loanFlowRecords) {
+			Map<String, Object> map = new HashMap<>();
+			LocalDate flowDate = ((Date) record.getFlow_date()).toInstant().atZone(ZoneId.systemDefault())
+					.toLocalDate();
+			String flowCode = record.getFlow_code();
+			BigDecimal flowAmt = convertToBigDecimal(record.getFlow_amt());
+
+			// Replace INDEM with calculated interest only if it matches the tranDate
+			if ("INDEM".equals(flowCode) && flowDate.equals(tranDate) && latestDueDateBeforeTranDate != null) {
+				long noOfDays = ChronoUnit.DAYS.between(latestDueDateBeforeTranDate, tranDate);
+				noOfDays = Math.max(noOfDays, 1);
+
+				BigDecimal calculatedInterest = perDayInterest.multiply(BigDecimal.valueOf(noOfDays));
+				calculatedInterest = customRound(calculatedInterest);
+
+				map.put("flow_amt", calculatedInterest);
+				totalFlowAmount += calculatedInterest.doubleValue();
+
+				System.out.println("Replacing INDEM amount with calculated interest: " + calculatedInterest);
+			} else {
+				map.put("flow_amt", flowAmt);
+				totalFlowAmount += flowAmt.doubleValue();
+			}
+
+			map.put("flow_date", flowDate);
+			map.put("flow_id", record.getFlow_id());
+			map.put("flow_code", flowCode);
+			map.put("loan_acct_no", record.getLoan_acct_no());
+			map.put("acct_name", record.getAcct_name());
+
+			formattedRecords.add(map);
+		}
+
+		// Prepare and return the final response
+		response.put("flow_total_amt", totalFlowAmount);
+		response.put("loan_flows", formattedRecords);
+
+		return response;
+	}
+
+	@GetMapping("getloanclosetdatas521")
+	public Map<String, Object> getloanclosetdatas521(@RequestParam(required = false) String accountNumber) {
+		System.out.println("THE GETTING ACCOUNT NUMBER IS HERE " + accountNumber);
+
+		double totalFlowAmount = 0.0;
+		List<DMD_TABLE> loanFlowRecords = dMD_TABLE_REPO.gettranpopvalues11(accountNumber);
+		List<Map<String, Object>> formattedRecords = new ArrayList<>();
+
+		// Fetch latest TRAN_DATE from BGLS_CONTROL_TABLE
+		Date tranDateObj = bGLS_CONTROL_TABLE_REP.getLatestTranDate();
+		if (tranDateObj == null) {
+			throw new IllegalStateException("TRAN_DATE cannot be null.");
+		}
+
+		LocalDate tranDate = (tranDateObj instanceof java.sql.Date) ? ((java.sql.Date) tranDateObj).toLocalDate()
+				: tranDateObj.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+		// Initialize variables for latest INDEM calculation
+		LocalDate latestDueDateBeforeTranDate = null;
+		BigDecimal indemAmount = BigDecimal.ZERO;
+		BigDecimal perDayInterest = BigDecimal.ZERO;
+		String acctName = "";
+		String loanAcctNo = accountNumber;
+
+		boolean isExistingIndemOnTranDate = false;
+
+		// Process loan flow records
+		for (DMD_TABLE record : loanFlowRecords) {
+			LocalDate dueDate = ((Date) record.getFlow_date()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			String flowCode = (String) record.getFlow_code();
+
+			if (dueDate.equals(tranDate) && "INDEM".equals(flowCode)) {
+				isExistingIndemOnTranDate = true;
+			}
+
+			if (dueDate.isBefore(tranDate) && "INDEM".equals(flowCode)) {
+				BigDecimal flowAmt = convertToBigDecimal(record.getFlow_amt());
+				if (latestDueDateBeforeTranDate == null || dueDate.isAfter(latestDueDateBeforeTranDate)) {
+					latestDueDateBeforeTranDate = dueDate;
+					indemAmount = flowAmt;
+					acctName = (String) record.getAcct_name();
+					loanAcctNo = (String) record.getLoan_acct_no();
+				}
+			}
+		}
+
+		// Calculate per-day interest with better precision
+		if (latestDueDateBeforeTranDate != null) {
+			int totalDaysInMonth = YearMonth.from(latestDueDateBeforeTranDate).lengthOfMonth();
+			perDayInterest = indemAmount.divide(BigDecimal.valueOf(totalDaysInMonth), 4, RoundingMode.HALF_UP);
+		}
+
+		// Process and format transaction records
+		for (DMD_TABLE record : loanFlowRecords) {
+			Map<String, Object> map = new HashMap<>();
+			LocalDate flowDate = ((Date) record.getFlow_date()).toInstant().atZone(ZoneId.systemDefault())
+					.toLocalDate();
+			String flowCode = (String) record.getFlow_code();
+			BigDecimal flowAmt = convertToBigDecimal(record.getFlow_amt());
+
+			map.put("flow_date", flowDate);
+			map.put("flow_id", record.getFlow_id());
+			map.put("flow_code", flowCode);
+			map.put("loan_acct_no", record.getLoan_acct_no());
+			map.put("acct_name", record.getAcct_name());
+			map.put("flow_amt", flowAmt);
+			totalFlowAmount += flowAmt.doubleValue();
+
+			formattedRecords.add(map);
+		}
+
+		// Add interest transaction if needed
+		if (!isExistingIndemOnTranDate && latestDueDateBeforeTranDate != null) {
+			long noOfDays = ChronoUnit.DAYS.between(latestDueDateBeforeTranDate, tranDate);
+			noOfDays = Math.max(noOfDays, 1);
+
+			// Multiply and round off
+			BigDecimal calculatedInterest = perDayInterest.multiply(BigDecimal.valueOf(noOfDays));
+			calculatedInterest = customRound(calculatedInterest);
+
+			Map<String, Object> interestRow = new HashMap<>();
+			interestRow.put("flow_date", tranDate);
+			interestRow.put("flow_id", "1");
+			interestRow.put("flow_code", "INDEM");
+			interestRow.put("loan_acct_no", loanAcctNo);
+			interestRow.put("acct_name", acctName);
+			interestRow.put("encoded_key", "Generated");
+			interestRow.put("flow_amt", calculatedInterest);
+
+			formattedRecords.add(interestRow);
+			totalFlowAmount += calculatedInterest.doubleValue();
+		}
+
+		// Ensure the balance is exactly zero if needed
+		BigDecimal finalBalance = new BigDecimal(totalFlowAmount).subtract(indemAmount).setScale(2,
+				RoundingMode.HALF_UP);
+		if (finalBalance.abs().compareTo(BigDecimal.ONE) < 0) {
+			totalFlowAmount = totalFlowAmount - finalBalance.doubleValue();
+		}
+
+		// Prepare final response
+		Map<String, Object> response = new HashMap<>();
+		response.put("flow_total_amt", totalFlowAmount);
+		response.put("loan_flows", formattedRecords);
+
+		return response;
+	}
+
+	private final AtomicInteger flowIdCounter = new AtomicInteger(2); // Start from 2
+
+	@GetMapping("getloanclosetdatas511")
+	public synchronized Map<String, Object> getLoanData(@RequestParam(required = false) String accountNumber) {
+		System.out.println("THE GETTING ACCOUNT NUMBER IS HERE " + accountNumber);
+
+		// Fetch latest TRAN_DATE from BGLS_CONTROL_TABLE
+		Date tranDateObj = bGLS_CONTROL_TABLE_REP.getLatestTranDate();
+		if (tranDateObj == null) {
+			throw new IllegalStateException("TRAN_DATE cannot be null.");
+		}
+
+		// Convert TRAN_DATE to LocalDate
+		LocalDate tranDate = (tranDateObj instanceof java.sql.Date) ? ((java.sql.Date) tranDateObj).toLocalDate()
+				: tranDateObj.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+		// Format as "DD-MM-YYYY"
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		String formattedTranDate = tranDate.format(formatter);
+
+		// Fetch loan account master entity data
+		DMD_TABLE loanData = dMD_TABLE_REPO.gettranpopvalues21(accountNumber);
+
+		// Create response map
+		Map<String, Object> response = new HashMap<>();
+		response.put("tran_date", formattedTranDate);
+		response.put("loan_data", loanData);
+		response.put("flow_id", flowIdCounter.getAndIncrement()); // Ensure correct sequence
+
+		return response;
 	}
 
 }

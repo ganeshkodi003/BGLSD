@@ -34,16 +34,11 @@
 
 <script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js"
 	th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
-
 <script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js"
 	th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
 <script
 	src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js"
 	th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
-
-
-
-
 <style>
 body {
 	font-size: 0.8rem;
@@ -1645,7 +1640,7 @@ function fetchacctnum() {
             $.ajax({
                 type: 'GET',
                 url: './getloanclosetdatas51',
-                data: { accountNumber: acctName }, // ✅ Passing the correct value
+                data: { accountNumber: acctnum }, // ✅ Passing the correct value
                 success: function (data) {
                     console.log("Received Data:", data);
                     
@@ -1736,7 +1731,7 @@ function fetchacctnum1() {
             $.ajax({
                 type: 'GET',
                 url: './getloanclosetdatas521',
-                data: { accountNumber: acctName },
+                data: { accountNumber: acctnum },
                 success: function (data) {
                     var formattedTotalAmount = parseFloat(data.flow_total_amt || "0.00").toLocaleString('en-US', { 
                         minimumFractionDigits: 2, 
@@ -1799,7 +1794,7 @@ function fetchacctnum1() {
 <script type="text/javascript">
 //Function to add a new row
 
-let flowCounter = 3; // Initialize flow_id starting from 2
+let flowCounter = 2; // Initialize flow_id starting from 2
 
 function deleteloanRow() {
     let table = document.getElementById("flowIdTbodynew1");
@@ -1874,8 +1869,8 @@ function addloanRow() {
                 <td style="text-align:right;">
                     <input type="text" name="flow_amtvals" class="border-0 text-right" />
                 </td>
-                <td><input type="text" name="loan_acct_no" class="border-0" value="${data.loan_data.id}" readonly /></td>
-                <td><input type="text" name="acct_name" class="border-0" value="${data.loan_data.loan_name}" readonly /></td>
+                <td><input type="text" name="loan_acct_no" class="border-0" value="${data.loan_data.loan_acct_no}" readonly /></td>
+                <td><input type="text" name="acct_name" class="border-0" value="${data.loan_data.acct_name}" readonly /></td>
                 <td>
                     <input type="radio" name="row_select" data-encoded_key="${data.loan_data.id}" onclick="handleCheckboxClickCollectiondata1()" />
                 </td>
@@ -2289,7 +2284,7 @@ document.addEventListener("DOMContentLoaded", function () {
 									onchange="updateAccountName(this); fetchacctnum();">
 									<option th:selected="${empty == ''}" value="">Select</option>
 									<option th:each="ref : ${booking}" th:value="${ref[0]}"
-										th:attr="data-acct-name=${ref[2]}, data-acct-namevalues=${ref[1]}"
+										th:attr="data-acct-name=${ref[1]}, data-acct-namevalues=${ref[1]}"
 										th:text="${ref[0]}"></option>
 								</select>
 							</div>
@@ -2377,7 +2372,7 @@ document.addEventListener("DOMContentLoaded", function () {
 									onchange="updateAccountName1(this); fetchacctnum1();">
 									<option th:selected="${empty == ''}" value="">Select</option>
 									<option th:each="ref : ${booking}" th:value="${ref[0]}"
-										th:attr="data-acct-name=${ref[2]}, data-acct-namevalues=${ref[1]}"
+										th:attr="data-acct-name=${ref[1]}, data-acct-namevalues=${ref[1]}"
 										th:text="${ref[0]}"></option>
 								</select>
 							</div>
@@ -2473,22 +2468,21 @@ document.addEventListener("DOMContentLoaded", function () {
 	</div>
 
 
-<div class="modal fade" data-backdrop="false" data-keyboard="false"
-    tabindex="-1" role="dialog" aria-hidden="true" id="confirmation_modal">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-body" style="text-align: center">
-                <p id="popupmsg_body">Do you want to continue?</p>
-                <button type="button" class="btn btn-primary" id="confirmYesBtn" data-dismiss="modal">
-                    Yes
-                </button>
-                <button type="button" class="btn btn-secondary" id="confirmNoBtn" data-dismiss="modal">
-                    No
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+	<div class="modal fade" data-backdrop="false" data-keyboard="false"
+		tabindex="-1" role="dialog" aria-hidden="true" id="confirmation_modal">
+		<div
+			class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-body" style="text-align: center">
+					<p id="popupmsg_body">Do you want to continue?</p>
+					<button type="button" class="btn btn-primary" id="confirmYesBtn"
+						data-dismiss="modal">Yes</button>
+					<button type="button" class="btn btn-secondary" id="confirmNoBtn"
+						data-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 

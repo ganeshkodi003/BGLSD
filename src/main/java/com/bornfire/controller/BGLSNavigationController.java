@@ -3453,7 +3453,7 @@ public class BGLSNavigationController {
 		if (formmode == null || formmode.equals("list")) {
 			md.addAttribute("formmode", "list");
 			md.addAttribute("TRANDATE", TRANDATE);
-			md.addAttribute("booking", lease_Loan_Work_Repo.getActNo());
+			md.addAttribute("booking", lease_Loan_Work_Repo.getActNoVALUES());
 			/* md.addAttribute("booking", LOAN_ACT_MST_REPO.getActNo()); */
 			md.addAttribute("booking1", depositRep.getexistingData());
 			md.addAttribute("chartaccount", chart_Acc_Rep.getListoffice());
