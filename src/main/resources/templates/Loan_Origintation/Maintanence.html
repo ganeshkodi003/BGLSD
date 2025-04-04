@@ -93,7 +93,6 @@ body {
 			padding: 20px;
 			border: 1px solid #888;
 			width: 70%;
-			height: 50%;
 			margin-left: 200px;
 		}
 
@@ -297,27 +296,33 @@ function populateTable(data) {
     }
 
     // Iterate over the data if available
-    data.forEach((trial, index) => {
-        const statusCell = trial.verify_flg === 'Y' 
-            ? '<td style="color: green; font-size: 12px; font-weight: bold;">APPROVED</td>' 
-            : '<td style="color: red; font-size: 12px; font-weight: bold;">NOT APPROVED</td>';
+   data.forEach((trial, index) => {
+    // Convert date_of_application to dd-MM-yyyy format
+    const date = new Date(trial.date_of_application);
+    const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
 
-       const row = `
-    <tr style="font-size:14px">
-        <td>${trial.id}</td>
-        <td>${trial.date_of_application}</td>
-        <td>${trial.name}</td>
-        <td>${trial.email_id}</td>
-        <td>${trial.employer}</td>
-        <td align="center">
-            <input type="radio"
-                data-id="${trial.id}"
-                onclick="${formmode === 'listForVehicle' ? 'listVehicleclick(this)' : 'listrpersonalclick(this)'}"
-                id="${trial.id}" 
-                name="btnradio">
-        </td>
-    </tr>
-`;
+    const statusCell = trial.verify_flg === 'Y' 
+        ? '<td style="color: green; font-size: 12px; font-weight: bold;">APPROVED</td>' 
+        : '<td style="color: red; font-size: 12px; font-weight: bold;">NOT APPROVED</td>';
+
+    const row = `
+        <tr style="font-size:14px">
+            <td>${trial.id}</td>
+            <td>${formattedDate}</td>
+            <td>${trial.name}</td>
+            <td>${trial.email_id}</td>
+            <td>${trial.employer}</td>
+            <td align="center">
+                <input type="radio"
+                    data-id="${trial.id}"
+                    onclick="${formmode === 'listForVehicle' ? 'listVehicleclick(this)' : 'listrpersonalclick(this)'}"
+                    id="${trial.id}" 
+                    name="btnradio">
+            </td>
+        </tr>
+    `;
+
+
         // Append the new row to the table body
         $('#approvaltbody').append(row);
     });
@@ -627,7 +632,7 @@ function goback() {
 							<div class="card-header"
 								style="background-color: #e9ecef; height: 50px">
 								<div class="float-left">
-								<h6 style="font-size: 1.2rem;">Retail Loan personal - Modify</h6>
+								<h6 style="font-size: 1.2rem;">RETAIL LOAN PERSONAL - MODIFY</h6>
 							    </div>
 								<div class="float-right">
 								<font Style="font-size: 13px; color: #3C6EAC"> <B>
@@ -949,7 +954,7 @@ function goback() {
 							<div class="card-header"
 								style="background-color: #e9ecef; height: 50px">
 								<div class="float-left">
-								<h6 style="font-size: 1.2rem;">Retail Vehicle Loan  - Modify</h6>
+								<h6 style="font-size: 1.2rem;">RETAIL VEHICLE LOAN  - MODIFY</h6>
 							    </div>
 								<div class="float-right">
 								<font Style="font-size: 13px; color: #3C6EAC"> <B>
