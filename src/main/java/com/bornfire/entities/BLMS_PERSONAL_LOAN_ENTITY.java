@@ -46,8 +46,120 @@ public class BLMS_PERSONAL_LOAN_ENTITY {
 	private String	del_flg;
 	@Id
 	private String	id;
+	private String	hold_flg;
+	private String	reject_flg;
+	private String	hold_remarks;
+	private String	hold_user;
+	private String	reject_remarks;
+	private String	reject_user;
+	private String	monthly_expense;
+	private String	annual_expense;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date	hold_date;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date	reject_date;
 	
 	
+	public String getHold_flg() {
+		return hold_flg;
+	}
+
+
+	public void setHold_flg(String hold_flg) {
+		this.hold_flg = hold_flg;
+	}
+
+
+	public String getReject_flg() {
+		return reject_flg;
+	}
+
+
+	public void setReject_flg(String reject_flg) {
+		this.reject_flg = reject_flg;
+	}
+
+
+	public String getHold_remarks() {
+		return hold_remarks;
+	}
+
+
+	public void setHold_remarks(String hold_remarks) {
+		this.hold_remarks = hold_remarks;
+	}
+
+
+	public String getHold_user() {
+		return hold_user;
+	}
+
+
+	public void setHold_user(String hold_user) {
+		this.hold_user = hold_user;
+	}
+
+
+	public String getReject_remarks() {
+		return reject_remarks;
+	}
+
+
+	public void setReject_remarks(String reject_remarks) {
+		this.reject_remarks = reject_remarks;
+	}
+
+
+	public String getReject_user() {
+		return reject_user;
+	}
+
+
+	public void setReject_user(String reject_user) {
+		this.reject_user = reject_user;
+	}
+
+
+	public String getMonthly_expense() {
+		return monthly_expense;
+	}
+
+
+	public void setMonthly_expense(String monthly_expense) {
+		this.monthly_expense = monthly_expense;
+	}
+
+
+	public String getAnnual_expense() {
+		return annual_expense;
+	}
+
+
+	public void setAnnual_expense(String annual_expense) {
+		this.annual_expense = annual_expense;
+	}
+
+
+	public Date getHold_date() {
+		return hold_date;
+	}
+
+
+	public void setHold_date(Date hold_date) {
+		this.hold_date = hold_date;
+	}
+
+
+	public Date getReject_date() {
+		return reject_date;
+	}
+
+
+	public void setReject_date(Date reject_date) {
+		this.reject_date = reject_date;
+	}
+
+
 	public String getName() {
 		return name;
 	}
@@ -367,13 +479,18 @@ public class BLMS_PERSONAL_LOAN_ENTITY {
 	}
 
 
+ 
+
+
 	public BLMS_PERSONAL_LOAN_ENTITY(String name, Date date_of_birth, Date date_of_application, String phone_number,
 			String email_id, String home_address, String marital_status, String place_of_work, String job_title,
 			String work_address, String service, String monthly_income, String annual_income, String employer,
-			String employment_nature, String purpose_of_personal_loan, String loan_amount,
-			String rate_of_interest, String repayment_period, String monthly_installment, String remarks,
-			String entity_user, String modify_user, String verify_user, Date entity_time, Date modify_time,
-			Date verify_time, String entity_flg, String modify_flg, String verify_flg, String del_flg, String id) {
+			String employment_nature, String purpose_of_personal_loan, String loan_amount, String rate_of_interest,
+			String repayment_period, String monthly_installment, String remarks, String entity_user, String modify_user,
+			String verify_user, Date entity_time, Date modify_time, Date verify_time, String entity_flg,
+			String modify_flg, String verify_flg, String del_flg, String id, String hold_flg, String reject_flg,
+			String hold_remarks, String hold_user, String reject_remarks, String reject_user, String monthly_expense,
+			String annual_expense, Date hold_date, Date reject_date) {
 		super();
 		this.name = name;
 		this.date_of_birth = date_of_birth;
@@ -407,6 +524,16 @@ public class BLMS_PERSONAL_LOAN_ENTITY {
 		this.verify_flg = verify_flg;
 		this.del_flg = del_flg;
 		this.id = id;
+		this.hold_flg = hold_flg;
+		this.reject_flg = reject_flg;
+		this.hold_remarks = hold_remarks;
+		this.hold_user = hold_user;
+		this.reject_remarks = reject_remarks;
+		this.reject_user = reject_user;
+		this.monthly_expense = monthly_expense;
+		this.annual_expense = annual_expense;
+		this.hold_date = hold_date;
+		this.reject_date = reject_date;
 	}
 
 
