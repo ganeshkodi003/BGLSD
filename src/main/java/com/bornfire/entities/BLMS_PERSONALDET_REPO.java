@@ -23,4 +23,7 @@ public interface BLMS_PERSONALDET_REPO extends JpaRepository<BLMS_PERSONAL_LOAN_
 	
 	@Query(value = "select * from BLMS_PERSONAL_LOAN_DETAILS  where id =?1 and del_flg ='N' ", nativeQuery = true)
 	BLMS_PERSONAL_LOAN_ENTITY getRefNo(String id);
+	
+	@Query(value = "select * from blms_personal_loan_details where hold_flg='Y' or reject_flg='Y'", nativeQuery = true)
+	List<BLMS_PERSONAL_LOAN_ENTITY> getholdreject();
 }

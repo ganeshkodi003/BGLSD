@@ -2,8 +2,8 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 <!--
-	CREATED BY : NITHYAPRIYA
-	DATE : 03-04-2025
+	CREATED BY : SURIYA K
+	DATE : 04-04-25
 -->
 
 <head>
@@ -44,40 +44,7 @@
 <script
 	src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js"
 	th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
-
-<link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
-.emi-output {
-	display: none;
-	font-size: 18px;
-	font-weight: bold;
-	color: #007bff;
-	text-align: center;
-	margin-top: 10px;
-}
-
-.slider-label {
-	font-weight: bold;
-}
-</style>
-<style>
-.loader__dot {
-	animation: 1s blink infinite
-}
-
-.loader__dot:nth-child(2) {
-	animation-delay: 250ms
-}
-
-.loader__dot:nth-child(3) {
-	animation-delay: 500ms
-}
-
 body {
 	font-size: 0.8rem;
 }
@@ -107,67 +74,48 @@ body {
 	width: 23px;
 }
 
-.scroll {
-	max-height: 60vh;
-	overflow-y: scroll;
-	overflow-x: hidden;
-}
-
-.tablinks {
-	background-color: #f1f1f1;
-	/* Default background color */
-	border: none;
-	color: black;
-	padding: 10px 20px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	font-size: 16px;
-	transition: background-color 0.3s;
-}
-
-.tablinks.active {
+.loan-tabs button:hover {
 	background-color: #2084a9;
 	color: white;
 }
-
-.tab {
-	overflow: hidden;
-	border: 1px solid #ccc;
-	background-color: #f2f2f2;
-}
-
-.tab button {
-	background-color: inherit;
-	float: left;
-	border: none;
-	outline: none;
-	cursor: pointer;
-	padding: 14px 56px;
-	transition: 0.3s;
-	font-size: 17px;
-}
-
-.tab button:hover {
-	background-color: #ddd;
-}
-
-.tabcontent {
-	display: none;
-	padding: 0px;
-	border-top: 1px solid #ccc;
-}
-
-.active {
-	background-color: #2084a9;
-}
-
-#myPieChart {
-	width: 100px;
-	height: 100px;
-}
 </style>
 <style>
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
+	margin-left: 350px;
+}
+
+.modal-content {
+	background-color: #fefefe;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 70%; 
+	margin-left: 200px;
+}
+
+.modal-pass {
+	background-color: #fefefe;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 40%;
+	height: 25%;
+	margin-left: 400PX;
+	margin-right: auto;
+	border-radius: 10px;
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+	font-family: Arial, sans-serif;
+}
+
 .close {
 	color: red;
 	font-size: 28px;
@@ -178,6 +126,34 @@ body {
 	color: black;
 	text-decoration: none;
 	cursor: pointer;
+}
+
+.table-responsive {
+	max-height: 700px;
+	overflow-y: auto;
+}
+
+.table-responsive1 {
+	max-height: 400px;
+	overflow-y: auto;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+thead {
+	position: sticky;
+	top: 0;
+	background-color: #f9f9f9;
+	z-index: 10;
+}
+
+th, td {
+	padding: 12px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
 }
 </style>
 <style>
@@ -203,659 +179,198 @@ input:hover+.password-info {
 	opacity: 0.8;
 }
 
-.subtablinks {
-	background-color: #f1f1f1;
-	/* Default background color */
+.filterable .filters input[disabled] {
+	background-color: transparent;
 	border: none;
-	color: black;
-	padding: 10px 20px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	font-size: 16px;
-	transition: background-color 0.3s;
+	cursor: auto;
+	box-shadow: none;
+	padding: 0;
+	height: auto;
 }
 
-.subtablinks.active {
-	background-color: #2084a9;
-	color: white;
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+	color: #333;
 }
 
-.hover-underline:hover {
-	text-decoration: underline;
-	text-decoration-color: #007bff;
-	cursor: pointer;
-	/* Sets underline color to blue */
+.filterable .filters input[disabled]::-moz-placeholder {
+	color: #333;
+}
+
+.filterable .filters input[disabled]:-ms-input-placeholder {
+	color: #333;
+}
+
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+	color: #333;
 }
 </style>
-
-
 <script>
-	function Home() {
+		function Home() {
 
-		location.href = 'Dashboard';
+			location.href = 'Dashboard';
+		}
+
+		function Back() {
+			window.history.back();
+		}
+
+		$(function() {
+			$(
+					"#doj,#dob,#date_of_offer,#date_of_appointment_letter,#aed,#ped,#dsd,#ded")
+					.datepicker({
+						dateFormat : "dd-mm-yy",
+						changeMonth : true,
+						changeYear : true
+
+					});
+		});
+	</script>
+<script>
+	
+	function PersonalList(){ 
+			location.href = 'Retailloanholdreject?formmode=listForPersonal';
 	}
-
-	function Back() {
-		window.history.back();
-	}
-
-	$(function() {
-		$(
-				"#doj,#dob,#date_of_offer,#date_of_appointment_letter,#aed,#ped,#dsd,#ded")
-				.datepicker({
-					dateFormat : "dd-mm-yy",
-					changeMonth : true,
-					changeYear : true
-
-				});
+	
+	
+	document.addEventListener('DOMContentLoaded', function() {
+	    handleFilterChange(); 
 	});
-</script>
+
+	function handleFilterChange(){
+	    var a = document.getElementById('approvedfilter').value;
+	    
+	    if (a === 'ALL') {
+	        $.ajax({
+	            url: './AllApprovedPersonal',
+	            type: 'GET',
+	            success: function(data) {
+	                updateTable(data);
+	            },
+	            error: function(err) {
+	                console.error('Error fetching data:', err);
+	            }
+	        });
+	    } else if (a === 'APPROVED') {
+	        $.ajax({
+	            url: './ApprovedPersonal',
+	            type: 'GET',
+	            success: function(data) {
+	                updateTable(data);
+	            },
+	            error: function(err) {
+	                console.error('Error fetching data:', err);
+	            }
+	        });
+	    } else if (a === 'NOTAPPROVED') {
+	     
+	        $.ajax({
+	            url: './NotApprovedPersonal',
+	            type: 'GET',
+	            success: function(data) {
+	                updateTable(data);
+	            },
+	            error: function(err) {
+	                console.error('Error fetching data:', err);
+	            }
+	        });
+	    }
+	}
+ 
+	
+	function listrpersonalclick(a){
+		var id = a.getAttribute("data-id");
+		location.href = 'Retailloanholdreject?formmode=HolrejectPersView&id=' + id;
+	}
+	</script>
+	<script type="text/javascript">
+	function SubProceed() {
+		var id = document.getElementById("id").value; 
+		alert(id + id);
+	    $.ajax({
+	        type: "POST",
+	        url: './Holdsubmit',  
+	        data: $("#HoldForm").serialize(),
+	        success: function (response) { 
+	            $("#mypopup_alertmsg").html(response); 
+	            $('#mypopup').modal('show');
+	        },
+	        complete: function() {
+	        }
+	    }); 
+	}
+	</script>
 <script>
-	function AddBranch() {
+	$(document)
+	.ready(
+			function() {
+				$('.filterable .btn-filter')
+						.click(
+								function() {
+									var $panel = $(this).parents(
+											'.filterable'), $filters = $panel
+											.find('.filters input'), $tbody = $panel
+											.find('.table tbody');
+									if ($filters.prop('disabled') == true) {
+										$filters
+												.prop('disabled', false);
+										$filters.first().focus();
+									} else {
+										$filters.val('').prop(
+												'disabled', true);
+										$tbody.find('.no-result')
+												.remove();
+										$tbody.find('tr').show();
+									}
+								});
 
-		location.href = './organizationDetails?formmode=AddBranch';
-
-	}
-
-	function list() {
-
-		location.href = './organizationDetails?formmode=list';
-	}
-
-	function add() {
-
-		location.href = './organizationDetails?formmode=add';
-	}
-
-	function Modify() {
-
-		location.href = './organizationDetails?formmode=ModifyHead';
-	}
-	
-	
-	
-</script>
-
-<script>
-	function view(a) {
-		var branch = a.getAttribute('data-resource');
-
-		location.href = './organizationDetails?formmode=view&branch_name='
-				+ branch;
-	}
-
-
-	function branchfunction(a){
-		var branch = a.getAttribute('data-resource');
-		var mod_flg = a.getAttribute('data-modify_flg');
-		if(mod_flg == "Y"){
-			location.href = './organizationDetails?formmode=DeleteBranch&branch_name='
-				+ branch;
-		}else{
-			location.href = './organizationDetails?formmode=modify&branch_name='
-				+ branch;
-		}
-	}
-
-	/* 	function openTab(evt, tabName) {
-
-	 var tabcontent = document.getElementsByClassName("tabcontent");
-	 for (let i = 0; i < tabcontent.length; i++) {
-	 tabcontent[i].style.display = "none";
-	 }
-
-	 let tablinks = document.getElementsByClassName("tablinks");
-	 for (let i = 0; i < tablinks.length; i++) {
-	 tablinks[i].classList.remove("active");
-	 }
-
-	 document.getElementById(tabName).style.display = "block";
-	 evt.currentTarget.classList.add("active");
-
-	 //document.getElementById("submitBtn").style.display = (tabName === 'tab2') ? 'block' : 'none';
-	 } */
-	 function showError(element, message) {
-		    var errorSpan = $('<span class="error-message"></span>').text(message);
-		    errorSpan.css('color', 'red');
-		    element.after(errorSpan);
-		}
-
-		function hideError(element) {
-		    element.next('.error-message').remove();
-		}
-
-		function validateField(selector, message) {
-		    const element = $(selector);
-		    if (!element.val()) {
-		        showError(element, message);
-		        return true;
-		    } else {
-		        hideError(element);
-		        return false;
-		    }
-		}
-
-	function AddSubmit() {
-		 let hasError = false;
-		  //for customer check
-		  
-		  /*  hasError = validateField("#branch_head", 'Required') || hasError; 
-		   hasError = validateField("#branch_code", 'Required') || hasError; 
-	       hasError = validateField("#swift_code", 'Required') || hasError; 
-		   hasError = validateField("#designation", 'Required') || hasError; 
-           hasError = validateField("#land_line", 'Required') || hasError; 
-		   hasError =validateField("#branch_name", 'Required') || hasError;
-		   hasError =  validateField("#mobile", 'Required') || hasError; 
-		   hasError =  validateField("#photo", 'Required') || hasError; 
-		   hasError =  validateField("#cont_person", 'Required') || hasError; 
-		   hasError =  validateField("#fax", 'Required') || hasError;  */
-		   
-		
-		   if (hasError) {
-		        $('#alert1').modal("toggle");
-		        $('#alertmsg1').text("Enter the Required fields..");
-		        return; // Exit the function if there are validation errors
-		    }
-		   var formElement = document.getElementById('assosiateForm1'); // Get the form element
-		   var formData = new FormData(formElement); 
-	       var photoInput = formElement.querySelector("input[name='photo']");
-		   alert(photoInput)
-	        
-		   if (photoInput && photoInput.files.length > 0) {
-	            formData.append("photoFile", photoInput.files[0]);
-	        }else {
-	            console.error("Photo input not found or no file selected.");
-	            $('#alert1').modal("toggle");
-	            $('#alertmsg1').text("Please select a photo.");
-	            return; // Exit the function if the photo input is not found or no file is selected
-	        }  
-			$.ajax({
-				url : './OrgBranchAdd',
-				data: formData,
-			    type: 'POST',
-			    processData: false,  // Don't process the data
-			    contentType: false, 
-				success : function(data) {
-					$("#alertmsg").text(data);
-					$('#alert').modal("show");
-				}
+				$('.filterable .filters input')
+						.keyup(
+								function(e) {
+									/* Ignore tab key */
+									var code = e.keyCode || e.which;
+									if (code == '9')
+										return;
+									/* Useful DOM data and selectors */
+									var $input = $(this), inputContent = $input
+											.val().toLowerCase(), $panel = $input
+											.parents('.filterable'), column = $panel
+											.find('.filters th')
+											.index($input.parents('th')), $table = $panel
+											.find('.table'), $rows = $table
+											.find('tbody tr');
+									/* Dirtiest filter function ever ;) */
+									var $filteredRows = $rows
+											.filter(function() {
+												var value = $(this)
+														.find('td').eq(
+																column)
+														.text()
+														.toLowerCase();
+												return value
+														.indexOf(inputContent) === -1;
+											});
+									/* Clean previous no-result if exist */
+									$table.find('tbody .no-result')
+											.remove();
+									/* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+									$rows.show();
+									$filteredRows.hide();
+									/* Prepend no-result row if all rows are filtered */
+									if ($filteredRows.length === $rows.length) {
+										$table
+												.find('tbody')
+												.prepend(
+														$('<tr class="no-result text-center"><td colspan="'
+																+ $table
+																		.find('.filters th').length
+																+ '">No result found</td></tr>'));
+									}
+								});
 			});
-		
-	}
 
-	 function ModifyTab1Submit() {
-
-		    $.ajax({
-		        url: './tab1modify',
-		        data: $("#tab1modify").serialize(),
-		        type: 'POST',
-		        success: function(data) {
-		            $("#alertmsg").text(data);
-		            $('#alert').modal("show");
-		        },
-		        error: function(jqXHR, textStatus, errorThrown) {
-		            console.error("Error in AJAX request: " + textStatus, errorThrown);
-		        }
-		    });
-		}
-
-
-	function ModifyTab2Submit() {
-
-		$.ajax({
-			url : './tab2modify',
-			data : $("#tab2modify").serialize(),
-			type : 'POST',
-			success : function(data) {
-				$("#alertmsg").text(data);
-				$('#alert').modal("show");
-			}
-		});
-
-	}
-	function del_bran() {
-
-		$.ajax({
-			url : './tab2Del',
-			data : $("#tab2Del").serialize(),
-			type : 'POST',
-			success : function(data) {
-				$("#alertmsg").text(data);
-				$('#alert').modal("show");
-			}
-		});
-
-	}
-</script>
-
-<script>
-	function openTab(evt, tabName) {
-		// Hide all main tab content
-		let i, tabcontent, tablinks;
-		tabcontent = document.getElementsByClassName("tabcontent");
-		for (i = 0; i < tabcontent.length; i++) {
-			tabcontent[i].style.display = "none";
-		}
-
-		// Remove active class from main tabs
-		tablinks = document.getElementsByClassName("tablinks");
-		for (i = 0; i < tablinks.length; i++) {
-			tablinks[i].className = tablinks[i].className
-					.replace(" active", "");
-		}
-
-		// Show selected main tab and set as active
-		document.getElementById(tabName).style.display = "block";
-		evt.currentTarget.className += " active";
-	}
-
-	function openSubTab(evt, subTabName) {
-		// Hide all sub-tab content
-		let i, subtabcontent, subtablinks;
-		subtabcontent = document.getElementsByClassName("subtabcontent");
-		for (i = 0; i < subtabcontent.length; i++) {
-			subtabcontent[i].style.display = "none";
-		}
-
-		// Remove active class from sub-tabs
-		subtablinks = document.getElementsByClassName("subtablinks");
-		for (i = 0; i < subtablinks.length; i++) {
-			subtablinks[i].className = subtablinks[i].className.replace(
-					" active", "");
-		}
-
-		// Show selected sub-tab and set as active
-		document.getElementById(subTabName).style.display = "block";
-		evt.currentTarget.className += " active";
-	}
-</script>
-<script>
-	$(function() {
-		$("#date_of_regn").datepicker({
-			dateFormat : "dd-mm-yy", // Format as 'DD-MM-YYYY'
-			changeMonth : true, // Allows changing month
-			changeYear : true, // Allows changing year
-			yearRange : "1900:2024", // Year range
-			maxDate : new Date()
-		// Restricts to today or earlier
-		});
-	});
-</script>
-<script>
-	function addHoliday() {
-
-		location.href = './organizationDetails?formmode=addholiday';
-
-	}
-	function UploadHoliday() {
-
-		location.href = './organizationDetails?formmode=UploadHoliday';
-
-	}
-	function ModifyHoliday() {
-
-		location.href = './organizationDetails?formmode=ModifyHoliday';
-	}
-
-	function ListHoliday() {
-
-		location.href = './organizationDetails?formmode=listholiday';
-	}
-</script>
-<script>
-	function submitexcelgst() {
-		event.preventDefault(); // Prevent default form submission behavior
-
-		var fileInput = document.getElementById('fileval');
-		console.log(fileInput);
-
-		// Check if a file is selected
-		if (fileInput && fileInput.files.length > 0) {
-			var file = fileInput.files[0];
-			//alert(file.name); // Alert with the file name
-
-			var formData = new FormData();
-			formData.append('file', file);
-
-			$.ajax({
-				url : './calenderuploadexcel',
-				data : formData,
-				type : 'POST',
-				contentType : false,
-				processData : false,
-				cache : false, // Disable cache to avoid potential issues
-				success : function(data) {
-					alert('File uploaded successfully: ' + data);
-					console.log("Successfully Upload")
-				},
-				error : function(xhr, status, error) {
-					alert('Error occurred while uploading file: ' + error);
-				}
-			});
-		} else {
-			alert('Please select a file before uploading.');
-		}
-	}
-
-	function getdata(a) {
-		var record_srl = a.getAttribute("data-attr");
-		console.log("record_srl" + record_srl);
-		location.href = 'organizationDetails?formmode=viewrecord&record_srl='
-				+ record_srl;
-	}
-</script>
-<script>
-	function validateNumericInput(input) {
-		const errorMessage = document.getElementById('errorMessage');
-		// Remove any non-numeric characters
-		input.value = input.value.replace(/[^0-9]/g, '');
-
-		// Show an error message if needed (optional)
-		if (/[^0-9]/.test(input.value)) {
-			errorMessage.style.display = 'block';
-		} else {
-			errorMessage.style.display = 'none';
-		}
-	}
-	
-	function validatePanCard(input) {
-        const errorMessage = document.getElementById('errorMessage');
-        const value = input.value;
-
-        // Allow only alphanumeric characters
-        input.value = value.replace(/[^a-zA-Z0-9]/g, '');
-
-        // Check if the length is exactly 10
-        if (input.value.length !== 10) {
-            errorMessage.style.display = 'block';
-        } else {
-            errorMessage.style.display = 'none';
-        }
-    }
-	
-	function validateAddress(input) {
-        const value = input.value;
-
-        // Check if the length is less than 3 characters
-        if (value.length < 3 && value.length > 0) {
-            alert("Please fill in more than 3 letters.");
-        }
-    }
-</script>
-<script>
-        // Function to format and set value
-        function formatAndSetValue(inputField) {
-            // Remove any commas from the value (for number input types only)
-            let rawValue = inputField.value.replace(/,/g, '');
-            // Ensure the value has decimal precision
-            let formattedValue = formatForNumbers(rawValue);
-
-            // If it's a number input, avoid commas in the input field value (parse as number)
-            if (inputField.type === 'number') {
-                inputField.value = parseFloat(formattedValue); // Assign the raw number value without commas
-            } else {
-                inputField.value = formatNumberWithIndianSeparationForOninput(formattedValue); // Apply Indian separation for text input
-            }
-        }
-
-        // Function to format number with Indian separation
-        function formatNumberWithIndianSeparationForOninput(value) {
-            if (!value) return '';
-
-            let [integerPart, decimalPart] = value.split('.');
-
-            let lastThreeDigits = integerPart.slice(-3);
-            let otherDigits = integerPart.slice(0, -3);
-
-            if (otherDigits !== '') {
-                lastThreeDigits = ',' + lastThreeDigits;
-            }
-
-            let formattedIntegerPart = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThreeDigits;
-
-            return decimalPart !== undefined ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
-        }
-
-        // Function to ensure the number has two decimal places
-        function formatForNumbers(value) {
-            let num = parseFloat(value);
-            return isNaN(num) ? '0.00' : num.toFixed(2); // Ensure two decimal places for consistent formatting
-        }
-        
-        
-    
-    </script>
-<script type="text/javascript">
-function SubPersonal(a) { 
-    // Show the loader
-    $('#loader').show();
-
-    // If all validations pass, proceed with the AJAX request
-    $.ajax({
-        type: "POST",
-        url: './RetailPersDet',  
-        data: $("#PersonalForm").serialize(),
-        success: function (response) { 
-            $("#mypopup_alertmsg").html(response); 
-            $('#mypopup').modal('show');
-        },
-        complete: function() {
-            // Hide the loader regardless of success or error
-            $('#loader').hide();
-        }
-    }); 
-}
-
-function SubVehicle(a) { 
-	alert("vehicle");
-    // Show the loader
-    $('#loader1').show();
-
-    // If all validations pass, proceed with the AJAX request
-    $.ajax({
-        type: "POST",
-        url: './RetailVehicleDet',  
-        data: $("#VehicleForm").serialize(),
-        success: function (response) { 
-            $("#mypopup_alertmsg").html(response); 
-            $('#mypopup').modal('show');
-        },
-        complete: function() {
-            // Hide the loader regardless of success or error
-            $('#loader1').hide();
-        }
-    }); 
-}
-
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const loanAmount = document.getElementById("loanAmount");
-    const loanYears = document.getElementById("loanYears");
-    const interestRate = document.getElementById("interestRate");
-    const loanAmountValue = document.getElementById("loanAmountValue");
-    const loanYearsValue = document.getElementById("loanYearsValue");
-    const interestRateValue = document.getElementById("interestRateValue");
-
-    const emiResultBox = document.getElementById("emiResultBox");
-    const emiResultText = document.getElementById("emiResultText");
-    const emiChart = document.getElementById("emiChart");
-    let chartInstance = null;
-
-    function updateSliderValues() {
-        loanAmountValue.innerText = new Intl.NumberFormat('en-IN').format(loanAmount.value);
-        loanYearsValue.innerText = loanYears.value;
-        interestRateValue.innerText = interestRate.value;
-    }
-
-    loanAmount.addEventListener("input", updateSliderValues);
-    loanYears.addEventListener("input", updateSliderValues);
-    interestRate.addEventListener("input", updateSliderValues);
-
-   window.calculateEMI = function() {
-    let P = parseFloat(loanAmount.value);
-    let N = parseInt(loanYears.value) * 12;
-    let R = parseFloat(interestRate.value) / 100 / 12;
-
-    if (isNaN(P) || isNaN(N) || isNaN(R) || R === 0) {
-        emiResultText.innerText = "Invalid Input!";
-        emiResultBox.style.display = "block";
-        return;
-    }
-
-    let EMI = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
-    EMI = EMI.toFixed(2);
-
-    emiResultText.innerHTML = `Your Monthly EMI will be <span style="color: #007bff; font-size: 24px;">₹${EMI}</span> per month`;
-    emiResultBox.style.display = "block";
-
-    // Disable sliders
-    loanAmount.disabled = true;
-    loanYears.disabled = true;
-    interestRate.disabled = true;
-
-    // Replace Calculate button with Reset button
-    let calculateBtn = document.getElementById("calculateBtn");
-    calculateBtn.innerText = "Reset";
-    calculateBtn.classList.remove("btn-success");
-    calculateBtn.classList.add("btn-danger");
-    calculateBtn.setAttribute("onclick", "resetForm()");
-
-    // Show Graph
-    displayGraph(P, R, N);
-};
-
-window.resetForm = function() {
-    loanAmount.value = 500000;
-    loanYears.value = 7;
-    interestRate.value = 7;
-    updateSliderValues();
-
-    emiResultBox.style.display = "none";
-    emiChart.style.display = "none";
-
-    // Enable sliders
-    loanAmount.disabled = false;
-    loanYears.disabled = false;
-    interestRate.disabled = false;
-
-    let calculateBtn = document.getElementById("calculateBtn");
-    calculateBtn.innerText = "Calculate";
-    calculateBtn.classList.remove("btn-danger");
-    calculateBtn.classList.add("btn-success");
-    calculateBtn.setAttribute("onclick", "calculateEMI()");
-};
-
-
-     function displayGraph(P, R, N) {
-        let totalPayment = 0, totalInterest = 0;
-        let principalData = [], interestData = [], labels = [];
-
-        for (let i = 1; i <= N / 12; i++) {
-            let interest = (P * R);
-            let EMI = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
-            let principal = EMI - interest;
-
-            totalInterest += interest * 12;
-            totalPayment += (EMI * 12);
-
-            principalData.push(totalPayment - totalInterest);
-            interestData.push(totalInterest);
-            labels.push("Yr " + i);
-        }
-
-        emiChart.style.display = "block";
-
-        if (chartInstance) chartInstance.destroy();
-
-        let ctx = emiChart.getContext("2d");
-        chartInstance = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: "Principal", data: principalData, borderColor: "blue", fill: false },
-                    { label: "Interest", data: interestData, borderColor: "red", fill: false }
-                ]
-            },
-            options: { responsive: true }
-        });
-    }
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    function syncSliderWithInput(sliderId, inputId) {
-        let slider = document.getElementById(sliderId);
-        let input = document.getElementById(inputId);
-
-        // Sync input field when the slider moves
-        slider.addEventListener("input", function() {
-            input.value = slider.value;
-        });
-
-        // Sync slider when the input field is changed manually
-        input.addEventListener("input", function() {
-            let value = parseFloat(input.value); // Convert input to a number
-
-            // Ensure the value is within the allowed range
-            if (value < parseFloat(slider.min)) {
-                value = slider.min;
-            } else if (value > parseFloat(slider.max)) {
-                value = slider.max;
-            }
-
-            input.value = value; // Update input field if it's out of range
-            slider.value = value; // Sync the slider
-        });
-    }
-
-    syncSliderWithInput("loanAmount", "loanAmountInput");
-    syncSliderWithInput("loanYears", "loanYearsInput");
-    syncSliderWithInput("interestRate", "interestRateInput");
-});
-
-</script>
-<script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function() {
-    calculateAnnualIncome();
-    document.getElementById('monthly_income').addEventListener('input', calculateAnnualIncome);
-});
-
-// Function to calculate Annual Income from Monthly Income
-function calculateAnnualIncome() {
-    var monthlyIncome = document.getElementById('monthly_income').value;
-    console.log("Monthly Income: ", monthlyIncome);
-
-    if (monthlyIncome) {
-        var monthlyIncomeValue = parseFloat(monthlyIncome.replace(/,/g, ''));
-        var annualIncome = (monthlyIncomeValue * 12).toFixed(2);
-        console.log("Annual Income: ", annualIncome);
-        document.getElementById('annual_income').value = formatNumberWithIndianSeparation(annualIncome);
-    } else {
-        document.getElementById('annual_income').value = '';
-    }
-}
-
-// Reuse or rename your formatter function
-function formatNumberWithIndianSeparation(value) {
-    if (!value && value !== 0) return '';
-    let valueStr = value.toString();
-    let [integerPart, decimalPart] = valueStr.split('.');
-    let lastThreeDigits = integerPart.slice(-3);
-    let otherDigits = integerPart.slice(0, -3);
-    if (otherDigits !== '') {
-        lastThreeDigits = ',' + lastThreeDigits;
-    }
-    let formattedIntegerPart = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThreeDigits;
-    return decimalPart !== undefined ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
-}
-</script>
+	</script>
 
 </head>
-
-
 <body>
 
 	<div class="col-sm-2">
@@ -864,1884 +379,430 @@ function formatNumberWithIndianSeparation(value) {
 	<!---------------------User List Starts------------------------------------------------------->
 	<!-- Start Content-->
 	<div class="container-manager">
-
-
-
 		<div class="row">
-
-
 			<div class="col-sm-11 ml-5 mt-2" style="font-size: 0.8rem;">
-
-
-				<!-- ------------------------------------Organization Main---------------------------------- -->
-
-
+				<!-- ------------------------------------Approval tab---------------------------------- -->
 				<div th:if="${formmode}=='list'">
-					<div class="card ">
-
-						<div class="card-header"
-							style="background-color: #e9ecef; height: 50px">
-							<div class="float-left">
-								<h6 style="font-size: 1.2rem; color: black;">RETAIL - HOLD/REJECT</h6>
-							</div>
-							<div class="float-right"> 
-									<button type="button"
-										class="btn btn-xs btn-primary btns p-2 border btn-filter">Filter</button> 
-							</div>
-						</div>
-
-						<div class="tab mt-2"
-							style="padding: 4px 4px; position: relative; display: flex; justify-content: space-around; margin-top: 10px; width: 100%; height: 43px">
-							<button class="tablinks" onclick="openTab(event, 'tab1')"
-								style="font-size: 16px; padding: 4px 8px; height: 32px;">Personal
-								Loan</button>
-							<button class="tablinks" onclick="openTab(event, 'tab2')"
-								style="font-size: 16px; padding: 4px 8px; height: 32px;">Vehicle
-								Loan</button>
-							<button class="tablinks" onclick="openTab(event, 'tabCalendar')"
-								style="font-size: 16px; padding: 4px 8px; height: 32px;">Education
-								Loan</button>
-							<button class="tablinks" onclick="openTab(event, 'tab3')"
-								style="font-size: 16px; padding: 4px 8px; height: 32px;">Housing
-								Loan</button>
-						</div>
-
-						<div id="tab1" class="tabcontent " style="display: block">
-						<div class="w-100 border panel panel-primary filterable">
-							<div class="card-body"> 
-								<div class="table-responsive">
-									<table class=" table  table-bordered  table-hover table-sm"
-										style="table-layout: fixed; width: 100%;" id="usertable">
-										<thead>
-											<tr class="filters">
-												<th><input type="text"
-													class="form-control font-weight-bold bg-white"
-													placeholder="Appl Ref No" disabled></th>
-												<th><input type="text"
-													class="form-control font-weight-bold bg-white"
-													placeholder="Date of Application" disabled></th>
-												<th><input type="text"
-													class="form-control font-weight-bold bg-white"
-													placeholder="Name" disabled></th>
-												<th><input type="text"
-													class="form-control font-weight-bold bg-white"
-													placeholder="Email ID" disabled></th>
-												<th><input type="text"
-													class="form-control font-weight-bold bg-white"
-													placeholder="Employer" disabled></th>
-												 
-												<th style="font-size: 15px">Select</th>
-											</tr>
-										</thead>
-										<tbody>
-											 
-										</tbody>
-									</table>
-								</div>
-								 
-
-							</div>
-							</div>
-							<!-- Loader HTML -->
-							<div id="loader"
-								style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background-color: rgba(211, 211, 211, 0.6); /* Light gray with more transparency */ padding: 20px; /* Padding around the loader */ border-radius: 8px; /* Rounded corners */ text-align: center;">
-								<!-- Center text in the loader -->
-								<div
-									style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-									<img style="width: 50px; height: 50px;"
-										th:src="@{/images/loader.gif}" alt="Loading..." />
-								</div>
-							</div>
-
-							<div class="card-footer text-center "
-								style="background-color: #e9ecef">
-
-
-								<button class="btn btn-primary p-2" onclick="Home();">Home</button> 
-								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
-
-							</div>
-						</div>
-
-						<div id="tab2" class="tabcontent" style="display: none">
-
-							<div class="w-100 border panel panel-primary filterable">
-							<div class="card-body"> 
-								<div class="table-responsive">
-									<table class=" table  table-bordered  table-hover table-sm"
-										style="table-layout: fixed; width: 100%;" id="usertable">
-										<thead>
-											<tr class="filters">
-												<th><input type="text"
-													class="form-control font-weight-bold bg-white"
-													placeholder="Appl Ref No" disabled></th>
-												<th><input type="text"
-													class="form-control font-weight-bold bg-white"
-													placeholder="Date of Application" disabled></th>
-												<th><input type="text"
-													class="form-control font-weight-bold bg-white"
-													placeholder="Name" disabled></th>
-												<th><input type="text"
-													class="form-control font-weight-bold bg-white"
-													placeholder="Email ID" disabled></th>
-												<th><input type="text"
-													class="form-control font-weight-bold bg-white"
-													placeholder="Employer" disabled></th>
-												 
-												<th style="font-size: 15px">Select</th>
-											</tr>
-										</thead>
-										<tbody>
-											 
-										</tbody>
-									</table>
-								</div>
-								 
-
-							</div>
-							</div>
-							<!-- Loader HTML -->
-							<div id="loader1"
-								style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background-color: rgba(211, 211, 211, 0.6); /* Light gray with more transparency */ padding: 20px; /* Padding around the loader */ border-radius: 8px; /* Rounded corners */ text-align: center;">
-								<!-- Center text in the loader -->
-								<div
-									style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-									<img style="width: 50px; height: 50px;"
-										th:src="@{/images/loader.gif}" alt="Loading..." />
-								</div>
-							</div>
-							<div class="card-footer text-center "
-								style="background-color: #e9ecef">
-
-
-								<button class="btn btn-primary p-2" onclick="Home();">Home</button> 
-								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
-
-							</div>
-
-
-						</div>
-						<div id="tabCalendar" class="tabcontent" style="display: none;">
-
-						</div>
-					</div>
-				</div>
-				<!-- ---------------------------------------------------------------------------------------------------------------- -->
-				<div th:if="${formmode} =='addholiday'">
-					<div class="card">
-						<div class="card-header"
-							style="background-color: #e9ecef; height: 50px">
-							<div class="float-left">
-								<h6 style="font-size: 1.2rem; color: black;">Holiday
-									Master-Add</h6>
-							</div>
-
-						</div>
-
-						<div class="card-body">
-							<form class=" border border-secondary" action="#" method="post"
-								id="" autocomplete="off" enctype="multipart/form-data">
-								<div class="row formline" style="padding: 10px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Organization</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Location</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Calendar Year</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Month</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Record No</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Date</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Description</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Remarks</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Holiday Flag</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Record Status</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-							</form>
-
-						</div>
-						<div class="card-footer text-center "
-							style="background-color: #e9ecef">
-
-
-							<button class="btn btn-primary p-2" onclick="Home();">Home</button>
-							<button class="btn btn-primary p-2" id="submitBtn"
-								onclick="AddSubmit();">Submit</button>
-
-							<button class="btn btn-primary p-2" onclick="Back();">Back</button>
-
-						</div>
-					</div>
-				</div>
-				<div th:if="${formmode}=='UploadHoliday'">
-					<form action="#" method="post" autocomplete="off"
-						style="width: 100%">
-						<div class="card">
-							<div class="card-header" style="background-color: #BBC3CB;">
-								<div class="float-right"></div>
-								<h4>HOLIDAY MASTER - FILE UPLOAD</h4>
-							</div>
-							<div class="card-body p-0 mt-3">
-								<div class="panel-heading text-center">
-
-
-
-									<div class="form-group ">
-										<div class="row">
-
-											<div class="col-sm-3">
-												<label class="">Upload</label>
-											</div>
-											<div class="col-sm-2">
-
-												<input type="file" id="fileval" name="fileval"
-													accept=".xlsx,.xls,.csv"
-													class="form-control form-control-sm">
-
-											</div>
-
-											<div class="col-sm-2"></div>
-										</div>
-									</div>
-									<div class="form-group "></div>
-
-								</div>
-							</div>
-							<div class="card-footer text-center"
-								style="background-color: #BBC3CB;">
-								<button type="button" class="btn btn-primary" id="btnHome"
-									onclick="home();">Home</button>
-
-								<button type="button" class="btn btn-primary" id="nav"
-									onclick="submitexcelgst(this)">Upload</button>
-
-								<button type="button" class="btn btn-primary" id="btnBack"
-									onclick="back();">Back</button>
-							</div>
-						</div>
-					</form>
-				</div>
-
-				<div th:if="${formmode} =='ModifyHoliday'">
-					<div class="card">
-						<div class="card-header"
-							style="background-color: #e9ecef; height: 50px">
-							<div class="float-left">
-								<h6 style="font-size: 1.2rem; color: black;">Holiday
-									Master-Modify</h6>
-							</div>
-
-						</div>
-
-
-						<div class="card-body">
-							<form class=" border border-secondary" action="#" method="post"
-								id="tab1modify" autocomplete="off">
-								<div class="row formline" style="padding: 10px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Organization</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Location</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Calendar Year</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Month</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Record No</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Date</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Description</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Remarks</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Holiday Flag</div>
-									<div class="col-sm-2">
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Record Status</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="" id="" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-							</form>
-
-						</div>
-						<div class="card-footer text-center "
-							style="background-color: #e9ecef">
-
-
-							<button class="btn btn-primary p-2" onclick="Home();">Home</button>
-							<button class="btn btn-primary p-2" id="submitBtn"
-								onclick="ModifyTab1Submit();">Submit</button>
-
-							<button class="btn btn-primary p-2" onclick="Back();">Back</button>
-
-						</div>
-
-
-					</div>
-				</div>
-
-
-				<div th:if="${formmode}=='listholiday'">
 					<div class="panel panel-primary filterable">
 						<div class="card w-100 border panel panel-primary filterable">
 							<div class="card-header"
-								style="background-color: #e9ecef; height: 70px">
+								style="background-color: #e9ecef; height: 50px">
 								<div class="float-left">
-									<h6 style="font-size: 1.2rem; color: black;">Holiday
-										Master-List</h6>
+									<h6 style="font-size: 1.2rem;">RETAIL - HOLD/REJECT</h6>
 								</div>
-
 							</div>
-
 							<div class="card-body">
-								<div class="table-responsive">
-									<table class="table table-bordered  table-hover table-sm"
-										style="margin-bottom: 0px; font-size: initial;"
-										id="AssosiateTable">
-										<thead class="thead-light">
 
-											<tr>
-												<th>SRL NO</th>
-												<th>YEAR</th>
-												<th>MONTH</th>
-												<th>DATE</th>
-												<th>DAY</th>
-												<th>DESCRIPTION</th>
-												<th>REMARKS</th>
-											</tr>
-										</thead>
-										<tbody id="placelist">
-											<tr th:each="chartacc : ${Listofvalues}">
-
-												<td class="hover-underline" onclick="getdata(this)"
-													style="color: #007bff;"
-													th:attr="data-attr=${chartacc?.record_srl}"
-													th:text="${chartacc?.record_srl}"></td>
-												<td th:text="${chartacc?.cal_year}"></td>
-												<td th:text="${chartacc?.cal_month}"></td>
-												<td
-													th:text="${#dates.format(chartacc?.record_date, 'dd-MM-yyyy')}"></td>
-												<td th:text="${#dates.format(chartacc?.record_date, 'dd')}"></td>
-												<td th:text="${chartacc?.holiday_desc}"></td>
-
-												<td th:text="${chartacc?.holiday_remarks}"></td>
-
-
-
-											</tr>
-										</tbody>
-
-
-									</table>
+								<div class="loan-tabs mt-2"
+									style="padding: 4px 4px; position: relative; display: flex; justify-content: space-around; margin-top: 10px; width: 100%; height: 43px">
+									<button class="tab"
+										style="font-size: 16px; padding: 4px 8px; height: 32px;"
+										onclick="PersonalList();">Personal Loan</button>
+									<button class="tab"
+										style="font-size: 16px; padding: 4px 8px; height: 32px;">Vehicle
+										Loan</button>
+									<button class="tab"
+										style="font-size: 16px; padding: 4px 8px; height: 32px;">Education
+										Loan</button>
+									<button
+										style="font-size: 16px; padding: 4px 8px; height: 32px;">Housing
+										Loan</button>
 								</div>
 							</div>
-
 							<div class="card-footer text-center"
 								style="background-color: #e9ecef">
 								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
-								<button class="btn btn-primary p-2" id="submitBtn"
-									onclick="getCheckedValues()">Submit</button>
+								<button class="btn btn-primary p-2" onclick="back()">Back</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--------------------------------------Approval Retail tab  ----------------------------->
+
+				<div th:if="${formmode}=='listForPersonal'">
+					<div class="panel panel-primary filterable">
+						<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+									<h6 style="font-size: 1.2rem;">PERSONAL LOAN HOLD/REJECT</h6>
+								</div>
+								<div class="float-right">
+									<button type="button"
+										class="btn btn-xs btn-primary btns p-2 border btn-filter ">Filter</button>
+								</div>
+							</div>
+							<div class="card-body">
+								<div class="table-responsive">
+									<table class="table table-bordered  table-hover table-sm"
+										style="table-layout: fixed; width: 100%;">
+										<thead>
+											<tr class="filters">
+												<th><input type="text"
+													class="form-control font-weight-bold"
+													placeholder="Appl Ref No" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold "
+													placeholder="Date of Application" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold "
+													placeholder="Customer Name" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold "
+													placeholder="Email ID" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold "
+													placeholder="Employer" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold" placeholder="Status"
+													disabled></th>
+												<th style="font-weight: bold; font-size: 14px; width: 8%">Select</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="customerrequest : ${holdrejectlist}">
+
+												<td style="font-size: 14px" th:text="${customerrequest.id}">456</td>
+												<td style="font-size: 14px"
+    th:text="${#dates.format(customerrequest.date_of_application, 'dd-MM-yyyy')}">TEST</td>
+
+
+												<td style="font-size: 14px"
+													th:text="${customerrequest.name}">l</td>
+												<td style="font-size: 14px"
+													th:text="${customerrequest.email_id}">l</td>
+												<td style="font-size: 14px"
+													th:text="${customerrequest.employer}">j</td>
+												<td style="font-size: 14px"
+													th:text="${customerrequest.hold_flg == 'Y' ? 'HOLD' : (customerrequest.reject_flg == 'Y' ? 'REJECT' : customerrequest.status)}">
+												</td>
+
+												<td align="center"><input type="radio"
+													th:attr="data-id=${customerrequest.id}"
+													onclick="listrpersonalclick(this);"  name="btnradio"></td>
+
+											</tr>
+										</tbody>
+									</table>
+								</div>
+
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
 								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+
 							</div>
-						</div>
-					</div>
-				</div>
-
-
-				<div th:if="${formmode}=='viewrecord'">
-					<div class="card ">
-
-						<div class="card-header"
-							style="background-color: #e9ecef; height: 50px">
-							<div class="float-left">
-								<h6 style="font-size: 1.2rem; color: black;">Holiday
-									Master-View</h6>
-							</div>
-
-						</div>
-						<div class="card-body">
-							<form class=" border border-secondary" action="#" method="post"
-								id="tab1modify" autocomplete="off">
-								<div class="row formline" style="padding: 10px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Organization</div>
-									<div class="col-sm-2">
-										<input type="text" name="orgn" id="orgn"
-											th:value="${singlerecord?.orgn}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Location</div>
-									<div class="col-sm-2">
-										<input type="text" name="location" id="location"
-											th:value="${singlerecord?.location}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Calendar Year</div>
-									<div class="col-sm-2">
-										<input type="text" name="cal_year" id="cal_year"
-											th:value="${singlerecord?.cal_year}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Calender Month</div>
-									<div class="col-sm-2">
-										<input type="text" name="cal_month" id="cal_month"
-											th:value="${singlerecord?.cal_month}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Record No</div>
-									<div class="col-sm-2">
-										<input type="text" name="record_srl" id="record_srl"
-											th:value="${singlerecord?.record_srl}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Record Date</div>
-									<div class="col-sm-2">
-										<input type="text" name="record_date" id="record_date"
-											th:value="${#dates.format(singlerecord?.record_date, 'dd-MM-yyyy')}"
-											readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Holiday Description</div>
-									<div class="col-sm-2">
-										<input type="text" name="holiday_desc" id="holiday_desc"
-											th:value="${singlerecord?.holiday_desc}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Holiday Remarks</div>
-									<div class="col-sm-2">
-										<input type="text" name="holiday_remarks" id="holiday_remarks"
-											th:value="${singlerecord?.holiday_remarks}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Holiday Flag</div>
-									<div class="col-sm-2">
-										<input type="text" name="holiday_flg" id="holiday_flg"
-											th:value="${#strings.equals(singlerecord?.holiday_flg, 'Y') ? 'ACTIVE' : 'INACTIVE'}"
-											readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Record Status</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="record_status" id="record_status"
-											th:value="${singlerecord?.record_status}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-							</form>
-
-						</div>
-						<div class="card-footer text-center "
-							style="background-color: #e9ecef">
-
-
-							<button class="btn btn-primary p-2" onclick="Home();">Home</button>
-
-							<button class="btn btn-primary p-2" onclick="Back();">Back</button>
-
 						</div>
 
 					</div>
 
 
 				</div>
-				<!-- ------------------------------------Organization Modify---------------------------------- -->
-				<div th:if="${formmode}=='view'">
-					<div class="card ">
+				<!---------------------------------------------PERSONAL APPROVAL - VIEW ------------------------------------------>
+ 
 
-						<div class="card-header"
-							style="background-color: #e9ecef; height: 50px">
-							<div class="float-left">
-								<h6 style="font-size: 1.2rem; color: black;">BRANCH - VIEW</h6>
+				<div th:if="${formmode}=='HolrejectPersView'">
+					<div class="panel panel-primary filterable">
+						<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+									<h6 style="font-size: 1.2rem;">RETAIL PERSONAL LOAN - HOLD/REJECT</h6>
+								</div> 
 							</div>
+							<div class="card-body">
+								<form class=" border border-secondary" action="#" method="post"
+									id="HoldForm" autocomplete="off">
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Applicant
+											Personal Details</div>
+									</div>
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Appl Ref No</div>
+										<div class="col-sm-2">
+											<input type="text" name="id" id="id"
+												th:value="${personal?.id}" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+										</div>
 
-						</div>
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Application</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_application"
+												id="date_of_application"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${#dates.format(personal?.date_of_application, 'yyyy-MM-dd')}" readonly/>
 
-						<div class="card-body">
-							<form class=" border border-secondary" action="#" method="post"
-								id="" autocomplete="off">
-								<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Name</div>
 
 
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Branch Code</div>
+										<div class="col-sm-2">
+											<input type="text" name="name" id="name"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly th:value="${personal?.name}" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Birth</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_birth" id="date_of_birth"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${#dates.format(personal?.date_of_birth, 'yyyy-MM-dd')}"  readonly/>
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
 
 
-									<div class="col-sm-2">
-										<input type="text" name="branch_code" id="branch_code"
-											th:value="${OrgBranch?.branch_code}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Phone Number</div>
+
+
+										<div class="col-sm-2">
+											<input type="number" name="phone_number" id="phone_number"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${personal?.phone_number}"  readonly/>
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Email ID</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="email_id" id="email_id"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${personal?.email_id}"  readonly/>
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Home Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="home_address" id="home_address"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${personal?.home_address}"  readonly/>
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Marital Status</div>
+										<div class="col-sm-2"> 
+												<input type="text" name="marital_status" id="marital_status"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${personal?.marital_status}"  readonly/>
+										</div>
 
 									</div>
 
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Branch Name</div>
-									<div class="col-sm-2">
-										<input type="text" name="branch_name" id="branch_name"
-											th:value="${OrgBranch?.branch_name}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Place of Work</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="place_of_work" id="place_of_work"
+												th:value="${personal?.place_of_work}"
+												class="form-control form-control-sm bg-white border border-dark"  readonly/>
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Job Title</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="job_title" id="job_title"
+												th:value="${personal?.job_title}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+
+										</div>
 									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Branch Head</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Work Address</div>
 
 
-									<div class="col-sm-2">
-										<input type="text" name="branch_head" id="branch_head"
-											th:value="${OrgBranch?.branch_head}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
+										<div class="col-sm-2">
+											<input type="text" name="work_address" id="work_address"
+												th:value="${personal?.work_address}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
 
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Service</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="service" id="service"
+												th:value="${personal?.service}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+
+										</div>
 									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Monthly Income</div>
 
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Designation</div>
-									<div class="col-sm-2">
 
-										<input type="text" name="designation" id="designation"
-											th:value="${OrgBranch?.designation}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
+										<div class="col-sm-2">
+											<input type="text" name="monthly_income" id="monthly_income"
+												th:value="${personal?.monthly_income}"
+												onchange="formatAndSetValue(this)"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
 
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Annual Income</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="annual_income" id="annual_income"
+												th:value="${personal?.annual_income}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
 									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
 
 
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Swift Code</div>
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Employer</div>
 
 
-									<div class="col-sm-2">
-										<input type="text" name="swift_code" id="swift_code"
-											th:value="${OrgBranch?.swift_code}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Pic No</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="pic_no" id="pic_no"
-											th:value="${OrgBranch?.pic_no}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
+										<div class="col-sm-2"> 
+											<input type="text" name="employer" id="employer"
+												th:value="${personal?.employer}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+										</div>
 
 
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Land Line</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="land_line" id="land_line"
-											th:value="${OrgBranch?.land_line}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Fax</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="fax" id="fax"
-											th:value="${OrgBranch?.fax}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Mobile</div>
-
-
-									<div class="col-sm-2">
-										<input type="number" name="mobile" id="mobile"
-											th:value="${OrgBranch?.mobile}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Employment Nature</div>
+										<div class="col-sm-2"> 
+											<input type="text" name="employment_nature" id="employment_nature"
+												th:value="${personal?.employment_nature}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+										</div>
 
 									</div>
 
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Contact Person</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="cont_person" id="cont_person"
-											th:value="${OrgBranch?.cont_person}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Web Site</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="website" id="website"
-											th:value="${OrgBranch?.website}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Personal
+											Loan Details</div>
 									</div>
 
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Mail Id</div>
-									<div class="col-sm-2">
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
 
-										<input type="text" name="mail_id" id="mail_id"
-											th:value="${OrgBranch?.mail_id}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
 
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Purpose of Personal Loan</div>
+
+
+										<div class="col-sm-2"> 
+											<input type="text" name="purpose_of_personal_loan" id="purpose_of_personal_loan"
+												th:value="${personal?.purpose_of_personal_loan}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+										</div>
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Loan Amount</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="loan_amount" id="loan_amount"
+												onchange="formatAndSetValue(this)"
+												th:value="${personal?.loan_amount}"
+												class="form-control form-control-sm bg-white border border-dark" readonly />
+
+										</div>
 									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
 
 
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Address 1</div>
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Rate of Interest</div>
 
 
-									<div class="col-sm-2">
-										<input type="text" name="add_1" id="add_1"
-											th:value="${OrgBranch?.add_1}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
+										<div class="col-sm-2">
+											<input type="number" name="rate_of_interest"
+												th:value="${personal?.rate_of_interest}"
+												id="rate_of_interest" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
 
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Repayment Period</div>
+										<div class="col-sm-2">
+
+											<input type="number" name="repayment_period"
+												th:value="${personal?.repayment_period}"
+												id="repayment_period" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Monthly Installment</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="monthly_installment"
+												th:value="${personal?.monthly_installment}"
+												id="monthly_installment" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Remarks</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="remarks" id="remarks"
+												th:value="${personal?.remarks}" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
 									</div>
 
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Address 2</div>
-									<div class="col-sm-2">
-										<input type="text" name="add_2" id="add_2"
-											th:value="${OrgBranch?.add_2}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
+								</form>
 
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+								<button class="btn btn-primary p-2" onclick="SubProceed();">Proceed</button>
+								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
 
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">City</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="city" id="city"
-											th:value="${OrgBranch?.city}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">State</div>
-									<div class="col-sm-2">
-										<input type="text" name="state" id="state"
-											th:value="${OrgBranch?.state}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 10px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Country</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="country" id="country"
-											th:value="${OrgBranch?.country}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Zip Code</div>
-									<div class="col-sm-2">
-										<input type="text" name="zip_code" id="zip_code"
-											th:value="${OrgBranch?.zip_code}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-
-							</form>
-
-						</div>
-						<div class="card-footer text-center "
-							style="background-color: #e9ecef">
-
-
-							<button class="btn btn-primary p-2" onclick="Home();">Home</button>
-
-							<button class="btn btn-primary p-2" onclick="Back();">Back</button>
-
+							</div>
 						</div>
 
 					</div>
 
 
 				</div>
-				<div th:if="${formmode}=='DeleteBranch'">
-					<div class="card ">
-
-						<div class="card-header"
-							style="background-color: #e9ecef; height: 50px">
-							<div class="float-left">
-								<h6 style="font-size: 1.2rem; color: black;">BRANCH -
-									DELETE</h6>
-							</div>
-
-						</div>
-
-						<div class="card-body">
-							<form class=" border border-secondary" action="#" method="post"
-								id="tab2Del" autocomplete="off">
-								<div class="row formline" style="padding: 10px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Branch Code</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="branch_code" id="branch_code"
-											th:value="${OrgBranch?.branch_code}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Branch Name</div>
-									<div class="col-sm-2">
-										<input type="text" name="branch_name" id="branch_name"
-											th:value="${OrgBranch?.branch_name}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Branch Head</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="branch_head" id="branch_head"
-											th:value="${OrgBranch?.branch_head}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Designation</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="designation" id="designation"
-											th:value="${OrgBranch?.designation}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Swift Code</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="swift_code" id="swift_code"
-											th:value="${OrgBranch?.swift_code}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Pic No</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="pic_no" id="pic_no"
-											th:value="${OrgBranch?.pic_no}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Land Line</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="land_line" id="land_line"
-											th:value="${OrgBranch?.land_line}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Fax</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="fax" id="fax"
-											th:value="${OrgBranch?.fax}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Mobile</div>
-
-
-									<div class="col-sm-2">
-										<input type="number" name="mobile" id="mobile"
-											th:value="${OrgBranch?.mobile}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Contact Person</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="cont_person" id="cont_person"
-											th:value="${OrgBranch?.cont_person}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Web Site</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="website" id="website"
-											th:value="${OrgBranch?.website}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Mail Id</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="mail_id" id="mail_id"
-											th:value="${OrgBranch?.mail_id}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Address 1</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="add_1" id="add_1"
-											th:value="${OrgBranch?.add_1}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Address 2</div>
-									<div class="col-sm-2">
-										<input type="text" name="add_2" id="add_2"
-											th:value="${OrgBranch?.add_2}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">City</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="city" id="city"
-											th:value="${OrgBranch?.city}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">State</div>
-									<div class="col-sm-2">
-										<input type="text" name="state" id="state"
-											th:value="${OrgBranch?.state}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 10px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Country</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="country" id="country"
-											th:value="${OrgBranch?.country}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Zip Code</div>
-									<div class="col-sm-2">
-										<input type="text" name="zip_code" id="zip_code"
-											th:value="${OrgBranch?.zip_code}" readonly
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-
-							</form>
-
-						</div>
-						<div class="card-footer text-center "
-							style="background-color: #e9ecef">
-
-
-							<button class="btn btn-primary p-2" onclick="Home();">Home</button>
-							<button class="btn btn-primary p-2" onclick="del_bran();">Submit</button>
-							<button class="btn btn-primary p-2" onclick="Back();">Back</button>
-
-						</div>
-
-					</div>
-
-
-				</div>
-				<div th:if="${formmode}=='modify'">
-					<div class="card ">
-
-						<div class="card-header"
-							style="background-color: #e9ecef; height: 50px">
-							<div class="float-left">
-								<h6 style="font-size: 1.2rem; color: black;">BRANCH -
-									MODIFY</h6>
-							</div>
-
-						</div>
-
-
-						<div class="card-body">
-							<form class=" border border-secondary" action="#" method="post"
-								id="tab2modify" autocomplete="off">
-								<div class="row formline" style="padding: 10px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Branch Code</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="branch_code" id="branch_code"
-											th:value="${OrgBranch?.branch_code}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Branch Name</div>
-									<div class="col-sm-2">
-										<input type="text" name="branch_name" id="branch_name"
-											th:value="${OrgBranch?.branch_name}"
-											class="form-control form-control-sm bg-white border border-dark"
-											readonly />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Branch Head</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="branch_head" id="branch_head"
-											th:value="${OrgBranch?.branch_head}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Designation</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="designation" id="designation"
-											th:value="${OrgBranch?.designation}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Swift Code</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="swift_code" id="swift_code"
-											th:value="${OrgBranch?.swift_code}"
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Pic No</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="pic_no" id="pic_no"
-											th:value="${OrgBranch?.pic_no}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Land Line</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="land_line" id="land_line"
-											th:value="${OrgBranch?.land_line}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Fax</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="fax" id="fax"
-											th:value="${OrgBranch?.fax}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Mobile</div>
-
-
-									<div class="col-sm-2">
-										<input type="number" name="mobile" id="mobile"
-											th:value="${OrgBranch?.mobile}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Contact Person</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="cont_person" id="cont_person"
-											th:value="${OrgBranch?.cont_person}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Web Site</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="website" id="website"
-											th:value="${OrgBranch?.website}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Mail Id</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="mail_id" id="mail_id"
-											th:value="${OrgBranch?.mail_id}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Address 1</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="add_1" id="add_1"
-											th:value="${OrgBranch?.add_1}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Address 2</div>
-									<div class="col-sm-2">
-										<input type="text" name="add_2" id="add_2"
-											th:value="${OrgBranch?.add_2}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">City</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="city" id="city"
-											th:value="${OrgBranch?.city}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">State</div>
-									<div class="col-sm-2">
-										<input type="text" name="state" id="state"
-											th:value="${OrgBranch?.state}"
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 10px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Country</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="country" id="country"
-											th:value="${OrgBranch?.country}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Zip Code</div>
-									<div class="col-sm-2">
-										<input type="text" name="zip_code" id="zip_code"
-											th:value="${OrgBranch?.zip_code}"
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-
-							</form>
-
-						</div>
-						<div class="card-footer text-center "
-							style="background-color: #e9ecef">
-
-
-							<button class="btn btn-primary p-2" onclick="Home();">Home</button>
-							<button class="btn btn-primary p-2" id="submitBtn"
-								onclick="ModifyTab2Submit();">Submit</button>
-
-							<button class="btn btn-primary p-2" onclick="Back();">Back</button>
-
-						</div>
-
-					</div>
-
-
-				</div>
-
-				<div th:if="${formmode} =='ModifyHead'">
-					<div class="card">
-						<div class="card-header"
-							style="background-color: #e9ecef; height: 50px">
-							<div class="float-left">
-								<h6 style="font-size: 1.2rem; color: black;">HEAD OFFICE -
-									MODIFY</h6>
-							</div>
-
-						</div>
-
-
-						<div class="card-body">
-							<form class=" border border-secondary" action="#" method="post"
-								id="tab1modify" autocomplete="off">
-								<div class="row formline" style="padding: 10px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Organization Name</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="org_name" id="org_name"
-											th:value="${organization?.org_name}"
-											class="form-control form-control-sm bg-white border border-dark"
-											readonly />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Organization Type</div>
-									<div class="col-sm-2">
-										<input type="text" name="org_type" id="org_type"
-											th:value="${organization?.org_type}"
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Date of Registration</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="date_of_regn" id="date_of_regn"
-											th:value="${#dates.format(organization?.date_of_regn, 'dd-MM-yyyy')}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Certificate and Registration</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="reg_no" id="reg_no"
-											th:value="${organization?.reg_no}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Business Registration Card</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="pan_card" id="pan_card"
-											th:value="${organization?.pan_card}" maxlength="10"
-											oninput="validatePanCard(this)"
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">VAT Reference</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="tan_card" id="tan_card"
-											th:value="${organization?.tan_card}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">No of Employees</div>
-									<div class="col-sm-2">
-										<input type="text" name="no_of_emp" id="no_of_emp"
-											th:value="${organization?.no_of_emp}"
-											oninput="validateNumericInput(this)"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">As On</div>
-									<div class="col-sm-2">
-
-										<input type="date" name="as_on" id="as_on"
-											th:value="${#dates.format(organization?.as_on, 'yyyy-MM-dd')}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-
-									</div>
-								</div>
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Registered Office Address 1</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="reg_addr_1" id="reg_addr_1"
-											th:value="${organization?.reg_addr_1}"
-											oninput="validateAddress(this)"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Registered Office Address 2</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="reg_addr_2" id="reg_addr_2"
-											th:value="${organization?.reg_addr_2}"
-											oninput="validateAddress(this)"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Corporate Office Address 1</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="corp_addr_1" id="corp_addr_1"
-											th:value="${organization?.corp_addr_1}"
-											oninput="validateAddress(this)"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Corporate Office Address 2</div>
-									<div class="col-sm-2">
-										<input type="text" name="cor_addr_2" id="cor_addr_2"
-											th:value="${organization?.cor_addr_2}"
-											oninput="validateAddress(this)"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 10px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">WebSite</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="web_site" id="web_site"
-											th:value="${organization?.web_site}"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Email</div>
-									<div class="col-sm-2">
-										<input type="text" name="email" id="email"
-											th:value="${organization?.email}"
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-
-
-
-							</form>
-
-						</div>
-						<div class="card-footer text-center "
-							style="background-color: #e9ecef">
-
-
-							<button class="btn btn-primary p-2" onclick="Home();">Home</button>
-							<button class="btn btn-primary p-2" id="submitBtn"
-								onclick="ModifyTab1Submit();">Submit</button>
-
-							<button class="btn btn-primary p-2" onclick="Back();">Back</button>
-
-						</div>
-
-
-					</div>
-				</div>
-
-				<div th:if="${formmode} =='AddBranch'">
-					<div class="card">
-						<div class="card-header"
-							style="background-color: #e9ecef; height: 50px">
-							<div class="float-left">
-								<h6 style="font-size: 1.2rem; color: black;">BRANCH - ADD</h6>
-							</div>
-
-						</div>
-
-						<div class="card-body">
-							<form class=" border border-secondary" action="#" method="post"
-								enctype="multipart/form-data" id="assosiateForm1"
-								autocomplete="off">
-								<div class="row formline" style="padding: 10px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">
-										Branch Code <span class="text-danger">*</span>
-									</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="branch_code" id="branch_code"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">
-										Branch Name <span class="text-danger">*</span>
-									</div>
-									<div class="col-sm-2">
-										<input type="text" name="branch_name" id="branch_name"
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">
-										Branch Head <span class="text-danger">*</span>
-									</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="branch_head" id="branch_head"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">
-										Designation <span class="text-danger">*</span>
-									</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="designation" id="designation"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">
-										Swift Code <span class="text-danger">*</span>
-									</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="swift_code" id="swift_code"
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">
-										Pic No <span class="text-danger">*</span>
-									</div>
-									<div class="col-sm-2 d-flex align-items-center">
-
-										<input type="file" name="photo" id="photo"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">
-										Land Line <span class="text-danger">*</span>
-									</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="land_line" id="land_line"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">
-										Fax <span class="text-danger">*</span>
-									</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="fax" id="fax"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">
-										Mobile <span class="text-danger">*</span>
-									</div>
-
-
-									<div class="col-sm-2">
-										<input type="number" name="mobile" id="mobile"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">
-										Contact Person <span class="text-danger">*</span>
-									</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="cont_person" id="cont_person"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Web Site</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="website" id="website"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Mail Id</div>
-									<div class="col-sm-2">
-
-										<input type="text" name="mail_id" id="mail_id"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Address 1</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="add_1" id="add_1"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Address 2</div>
-									<div class="col-sm-2">
-										<input type="text" name="add_2" id="add_2"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 2px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">City</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="city" id="city"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">State</div>
-									<div class="col-sm-2">
-										<input type="text" name="state" id="state"
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-								<div class="row formline" style="padding: 0px 0px 10px 0px;">
-
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Country</div>
-
-
-									<div class="col-sm-2">
-										<input type="text" name="country" id="country"
-											class="form-control form-control-sm bg-white border border-dark" />
-
-									</div>
-
-									<div class="col-sm-1"></div>
-									<div class="col-sm-2">Zip Code</div>
-									<div class="col-sm-2">
-										<input type="text" name="zip_code" id="zip_code"
-											class="form-control form-control-sm bg-white border border-dark" />
-									</div>
-								</div>
-
-
-							</form>
-
-						</div>
-						<div class="card-footer text-center "
-							style="background-color: #e9ecef">
-
-
-							<button class="btn btn-primary p-2" onclick="Home();">Home</button>
-							<button class="btn btn-primary p-2" id="submitBtn"
-								onclick="AddSubmit();">Submit</button>
-
-							<button class="btn btn-primary p-2" onclick="Back();">Back</button>
-
-						</div>
-					</div>
-				</div>
-
-
-
-
 			</div>
 
-
-
-		</div>
-	</div>
-
-
-	<div class="modal fade" data-backdrop="false" data-keyboard="false"
-		id="alert" tabindex="-1" role="dialog" aria-hidden="true">
-		<div
-			class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-
-				<div class="modal-body" style="text-align: center;">
-					<h6 id="alertmsg"></h6>
-					<button type="button" class="btn btn-primary" onclick="add()">Close</button>
-				</div>
-			</div>
 		</div>
 	</div>
 	<div class="modal fade" data-backdrop="false" data-keyboard="false"
@@ -2759,88 +820,8 @@ function formatNumberWithIndianSeparation(value) {
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="emiModal" tabindex="-1"
-		aria-labelledby="emiModalLabel" aria-hidden="true" style="top: 6%;">
-		<div class="modal-dialog">
-			<div class="modal-content" style="width: 170%;">
-				<div class="modal-header">
-					<h5 class="modal-title" id="emiModalLabel">EMI Calculator</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<form id="emiForm">
-						<div class="mb-3">
-							<label class="form-label slider-label">Amount You Need
-								(₹): <span id="loanAmountValue">500000</span>
-							</label> <input type="number" id="loanAmountInput"
-								class="form-control w-25" min="200000" max="1500000"
-								step="50000" value="500000"> <input type="range"
-								class="form-range" id="loanAmount" min="200000" max="1500000"
-								step="50000" value="500000">
-						</div>
-						<div class="mb-3">
-							<label class="form-label slider-label">For (Years): <span
-								id="loanYearsValue">7</span></label> <input type="number"
-								id="loanYearsInput" class="form-control w-25" min="1" max="10"
-								value="7"> <input type="range" class="form-range"
-								id="loanYears" min="1" max="10" value="7">
-						</div>
-						<div class="mb-3">
-							<label class="form-label slider-label">Interest Rate (%):
-								<span id="interestRateValue">7</span>
-							</label> <input type="number" id="interestRateInput"
-								class="form-control w-25" min="2" max="13" step="0.1" value="7">
-							<input type="range" class="form-range" id="interestRate" min="2"
-								max="13" step="0.1" value="7">
-						</div>
-						<button type="button" id="calculateBtn" class="btn btn-success"
-							onclick="calculateEMI()">Calculate</button>
-					</form>
 
-					<div class="emi-output" id="emiResultBox">
-						<p id="emiResultText">Your Monthly EMI will be ₹7,546 per
-							month</p>
-					</div>
 
-					<canvas id="emiChart" style="display: none;"></canvas>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" data-backdrop="false" data-keyboard="false"
-		id="alert1" tabindex="-1" role="dialog" aria-hidden="true">
-		<div
-			class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
-
-				<div class="modal-body" style="text-align: center;">
-					<h6 id="alertmsg1"></h6>
-					<button type="button" class="btn btn-primary"
-						onclick="$('#alert1').modal('hide')">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Get the input field
-            var dateInput = document.getElementById('as_on');            
-           
-                if (dateInput) {
-                	  var today = new Date().toISOString().split('T')[0];
-                	  dateInput.setAttribute('max', today);
-
-                     
-                }
-              
-            
-        });
-    </script>
 </body>
 
 </html>

@@ -5922,9 +5922,7 @@ public class CustOnboardinController {
 		}
 	
 	@RequestMapping(value = "Retailloan", method = { RequestMethod.GET, RequestMethod.POST })
-	public String Retailloan(@RequestParam(required = false) String formmode,
-			@RequestParam(required = false) String branch_name, Model md, HttpServletRequest req,
-			@RequestParam(required = false) BigDecimal record_srl) {
+	public String Retailloan(@RequestParam(required = false) String formmode,  Model md, HttpServletRequest req ) {
 
 		String userid = (String) req.getSession().getAttribute("USERID");
 		md.addAttribute("menu", "BAJHeaderMenu");
@@ -5940,9 +5938,7 @@ public class CustOnboardinController {
 	}
 	
 	@RequestMapping(value = "Corporateloan", method = { RequestMethod.GET, RequestMethod.POST })
-	public String Corporateloan(@RequestParam(required = false) String formmode,
-			@RequestParam(required = false) String branch_name, Model md, HttpServletRequest req,
-			@RequestParam(required = false) BigDecimal record_srl) {
+	public String Corporateloan(@RequestParam(required = false) String formmode,  Model md, HttpServletRequest req ) {
 
 		String userid = (String) req.getSession().getAttribute("USERID");
 		md.addAttribute("menu", "BAJHeaderMenu");
@@ -6014,19 +6010,39 @@ public class CustOnboardinController {
 	}
 	
 	@RequestMapping(value = "Retailloanholdreject", method = { RequestMethod.GET, RequestMethod.POST })
-	public String Retailloanholdreject(@RequestParam(required = false) String formmode,
-			@RequestParam(required = false) String branch_name, Model md, HttpServletRequest req,
-			@RequestParam(required = false) BigDecimal record_srl) {
+	public String Retailloanholdreject(@RequestParam(required = false) String formmode,  Model md, HttpServletRequest req
+			,@RequestParam(required = false) String id ) {
 
 		String userid = (String) req.getSession().getAttribute("USERID");
 		md.addAttribute("menu", "BAJHeaderMenu");
 
 		if (formmode == null || formmode.equals("list")) {
-			md.addAttribute("formmode", "list");
-
-		} else if (formmode.equals("ModifyHead")) {
-			md.addAttribute("formmode", "ModifyHead");
-		} 
+			md.addAttribute("formmode", "list"); 
+		} else if (formmode.equals("listForPersonal")) {
+			md.addAttribute("formmode", "listForPersonal"); 
+			md.addAttribute("holdrejectlist", bLMS_PERSONALDET_REPO.getholdreject());
+		} else if (formmode.equals("HolrejectPersView")) {
+			md.addAttribute("formmode", "HolrejectPersView");
+			md.addAttribute("personal", bLMS_PERSONALDET_REPO.getRefNo(id));
+		}
 		return "RetailloanHoldReject";
 	} 
+	
+	@RequestMapping(value = "Holdsubmit", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public String Holdsubmit(@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY blmsPersonalLoanEntity, Model md, HttpServletRequest req) {
+	    String userid = (String) req.getSession().getAttribute("USERID");
+ System.out.println("submit");
+	    String srlno = bLMS_PERSONALDET_REPO.srlnum();
+	    blmsPersonalLoanEntity.setId(srlno);  
+	    blmsPersonalLoanEntity.setDel_flg("N");
+	    blmsPersonalLoanEntity.setHold_flg("N"); 
+	    blmsPersonalLoanEntity.setVerify_flg("N");
+	    blmsPersonalLoanEntity.setModify_flg("N");
+ 
+	    bLMS_PERSONALDET_REPO.save(blmsPersonalLoanEntity);
+ 
+	    return "App Ref No: " + srlno + " has been Submitted Successfully<br>";
+	}
+
 }
