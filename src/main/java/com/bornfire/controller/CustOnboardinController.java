@@ -6009,4 +6009,21 @@ public class CustOnboardinController {
 		bLMS_VEHICLEDET_REPO.save(BLMS_VEHICLE_DET_ENTITY);
 		return "Submitted Successfully";
 	}
+	
+	@RequestMapping(value = "Retailloanholdreject", method = { RequestMethod.GET, RequestMethod.POST })
+	public String Retailloanholdreject(@RequestParam(required = false) String formmode,
+			@RequestParam(required = false) String branch_name, Model md, HttpServletRequest req,
+			@RequestParam(required = false) BigDecimal record_srl) {
+
+		String userid = (String) req.getSession().getAttribute("USERID");
+		md.addAttribute("menu", "BAJHeaderMenu");
+
+		if (formmode == null || formmode.equals("list")) {
+			md.addAttribute("formmode", "list");
+
+		} else if (formmode.equals("ModifyHead")) {
+			md.addAttribute("formmode", "ModifyHead");
+		} 
+		return "RetailloanHoldReject";
+	} 
 }
