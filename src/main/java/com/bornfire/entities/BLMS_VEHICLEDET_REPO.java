@@ -10,15 +10,10 @@ import org.springframework.stereotype.Repository;
 public interface BLMS_VEHICLEDET_REPO extends JpaRepository<BLMS_VEHICLE_DET_ENTITY, String> {
 
 	@Query(value = "select NEXT VALUE FOR BLMS_PERSONAL_SEQ AS nextval", nativeQuery = true)
-	String srlnum();
-
-
-	
+	String srlnum(); 
 	
 	// @Query(value = "select * from BLMS_PERSONAL_LOAN_DETAILS  where verify_flg = 'N' and del_flg ='N'", nativeQuery = true)
-	// List<BLMS_PERSONAL_LOAN_ENTITY> getnotapproved();
-	
-	
+	// List<BLMS_PERSONAL_LOAN_ENTITY> getnotapproved(); 
 	
 	@Query(value = "SELECT * FROM BLMS_VEHICLE_LOAN_DETAILS WHERE verify_flg IN ('Y', 'N') and del_flg ='N' ", nativeQuery = true)
 	List<BLMS_VEHICLE_DET_ENTITY> getApprovelist();
@@ -31,5 +26,8 @@ public interface BLMS_VEHICLEDET_REPO extends JpaRepository<BLMS_VEHICLE_DET_ENT
 	
 	@Query(value = "select * from BLMS_VEHICLE_LOAN_DETAILS  where id =?1 and del_flg ='N' ", nativeQuery = true)
 	BLMS_VEHICLE_DET_ENTITY getRefNo(String id);
+
+	 @Query(value = "select * from blms_vehicle_loan_details where hold_flg='Y' or reject_flg='Y'", nativeQuery = true)
+		List<BLMS_VEHICLE_DET_ENTITY> getholdreject();
 
 }
