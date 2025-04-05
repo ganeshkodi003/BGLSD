@@ -59,49 +59,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.bornfire.entities.AIRep;
-import com.bornfire.entities.BACP_BLACKLIST_Repo;
-import com.bornfire.entities.BACP_CUS_PROFILE_REPO;
-import com.bornfire.entities.BACP_DE_DUPRepo;
-import com.bornfire.entities.BACP_DOC_MAN_ENTITY;
-import com.bornfire.entities.BACP_DOC_MAN_REP;
-import com.bornfire.entities.BACP_NEGATIVE_LIST_Repo;
-import com.bornfire.entities.BGLSBusinessTable_Entity;
-import com.bornfire.entities.BGLSBusinessTable_Rep;
-import com.bornfire.entities.BLMS_PERSONALDET_REPO;
-import com.bornfire.entities.BLMS_PERSONAL_LOAN_ENTITY;
-import com.bornfire.entities.BLMS_VEHICLEDET_REPO;
-import com.bornfire.entities.BLMS_VEHICLE_DET_ENTITY;
-import com.bornfire.entities.Bacp_Signature_master;
-import com.bornfire.entities.Bacp_Signature_masterRepo;
-import com.bornfire.entities.Bacp_WorkFLow_Entity;
-import com.bornfire.entities.Bacp_WorkFLow_Repo;
-import com.bornfire.entities.Chart_Acc_Entity;
-import com.bornfire.entities.Chart_Acc_Rep;
-import com.bornfire.entities.CustomerRequest;
-import com.bornfire.entities.DMD_TABLE;
-import com.bornfire.entities.DMD_TABLE_REPO;
-import com.bornfire.entities.DepositEntity;
-import com.bornfire.entities.DepositRep;
-import com.bornfire.entities.DynamicFromValue;
-import com.bornfire.entities.Employee_Profile;
-import com.bornfire.entities.Employee_Profile_Rep;
-import com.bornfire.entities.Lease_Loan_Work_Entity;
-import com.bornfire.entities.Lease_Loan_Work_Repo;
-import com.bornfire.entities.Loan_Parameter_Entity;
-import com.bornfire.entities.MinimalDataRepository;
-import com.bornfire.entities.NoticeDetailsPayment0Rep;
-import com.bornfire.entities.Organization_Entity;
-import com.bornfire.entities.ParameterRep;
-import com.bornfire.entities.ParametersDetails;
-import com.bornfire.entities.Reference_Code_Entity;
-import com.bornfire.entities.Reference_code_Rep;
-import com.bornfire.entities.TRAN_MAIN_TRM_WRK_ENTITY;
-import com.bornfire.entities.TRAN_MAIN_TRM_WRK_REP;
-import com.bornfire.entities.Td_defn_Repo;
-import com.bornfire.entities.Td_defn_table;
-import com.bornfire.entities.UserProfile;
-import com.bornfire.entities.UserProfileRep;
+import com.bornfire.entities.*;
 import com.bornfire.services.CustomerDetailsService;
 import com.bornfire.services.CustomerRequestService;
 import com.bornfire.services.LeaseLoanService;
@@ -109,6 +67,7 @@ import com.bornfire.services.LeaseLoanService;
 @Controller
 @ConfigurationProperties("default")
 public class CustOnboardinController {
+
 
 	private static final Logger logger = LoggerFactory.getLogger(CustOnboardinController.class);
 
@@ -188,6 +147,11 @@ public class CustOnboardinController {
 	
 	@Autowired
 	BLMS_VEHICLEDET_REPO bLMS_VEHICLEDET_REPO;
+	@Autowired
+	SB_AccountMasterEntityRepo SB_AccountMasterEntityRepo;
+    CustOnboardinController(SB_AccountMasterEntityRepo SB_AccountMasterEntityRepo) {
+        this.SB_AccountMasterEntityRepo = SB_AccountMasterEntityRepo;
+    }
 
 	// Start API
 	/// for get session
@@ -5974,7 +5938,6 @@ public class CustOnboardinController {
 	public String RetailPersDet(@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY BLMS_PERSONAL_LOAN_ENTITY, Model md, HttpServletRequest req) {
 		String userid = (String) req.getSession().getAttribute("USERID");
 		String srlno = bLMS_PERSONALDET_REPO.srlnum();
-		BLMS_PERSONAL_LOAN_ENTITY.setId(srlno);
 		BLMS_PERSONAL_LOAN_ENTITY.setEntity_user(userid);
 		BLMS_PERSONAL_LOAN_ENTITY.setEntity_time(new Date());
 		BLMS_PERSONAL_LOAN_ENTITY.setModify_user(userid);
@@ -5986,7 +5949,7 @@ public class CustOnboardinController {
 		BLMS_PERSONAL_LOAN_ENTITY.setHold_flg("N");
 		BLMS_PERSONAL_LOAN_ENTITY.setReject_flg("N");
 		bLMS_PERSONALDET_REPO.save(BLMS_PERSONAL_LOAN_ENTITY);
-		return "Submitted Successfully";
+		return "Application Submitted Successfully";
 	}
 	
 	@RequestMapping(value = "RetailVehicleDet", method = { RequestMethod.GET, RequestMethod.POST })
@@ -6006,7 +5969,7 @@ public class CustOnboardinController {
 		BLMS_VEHICLE_DET_ENTITY.setHold_flg("N");
 		BLMS_VEHICLE_DET_ENTITY.setReject_flg("N");
 		bLMS_VEHICLEDET_REPO.save(BLMS_VEHICLE_DET_ENTITY);
-		return "Submitted Successfully";
+		return "Application Submitted Successfully";
 	}
 	
 	@RequestMapping(value = "Retailloanholdreject", method = { RequestMethod.GET, RequestMethod.POST })
@@ -6073,19 +6036,26 @@ public class CustOnboardinController {
 	@RequestMapping(value = "HoldVehiclesubmit", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public String HoldVehiclesubmit(@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY BLMS_PERSONAL_LOAN_ENTITY, Model md, 
-			HttpServletRequest req,@RequestParam(required = false) String id) {
-	    String userid = (String) req.getSession().getAttribute("USERID");
-	    
-	    System.out.println("ID"+id);
-	    BLMS_PERSONAL_LOAN_ENTITY.setDel_flg("N");
-	    BLMS_PERSONAL_LOAN_ENTITY.setHold_flg("N"); 
-	    BLMS_PERSONAL_LOAN_ENTITY.setVerify_flg("N");
-	    BLMS_PERSONAL_LOAN_ENTITY.setModify_flg("N");
-	    BLMS_PERSONAL_LOAN_ENTITY.setReject_flg("N");
- 
-	    bLMS_PERSONALDET_REPO.save(BLMS_PERSONAL_LOAN_ENTITY);
- 
-	    return "App Ref No: " + id + " has been Submitted Successfully<br>";
+			HttpServletRequest req, @RequestParam(required = false) String id) {
+		String userid = (String) req.getSession().getAttribute("USERID");
+
+		System.out.println("ID" + id);
+		BLMS_PERSONAL_LOAN_ENTITY.setDel_flg("N");
+		BLMS_PERSONAL_LOAN_ENTITY.setHold_flg("N");
+		BLMS_PERSONAL_LOAN_ENTITY.setVerify_flg("N");
+		BLMS_PERSONAL_LOAN_ENTITY.setModify_flg("N");
+		BLMS_PERSONAL_LOAN_ENTITY.setReject_flg("N");
+
+		bLMS_PERSONALDET_REPO.save(BLMS_PERSONAL_LOAN_ENTITY);
+
+		return "App Ref No: " + id + " has been Submitted Successfully<br>";
+	}
+
+	@GetMapping("getsbaccount")
+	@ResponseBody
+	public SB_AccountMasterEntity getsbaccount(@RequestParam String accountNo) {
+		System.out.println(SB_AccountMasterEntityRepo.getcustomeraccount(accountNo));
+		return SB_AccountMasterEntityRepo.getcustomeraccount(accountNo);
 	}
 
 }

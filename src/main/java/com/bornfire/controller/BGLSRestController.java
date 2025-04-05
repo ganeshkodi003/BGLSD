@@ -5036,5 +5036,12 @@ public class BGLSRestController {
 		Lease_Loan_Master_Entity acountName = lease_Loan_Master_Repo.accountName1(accountNum);
 		return acountName;
 	}
+	
+	@GetMapping("getsbBalance")
+	public String getsbBalance(@RequestParam(required = false) String accountNo) {
+		System.out.println("the getting account number is " + accountNo);
+		String acountBalance = chart_Acc_Rep.getsbBalance(accountNo);
+		return acountBalance;
+	}
 
 }

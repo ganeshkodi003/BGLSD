@@ -123,4 +123,7 @@ Object[] getglcode();
 
     @Query(value = "SELECT * FROM BGLS_CHART_OF_ACCOUNTS WHERE bank_acc_name =?1", nativeQuery = true)
     Chart_Acc_Entity getaeditVALUES(String acct_num);
+    
+    @Query(value = "SELECT ACCT_BAL  FROM BGLS_CHART_OF_ACCOUNTS WHERE ACCT_NUM =?1", nativeQuery = true)
+    String getsbBalance(String acct_num);
 }

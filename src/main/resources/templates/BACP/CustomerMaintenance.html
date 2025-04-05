@@ -1011,7 +1011,89 @@ input:hover+.password-info {
 			} else {
 				evt.preventDefault();
 			}
+			
+			if(tabName =='tab5'){
+				let accountNo = document.getElementById("cif_id").value;
+
+							
+
+
+
+		$.ajax({
+    url: './getsbaccount',
+    type: 'GET',
+    data: { accountNo: accountNo },
+    success: function (data) {
+        console.log('Account Data:', data);
+
+        // Format date (if not null)
+        let loanDate = '';
+        if (data.date_of_loan) {
+            const dateObj = new Date(data.date_of_loan);
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+            const year = dateObj.getFullYear();
+            loanDate = `${day}-${month}-${year}`;
+        }
+
+        // Now fetch balance
+        $.ajax({
+            url: './getsbBalance',
+            type: 'GET',
+            data: { accountNo: data.loan_accountno },
+            success: function (balance) {
+                console.log('Balance:', balance);
+
+                let $targetTbody = $('tbody#approvaltbody.append').first(); // Select correct table body
+
+                const newRow = `
+                    <tr class="appendedRow">
+                        <td>${data.branch_id}</td>
+                        <td>${data.loan_accountno}</td>
+                        <td>${data.customer_name}</td>
+                        <td>${loanDate}</td>
+                        <td style="text-align: right;">${formatINR(balance)}</td>
+                        <td><span>CREDIT</span></td>
+                    </tr>
+                `;
+
+                $targetTbody.append(newRow);
+                console.log('Appended Row:', newRow);
+            },
+            error: function (err) {
+                console.error('❌ Error fetching balance:', err);
+            }
+        });
+    },
+    error: function (err) {
+        console.error('❌ Error fetching account:', err);
+    }
+});
+
+
+			}
+
+
 		}
+		function formatINR(amount) {
+    amount = parseFloat(amount); // 🔁 Convert to number
+    if (isNaN(amount)) return '0.00'; // 🔒 Handle NaN
+
+    const x = amount.toFixed(2).split('.');
+    let intPart = x[0];
+    let decPart = x[1];
+
+    let lastThree = intPart.substring(intPart.length - 3);
+    let otherNumbers = intPart.substring(0, intPart.length - 3);
+
+    if (otherNumbers !== '') {
+        lastThree = ',' + lastThree;
+    }
+
+    const formatted = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+    return formatted + '.' + decPart;
+}
+
 		function hideAllTabs() {
 			const tabContents = document.getElementsByClassName('tabcontent');
 			for (let i = 0; i < tabContents.length; i++) {
@@ -2614,7 +2696,7 @@ input:hover+.password-info {
 															placeholder="Bal Ind" disabled></th>
 													</tr>
 												</thead>
-												<tbody id="approvaltbody" style="font-size: 15px">
+												<tbody id="approvaltbody" class="append" style="font-size: 15px">
 													<tr th:if="${getDDDetailsLa1.ca_schemetype == 'LA'}"
 														th:each="getDDDet : ${getDDDetailsLa}">
 														<td th:text="${getDDDet.branch_id}"></td>
@@ -2623,7 +2705,7 @@ input:hover+.password-info {
 														<td
 															th:text="${getDDDet.date_of_loan != null ? #dates.format(getDDDet.date_of_loan,'dd-MM-yyyy') : ''}">
 														</td>
-														<td style="text-align: right;" th:text="${Chartacctbal}">
+														<td style="text-align: right;" th:text="${#numbers.formatDecimal(Chartacctbal, 1, 'COMMA', 2, 'POINT')}">
 														</td>
 														<td><span
 															th:switch="${ChartbalIndicator?.add_det_flg}"> <span

@@ -9,5 +9,8 @@ public interface SB_AccountMasterEntityRepo extends JpaRepository<SB_AccountMast
 
 @Query(value = "SELECT NEXT VALUE FOR LOAN_ACCOUNT_MASTER", nativeQuery = true)
 String getNextLoanAccountNo();
+
+@Query(value = "SELECT * From BLMS_SB_LOAN_MASTER where Customer_id = ?1", nativeQuery = true)
+SB_AccountMasterEntity getcustomeraccount(String accountno);
   
 }
