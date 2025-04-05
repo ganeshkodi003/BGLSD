@@ -1,0 +1,356 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+	CREATED BY : AISHWARYA
+	DATE : 04-04-2025
+-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" href="/webjars/font-awesome/5.9.0/css/all.min.css" th:href="@{/webjars/font-awesome/5.9.0/css/all.min.css}">
+<link rel="stylesheet" type="text/css" href="/webjars/jquery-ui/1.12.1/jquery-ui.min.css" th:href="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.css}">
+<link rel="stylesheet" type="text/css" href="/webjars/datatables/1.10.19/css/jquery.dataTables.min.css" th:href="@{/webjars/datatables/1.10.19/css/jquery.dataTables.min.css}">
+<link rel="shortcut icon" th:href="@{/favicon.ico}" type="image/x-icon">
+<link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
+<script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+<script src="/webjars/popper.js/1.14.7/umd/popper.min.js" th:src="@{/webjars/popper.js/1.14.7/umd/popper.min.js}"></script>
+<script src="/webjars/jquery/3.4.1/jquery.min.js" th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js" th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js" th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
+<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js" th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
+<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js" th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
+<script src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js" th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
+<style>
+.loader__dot {
+	animation: 1s blink infinite
+}
+.loader__dot:nth-child(2) {
+	animation-delay: 250ms
+}
+.loader__dot:nth-child(3) {
+	animation-delay: 500ms
+}
+body {
+	font-size: 0.8rem;
+}
+.btn {
+	line-height: 0.5rem;
+}
+.table-bordered td, .table-bordered th {
+	font-size: smaller;
+}
+.container-manager {
+	width: 83.5%;
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: 17.3%;
+	margin-top: 80px;
+	margin-top: 80px;
+}
+.table .thead-light th {
+	color: #495057;
+	background-color: #e9ecef;
+	border-color: #dee2e6;
+	width: 23px;
+}
+.scroll {
+	max-height: 60vh;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+.tablinks {
+	background-color: #f1f1f1;
+	/* Default background color */
+	border: none;
+	color: black;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	transition: background-color 0.3s;
+}
+.tablinks.active {
+	background-color: #2084a9;
+	color: white;
+}
+.tab {
+	overflow: hidden;
+	border: 1px solid #ccc;
+	background-color: #f2f2f2;
+}
+.tab button {
+	background-color: inherit;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 56px;
+	transition: 0.3s;
+	font-size: 17px;
+}
+.tab button:hover {
+	background-color: #ddd;
+}
+.tabcontent {
+	display: none;
+	padding: 0px;
+	border-top: 1px solid #ccc;
+}
+.active {
+	background-color: #2084a9;
+}
+#myPieChart {
+	width: 100px;
+	height: 100px;
+}
+</style>
+<style>
+.modal {
+	display: none;
+	/* Hidden by default */
+	position: absolute;
+	/* Stay in place */
+	z-index: 1;
+	/* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%;
+	/* Full width */
+	height: 100%;
+	/* Full height */
+	overflow: auto;
+	/* Enable scroll if needed */
+	background-color: rgb(0, 0, 0);
+	/* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4);
+	/* Black w/ opacity */
+}
+/* Modal Content */
+.modal-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 100%;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0
+		rgba(0, 0, 0, 0.19);
+	-webkit-animation-name: animatetop;
+	-webkit-animation-duration: 0.4s;
+	animation-name: animatetop;
+	animation-duration: 0.4s
+}
+.modal-pass {
+	background-color: #fefefe;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 40%;
+	height: 25%;
+	margin-left: 400PX;
+	margin-right: auto;
+	border-radius: 10px;
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+	font-family: Arial, sans-serif;
+}
+.close {
+	color: red;
+	font-size: 28px;
+	font-weight: bold;
+}
+.close:hover, .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+</style>
+<style>
+.password-info {
+	visibility: hidden;
+	width: 320px;
+	background-color: #333;
+	color: #fff;
+	text-align: left;
+	border-radius: 10px;
+	padding: 10px;
+	position: absolute;
+	z-index: 1;
+	top: calc(100% + 10px);
+	left: 50%;
+	transform: translateX(-50%);
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+input:hover+.password-info {
+	visibility: visible;
+	opacity: 0.8;
+}
+.subtablinks {
+	background-color: #f1f1f1;
+	/* Default background color */
+	border: none;
+	color: black;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	transition: background-color 0.3s;
+}
+.subtablinks.active {
+	background-color: #2084a9;
+	color: white;
+}
+.hover-underline:hover {
+	text-decoration: underline;
+	text-decoration-color: #007bff;
+	cursor: pointer;
+	/* Sets underline color to blue */
+}
+.table th, .table td {
+    padding: 8px;
+    text-align: center; /* Adjust as per requirement */
+    border: none; /* Removes all internal borders */
+}
+
+.table tr {
+    border-bottom: none !important;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+</style>
+<script>
+function Home() {
+	location.href = 'Dashboard';
+}
+function Back() {
+	window.history.back();
+}
+$(function() {
+	$( "#doj,#dob,#date_of_offer,#date_of_appointment_letter,#aed,#ped,#dsd,#ded").datepicker({
+	  dateFormat : "dd-mm-yy",
+	  changeMonth : true,
+	  changeYear : true
+	});
+});
+</script>
+</head>
+<body>
+<div class="col-sm-2">
+	<div th:insert="BGLSHeaderMenu :: header"></div>
+</div>
+<!-----------------------------------------------------------------------------User List Starts---------------------------------------------------------------->
+<!-- Start Content-->
+<div class="container-manager">
+	<div class="row">
+		<div class="col-sm-11 ml-5 mt-2" style="font-size: 0.8rem;">
+			<div th:if="${formmode}=='list'">
+				<div class="card ">
+					<div class="card-header" style="background-color: #e9ecef; height: 50px">
+						<div class="float-left">
+							<h6 style="font-size: 1.2rem; color: black;">STATUS OF SUIT FILED ACCOUNTS</h6>
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="sub-header float-left">
+							<div class="left" style="margin-bottom: 5%;">Report On Status Of Suit Filed Accounts As On
+								<input type="date" class="date-input"></div>
+						</div>
+						<div class="sub-header float-right">
+							<div class="right">DATE: <input type="date" class="date-input"></div>
+						</div>
+                       
+						<table class="table table-bordered  table-hover table-sm mt-2"
+							style="margin-bottom: 0px; font-size: initial;" id="AssosiateTable">
+							<thead class="thead-light">
+
+								<tr style="text-align: left">
+									<th>Sac Jdg Dt DecEx On</th>
+									<th>Lawyer Jdg Dets CrtName</th>
+									<th>LMC Dt Appl Dt Stt Dt</th>
+									<th>StFile Dt Appeal Trib Stt Mode</th>
+									<th>Court Dec Iss RC Issd</th>
+									<th>Suit Dec AMT DN Issd</th>
+									<th>Suit Stat DecDetail ActDt</th>
+									<th>Suit Stat Dt AMT Recovered On Sale</th>	
+								</tr>
+							</thead>
+							<tbody>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+</tbody>
+
+						</table>
+
+					</div>
+					<div class="card-footer text-center " style="background-color: #e9ecef">
+						<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+						<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- -----------------------------------------------------------------------End------------------------------------------------------------- -->
+</body>
+    <script>
+        $(document).ready(function() {
+            $(".datepicker").datepicker({ dateFormat: 'dd-mm-yy' });
+        });
+    </script>
+</html>

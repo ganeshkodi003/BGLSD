@@ -3474,4 +3474,15 @@ public class BGLSNavigationController {
 		}
 		return "Pdadm";
 	}
+	
+	@RequestMapping(value = "scf_status", method = { RequestMethod.GET, RequestMethod.POST })
+	public String scf_status(@RequestParam(required = false) String formmode, Model md, HttpServletRequest req) {
+
+		if (formmode == null || formmode.equals("list")) {
+			md.addAttribute("formmode", "list");
+		} else if (formmode.equals("add")) {
+			md.addAttribute("formmode", "add");
+		}
+		return "scf_status";
+	}
 }

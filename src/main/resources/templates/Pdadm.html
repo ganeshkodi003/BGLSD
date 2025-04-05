@@ -241,6 +241,41 @@ function openTab(evt, tabName) {
 		document.getElementById(tabName).style.display = "block";
 		evt.currentTarget.className += " active";
 }
+function clkRetail() {
+		location.href = 'CustomerMaintenance?formmode=retailclick';
+}
+</script>
+<script>
+	// Function to format and set value
+	function formatAndSetValue(inputField) {
+		// Remove any commas from the value (for number input types only)
+		let rawValue = inputField.value.replace(/,/g, '');
+		// Ensure the value has decimal precision
+		let formattedValue = formatForNumbers(rawValue);
+		// If it's a number input, avoid commas in the input field value (parse as number)
+		if (inputField.type === 'number') {
+			inputField.value = parseFloat(formattedValue); // Assign the raw number value without commas
+		} else {
+			inputField.value = formatNumberWithIndianSeparationForOninput(formattedValue); // Apply Indian separation for text input
+		}
+	}
+	// Function to format number with Indian separation
+	function formatNumberWithIndianSeparationForOninput(value) {
+		if (!value) return '';
+		let [integerPart, decimalPart] = value.split('.');
+		let lastThreeDigits = integerPart.slice(-3);
+		let otherDigits = integerPart.slice(0, -3);
+		if (otherDigits !== '') {
+			lastThreeDigits = ',' + lastThreeDigits;
+		}
+		let formattedIntegerPart = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThreeDigits;
+		return decimalPart !== undefined ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
+	}
+	// Function to ensure the number has two decimal places
+	function formatForNumbers(value) {
+		let num = parseFloat(value);
+		return isNaN(num) ? '0.00' : num.toFixed(2); // Ensure two decimal places for consistent formatting
+	}
 </script>
 </head>
 <body>
@@ -263,13 +298,11 @@ function openTab(evt, tabName) {
 						</div>
 						<div class="tab mt-2"
 							style="padding: 4px 4px; position: relative; display: flex; justify-content: space-around; margin-top: 10px; width: 100%; height: 43px">
-							<button class="tablinks" onclick="openTab(event, 'tab1')" style="font-size: 16px; padding: 4px 8px; height: 32px;">S-Suit Det</button>
+							<button class="tablinks active" onclick="openTab(event, 'tab1')" style="font-size: 16px; padding: 4px 8px; height: 32px;">S-Suit Det</button>
 							<button class="tablinks" onclick="openTab(event, 'tab2')" style="font-size: 16px; padding: 4px 8px; height: 32px;">J-Judgement Det</button>
 							<button class="tablinks" onclick="openTab(event, 'tab3')" style="font-size: 16px; padding: 4px 8px; height: 32px;">A-Additional Det</button>
-							<button class="tablinks" onclick="openTab(event, 'tab4')" style="font-size: 16px; padding: 4px 8px; height: 32px;">C-Cust Master Inq</button>
+							<button class="tablinks" onclick="clkRetail()" style="font-size: 16px; padding: 4px 8px; height: 32px;">C-Cust Master Inq</button>
 							<button class="tablinks" onclick="openTab(event, 'tab5')" style="font-size: 16px; padding: 4px 8px; height: 32px;">H-History</button>
-							<button class="tablinks" onclick="openTab(event, 'tab6')" style="font-size: 16px; padding: 4px 8px; height: 32px;">L-Liablility</button>
-							<button class="tablinks" onclick="openTab(event, 'tab7')" style="font-size: 16px; padding: 4px 8px; height: 32px;">Q-Quit</button>
 						</div>
 <!----------------------------------------------------------------------------------Tab 1-------------------------------------------------------------------------->
 <div id="tab1" class="tabcontent" style="display: block">
@@ -294,7 +327,7 @@ function openTab(evt, tabName) {
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Customer Id</div>
 				<div class="col-sm-2">
-					<input type="number" name="phone_number" id="phone_number"
+					<input type="text" name="name" id="name"
 						class="form-control form-control-sm bg-white border border-dark" />
 				</div>
 				<div class="col-sm-1"></div>
@@ -315,6 +348,34 @@ function openTab(evt, tabName) {
 				<div class="col-sm-2">Sol Id</div>
 				<div class="col-sm-2">
 					<input type="text" name="marital_status" id="marital_status"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Loan No</div>
+				<div class="col-sm-2">
+					<input type="text" name="phone_number" id="phone_number"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Borrower Name</div>
+				<div class="col-sm-2">
+					<input type="text" name="email_id" id="email_id"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Date of Loan</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Loan Amount</div>
+				<div class="col-sm-2">
+					<input type="text" name="loan_amt" id="loan_amt" onchange="formatAndSetValue(this)"
 						class="form-control form-control-sm bg-white border border-dark" />
 				</div>
 			</div>
@@ -370,7 +431,7 @@ function openTab(evt, tabName) {
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Suit Filed Ref</div>
 				<div class="col-sm-2">
-					<input type="number" name="repayment_period" id="repayment_period"
+					<input type="text" name="repayment_period" id="repayment_period"
 						class="form-control form-control-sm bg-white border border-dark" />
 				</div>
 			</div>
@@ -392,7 +453,7 @@ function openTab(evt, tabName) {
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Suit Amount</div>
 				<div class="col-sm-2">
-					<input type="text" name="monthly_installment" id="monthly_installment"
+					<input type="text" name="monthly_installment" id="monthly_installment" onchange="formatAndSetValue(this)"
 						class="form-control form-control-sm bg-white border border-dark" />
 				</div>
 				<div class="col-sm-1"></div>
@@ -470,7 +531,7 @@ function openTab(evt, tabName) {
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Customer Id</div>
 				<div class="col-sm-2">
-					<input type="number" name="phone_number" id="phone_number"
+					<input type="text" name="phone_number" id="phone_number"
 						class="form-control form-control-sm bg-white border border-dark" />
 				</div>
 				<div class="col-sm-1"></div>
@@ -491,6 +552,34 @@ function openTab(evt, tabName) {
 				<div class="col-sm-2">Sol Id</div>
 				<div class="col-sm-2">
 					<input type="text" name="marital_status" id="marital_status"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Loan No</div>
+				<div class="col-sm-2">
+					<input type="text" name="phone_number" id="phone_number"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Borrower Name</div>
+				<div class="col-sm-2">
+					<input type="text" name="email_id" id="email_id"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Date of Loan</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Loan Amount</div>
+				<div class="col-sm-2">
+					<input type="text" name="email_id" id="email_id" onchange="formatAndSetValue(this)"
 						class="form-control form-control-sm bg-white border border-dark" />
 				</div>
 			</div>
@@ -537,12 +626,12 @@ function openTab(evt, tabName) {
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Decree Amount</div>
 				<div class="col-sm-2">
-					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" onchange="formatAndSetValue(this)"/>
 				</div>
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Amount Recovered</div>
 				<div class="col-sm-2">
-					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" onchange="formatAndSetValue(this)"/>
 				</div>
 			</div>
 			<div class="row formline" style="padding: 0px 0px 2px 0px;">
@@ -563,7 +652,7 @@ function openTab(evt, tabName) {
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Court Liquidator</div>
 				<div class="col-sm-2">
-					<input type="number" name="" id=""
+					<input type="text" name="" id=""
 						class="form-control form-control-sm bg-white border border-dark" />
 				</div>
 				<div class="col-sm-1"></div>
@@ -619,13 +708,41 @@ function openTab(evt, tabName) {
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Customer Id</div>
 				<div class="col-sm-2">
-					<input type="number" name="phone_number" id="phone_number"
+					<input type="text" name="phone_number" id="phone_number"
 						class="form-control form-control-sm bg-white border border-dark" />
 				</div>
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Customer Name</div>
 				<div class="col-sm-2">
 					<input type="text" name="email_id" id="email_id"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Loan No</div>
+				<div class="col-sm-2">
+					<input type="text" name="phone_number" id="phone_number"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Borrower Name</div>
+				<div class="col-sm-2">
+					<input type="text" name="email_id" id="email_id"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+			</div>
+			<div class="row formline" style="padding: 0px 0px 2px 0px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Date of Loan</div>
+				<div class="col-sm-2">
+					<input type="date" name="date_of_birth" id="date_of_birth"
+						class="form-control form-control-sm bg-white border border-dark" />
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-2">Loan Amount</div>
+				<div class="col-sm-2">
+					<input type="text" name="email_id" id="email_id" onchange="formatAndSetValue(this)"
 						class="form-control form-control-sm bg-white border border-dark" />
 				</div>
 			</div>
@@ -681,7 +798,7 @@ function openTab(evt, tabName) {
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Amt Rcvd frm Asst</div>
 				<div class="col-sm-2">
-					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" onchange="formatAndSetValue(this)"/>
 				</div>
 			</div>
 			<div class="row formline" style="padding: 0px 0px 2px 0px;">
@@ -705,7 +822,7 @@ function openTab(evt, tabName) {
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Adv Fee Sntcnd Amt</div>
 				<div class="col-sm-2">
-					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" onchange="formatAndSetValue(this)"/>
 				</div>
 			</div>
 			<div class="row formline" style="padding: 0px 0px 2px 0px;">
@@ -718,7 +835,7 @@ function openTab(evt, tabName) {
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Adv Fees Paid Amt</div>
 				<div class="col-sm-2">
-					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" />
+					<input type="text" name="" id="" class="form-control form-control-sm bg-white border border-dark" onchange="formatAndSetValue(this)"/>
 				</div>
 			</div>
 			<div class="row formline" style="padding: 0px 0px 2px 0px;">
@@ -761,7 +878,7 @@ function openTab(evt, tabName) {
 				<div class="col-sm-1"></div>
 				<div class="col-sm-2">Remarks 3</div>
 				<div class="col-sm-2">
-					<input type="number" name="" id=""
+					<input type="text" name="" id=""
 						class="form-control form-control-sm bg-white border border-dark" />
 				</div>
 				<div class="col-sm-1"></div>
