@@ -98,7 +98,7 @@ body {
 	margin: 15% auto;
 	padding: 20px;
 	border: 1px solid #888;
-	width: 70%; 
+	width: 70%;
 	margin-left: 200px;
 }
 
@@ -205,170 +205,196 @@ input:hover+.password-info {
 }
 </style>
 <script>
-		function Home() {
+	function Home() {
 
-			location.href = 'Dashboard';
-		}
+		location.href = 'Dashboard';
+	}
 
-		function Back() {
-			window.history.back();
-		}
+	function Back() {
+		window.history.back();
+	}
 
-		$(function() {
-			$(
-					"#doj,#dob,#date_of_offer,#date_of_appointment_letter,#aed,#ped,#dsd,#ded")
-					.datepicker({
-						dateFormat : "dd-mm-yy",
-						changeMonth : true,
-						changeYear : true
+	$(function() {
+		$(
+				"#doj,#dob,#date_of_offer,#date_of_appointment_letter,#aed,#ped,#dsd,#ded")
+				.datepicker({
+					dateFormat : "dd-mm-yy",
+					changeMonth : true,
+					changeYear : true
 
-					});
-		});
-	</script>
+				});
+	});
+</script>
 <script>
-	
-	function PersonalList(){ 
-			location.href = 'Retailloanholdreject?formmode=listForPersonal';
+	function PersonalList() {
+		location.href = 'Retailloanholdreject?formmode=listForPersonal';
 	}
 	
-	
+	function VehicleList() {
+		location.href = 'Retailloanholdreject?formmode=listForVehicle';
+	}
+
 	document.addEventListener('DOMContentLoaded', function() {
-	    handleFilterChange(); 
+		handleFilterChange();
 	});
 
-	function handleFilterChange(){
-	    var a = document.getElementById('approvedfilter').value;
-	    
-	    if (a === 'ALL') {
-	        $.ajax({
-	            url: './AllApprovedPersonal',
-	            type: 'GET',
-	            success: function(data) {
-	                updateTable(data);
-	            },
-	            error: function(err) {
-	                console.error('Error fetching data:', err);
-	            }
-	        });
-	    } else if (a === 'APPROVED') {
-	        $.ajax({
-	            url: './ApprovedPersonal',
-	            type: 'GET',
-	            success: function(data) {
-	                updateTable(data);
-	            },
-	            error: function(err) {
-	                console.error('Error fetching data:', err);
-	            }
-	        });
-	    } else if (a === 'NOTAPPROVED') {
-	     
-	        $.ajax({
-	            url: './NotApprovedPersonal',
-	            type: 'GET',
-	            success: function(data) {
-	                updateTable(data);
-	            },
-	            error: function(err) {
-	                console.error('Error fetching data:', err);
-	            }
-	        });
-	    }
+	function handleFilterChange() {
+		var a = document.getElementById('approvedfilter').value;
+
+		if (a === 'ALL') {
+			$.ajax({
+				url : './AllApprovedPersonal',
+				type : 'GET',
+				success : function(data) {
+					updateTable(data);
+				},
+				error : function(err) {
+					console.error('Error fetching data:', err);
+				}
+			});
+		} else if (a === 'APPROVED') {
+			$.ajax({
+				url : './ApprovedPersonal',
+				type : 'GET',
+				success : function(data) {
+					updateTable(data);
+				},
+				error : function(err) {
+					console.error('Error fetching data:', err);
+				}
+			});
+		} else if (a === 'NOTAPPROVED') {
+
+			$.ajax({
+				url : './NotApprovedPersonal',
+				type : 'GET',
+				success : function(data) {
+					updateTable(data);
+				},
+				error : function(err) {
+					console.error('Error fetching data:', err);
+				}
+			});
+		}
 	}
- 
-	
-	function listrpersonalclick(a){
+
+	function listrpersonalclick(a) {
 		var id = a.getAttribute("data-id");
-		location.href = 'Retailloanholdreject?formmode=HolrejectPersView&id=' + id;
+		location.href = 'Retailloanholdreject?formmode=HolrejectPersView&id='
+				+ id;
 	}
-	</script>
-	<script type="text/javascript">
-	function SubProceed() {
-		var id = document.getElementById("id").value; 
-		alert(id + id);
-	    $.ajax({
-	        type: "POST",
-	        url: './Holdsubmit',  
-	        data: $("#HoldForm").serialize(),
-	        success: function (response) { 
-	            $("#mypopup_alertmsg").html(response); 
-	            $('#mypopup').modal('show');
-	        },
-	        complete: function() {
-	        }
-	    }); 
+	
+	function listvehicleclick(a) {
+		var id = a.getAttribute("data-id");
+		location.href = 'Retailloanholdreject?formmode=HolrejectVehicleView&id='
+				+ id;
 	}
-	</script>
+</script>
+<script type="text/javascript">
+function SubProceed() {
+	var id = document.getElementById("id").value; 
+	alert("id"+id);
+	$.ajax({
+		type: "POST",
+		url: './PersonalHoldsubmit?id=' + id,  // ✅ Corrected URL
+		data: $("#HoldForm").serialize(),
+		success: function(response) {
+			$("#mypopup_alertmsg").html(response);
+			$('#mypopup').modal('show');
+		},
+		error: function(xhr) {
+			console.error("Error in SubProceed:", xhr.responseText);
+		}
+	});
+}
+
+function SubVehicleProceed() {
+	var id = document.getElementById("id").value; 
+	alert("id"+id);
+	$.ajax({
+		type: "POST",
+		url: './VehicleHoldsubmit?id=' + id,  // ✅ Corrected URL
+		data: $("#VehicleHoldForm").serialize(),
+		success: function(response) {
+			$("#mypopup_alertmsg").html(response);
+			$('#mypopup').modal('show');
+		},
+		error: function(xhr) {
+			console.error("Error in SubVehicleProceed:", xhr.responseText);
+		}
+	});
+}
+
+</script>
 <script>
 	$(document)
-	.ready(
-			function() {
-				$('.filterable .btn-filter')
-						.click(
-								function() {
-									var $panel = $(this).parents(
-											'.filterable'), $filters = $panel
-											.find('.filters input'), $tbody = $panel
-											.find('.table tbody');
-									if ($filters.prop('disabled') == true) {
-										$filters
-												.prop('disabled', false);
-										$filters.first().focus();
-									} else {
-										$filters.val('').prop(
-												'disabled', true);
-										$tbody.find('.no-result')
-												.remove();
-										$tbody.find('tr').show();
-									}
-								});
+			.ready(
+					function() {
+						$('.filterable .btn-filter')
+								.click(
+										function() {
+											var $panel = $(this).parents(
+													'.filterable'), $filters = $panel
+													.find('.filters input'), $tbody = $panel
+													.find('.table tbody');
+											if ($filters.prop('disabled') == true) {
+												$filters
+														.prop('disabled', false);
+												$filters.first().focus();
+											} else {
+												$filters.val('').prop(
+														'disabled', true);
+												$tbody.find('.no-result')
+														.remove();
+												$tbody.find('tr').show();
+											}
+										});
 
-				$('.filterable .filters input')
-						.keyup(
-								function(e) {
-									/* Ignore tab key */
-									var code = e.keyCode || e.which;
-									if (code == '9')
-										return;
-									/* Useful DOM data and selectors */
-									var $input = $(this), inputContent = $input
-											.val().toLowerCase(), $panel = $input
-											.parents('.filterable'), column = $panel
-											.find('.filters th')
-											.index($input.parents('th')), $table = $panel
-											.find('.table'), $rows = $table
-											.find('tbody tr');
-									/* Dirtiest filter function ever ;) */
-									var $filteredRows = $rows
-											.filter(function() {
-												var value = $(this)
-														.find('td').eq(
-																column)
-														.text()
-														.toLowerCase();
-												return value
-														.indexOf(inputContent) === -1;
-											});
-									/* Clean previous no-result if exist */
-									$table.find('tbody .no-result')
-											.remove();
-									/* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
-									$rows.show();
-									$filteredRows.hide();
-									/* Prepend no-result row if all rows are filtered */
-									if ($filteredRows.length === $rows.length) {
-										$table
-												.find('tbody')
-												.prepend(
-														$('<tr class="no-result text-center"><td colspan="'
-																+ $table
-																		.find('.filters th').length
-																+ '">No result found</td></tr>'));
-									}
-								});
-			});
-
-	</script>
+						$('.filterable .filters input')
+								.keyup(
+										function(e) {
+											/* Ignore tab key */
+											var code = e.keyCode || e.which;
+											if (code == '9')
+												return;
+											/* Useful DOM data and selectors */
+											var $input = $(this), inputContent = $input
+													.val().toLowerCase(), $panel = $input
+													.parents('.filterable'), column = $panel
+													.find('.filters th')
+													.index($input.parents('th')), $table = $panel
+													.find('.table'), $rows = $table
+													.find('tbody tr');
+											/* Dirtiest filter function ever ;) */
+											var $filteredRows = $rows
+													.filter(function() {
+														var value = $(this)
+																.find('td').eq(
+																		column)
+																.text()
+																.toLowerCase();
+														return value
+																.indexOf(inputContent) === -1;
+													});
+											/* Clean previous no-result if exist */
+											$table.find('tbody .no-result')
+													.remove();
+											/* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+											$rows.show();
+											$filteredRows.hide();
+											/* Prepend no-result row if all rows are filtered */
+											if ($filteredRows.length === $rows.length) {
+												$table
+														.find('tbody')
+														.prepend(
+																$('<tr class="no-result text-center"><td colspan="'
+																		+ $table
+																				.find('.filters th').length
+																		+ '">No result found</td></tr>'));
+											}
+										});
+					});
+</script>
 
 </head>
 <body>
@@ -381,7 +407,7 @@ input:hover+.password-info {
 	<div class="container-manager">
 		<div class="row">
 			<div class="col-sm-11 ml-5 mt-2" style="font-size: 0.8rem;">
-				<!-- ------------------------------------Approval tab---------------------------------- -->
+				<!-- ------------------------------------HOLD REJECT tab---------------------------------- -->
 				<div th:if="${formmode}=='list'">
 					<div class="panel panel-primary filterable">
 						<div class="card w-100 border panel panel-primary filterable">
@@ -399,7 +425,7 @@ input:hover+.password-info {
 										style="font-size: 16px; padding: 4px 8px; height: 32px;"
 										onclick="PersonalList();">Personal Loan</button>
 									<button class="tab"
-										style="font-size: 16px; padding: 4px 8px; height: 32px;">Vehicle
+										style="font-size: 16px; padding: 4px 8px; height: 32px;" onclick="VehicleList();">Vehicle
 										Loan</button>
 									<button class="tab"
 										style="font-size: 16px; padding: 4px 8px; height: 32px;">Education
@@ -417,7 +443,7 @@ input:hover+.password-info {
 						</div>
 					</div>
 				</div>
-				<!--------------------------------------Approval Retail tab  ----------------------------->
+				<!--------------------------------------PERSONAL tab  ----------------------------->
 
 				<div th:if="${formmode}=='listForPersonal'">
 					<div class="panel panel-primary filterable">
@@ -464,7 +490,7 @@ input:hover+.password-info {
 
 												<td style="font-size: 14px" th:text="${customerrequest.id}">456</td>
 												<td style="font-size: 14px"
-    th:text="${#dates.format(customerrequest.date_of_application, 'dd-MM-yyyy')}">TEST</td>
+													th:text="${#dates.format(customerrequest.date_of_application, 'dd-MM-yyyy')}">TEST</td>
 
 
 												<td style="font-size: 14px"
@@ -479,7 +505,7 @@ input:hover+.password-info {
 
 												<td align="center"><input type="radio"
 													th:attr="data-id=${customerrequest.id}"
-													onclick="listrpersonalclick(this);"  name="btnradio"></td>
+													onclick="listrpersonalclick(this);" name="btnradio"></td>
 
 											</tr>
 										</tbody>
@@ -500,7 +526,7 @@ input:hover+.password-info {
 
 				</div>
 				<!---------------------------------------------PERSONAL APPROVAL - VIEW ------------------------------------------>
- 
+
 
 				<div th:if="${formmode}=='HolrejectPersView'">
 					<div class="panel panel-primary filterable">
@@ -508,8 +534,11 @@ input:hover+.password-info {
 							<div class="card-header"
 								style="background-color: #e9ecef; height: 50px">
 								<div class="float-left">
-									<h6 style="font-size: 1.2rem;">RETAIL PERSONAL LOAN - HOLD/REJECT</h6>
-								</div> 
+									<h6 style="font-size: 1.2rem;" th:if="${personal.hold_flg == 'Y'}">RETAIL PERSONAL LOAN -
+										HOLD</h6>
+										<h6 style="font-size: 1.2rem;" th:if="${personal.reject_flg == 'Y'}">RETAIL PERSONAL LOAN -
+										REJECT</h6>
+								</div>
 							</div>
 							<div class="card-body">
 								<form class=" border border-secondary" action="#" method="post"
@@ -534,7 +563,8 @@ input:hover+.password-info {
 											<input type="date" name="date_of_application"
 												id="date_of_application"
 												class="form-control form-control-sm bg-white border border-dark"
-												th:value="${#dates.format(personal?.date_of_application, 'yyyy-MM-dd')}" readonly/>
+												th:value="${#dates.format(personal?.date_of_application, 'yyyy-MM-dd')}"
+												readonly />
 
 										</div>
 									</div>
@@ -555,7 +585,8 @@ input:hover+.password-info {
 										<div class="col-sm-2">
 											<input type="date" name="date_of_birth" id="date_of_birth"
 												class="form-control form-control-sm bg-white border border-dark"
-												th:value="${#dates.format(personal?.date_of_birth, 'yyyy-MM-dd')}"  readonly/>
+												th:value="${#dates.format(personal?.date_of_birth, 'yyyy-MM-dd')}"
+												readonly />
 
 										</div>
 									</div>
@@ -570,7 +601,7 @@ input:hover+.password-info {
 										<div class="col-sm-2">
 											<input type="number" name="phone_number" id="phone_number"
 												class="form-control form-control-sm bg-white border border-dark"
-												th:value="${personal?.phone_number}"  readonly/>
+												th:value="${personal?.phone_number}" readonly />
 
 										</div>
 
@@ -580,7 +611,7 @@ input:hover+.password-info {
 
 											<input type="text" name="email_id" id="email_id"
 												class="form-control form-control-sm bg-white border border-dark"
-												th:value="${personal?.email_id}"  readonly/>
+												th:value="${personal?.email_id}" readonly />
 
 										</div>
 									</div>
@@ -595,15 +626,15 @@ input:hover+.password-info {
 										<div class="col-sm-2">
 											<input type="text" name="home_address" id="home_address"
 												class="form-control form-control-sm bg-white border border-dark"
-												th:value="${personal?.home_address}"  readonly/>
+												th:value="${personal?.home_address}" readonly />
 										</div>
 
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Marital Status</div>
-										<div class="col-sm-2"> 
-												<input type="text" name="marital_status" id="marital_status"
+										<div class="col-sm-2">
+											<input type="text" name="marital_status" id="marital_status"
 												class="form-control form-control-sm bg-white border border-dark"
-												th:value="${personal?.marital_status}"  readonly/>
+												th:value="${personal?.marital_status}" readonly />
 										</div>
 
 									</div>
@@ -618,7 +649,8 @@ input:hover+.password-info {
 										<div class="col-sm-2">
 											<input type="text" name="place_of_work" id="place_of_work"
 												th:value="${personal?.place_of_work}"
-												class="form-control form-control-sm bg-white border border-dark"  readonly/>
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
 
 										</div>
 
@@ -628,7 +660,8 @@ input:hover+.password-info {
 
 											<input type="text" name="job_title" id="job_title"
 												th:value="${personal?.job_title}"
-												class="form-control form-control-sm bg-white border border-dark" readonly />
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
 
 										</div>
 									</div>
@@ -640,7 +673,8 @@ input:hover+.password-info {
 										<div class="col-sm-2">
 											<input type="text" name="work_address" id="work_address"
 												th:value="${personal?.work_address}"
-												class="form-control form-control-sm bg-white border border-dark" readonly />
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
 
 										</div>
 
@@ -650,7 +684,8 @@ input:hover+.password-info {
 
 											<input type="text" name="service" id="service"
 												th:value="${personal?.service}"
-												class="form-control form-control-sm bg-white border border-dark" readonly />
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
 
 										</div>
 									</div>
@@ -663,7 +698,8 @@ input:hover+.password-info {
 											<input type="text" name="monthly_income" id="monthly_income"
 												th:value="${personal?.monthly_income}"
 												onchange="formatAndSetValue(this)"
-												class="form-control form-control-sm bg-white border border-dark" readonly />
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
 
 										</div>
 
@@ -685,19 +721,22 @@ input:hover+.password-info {
 										<div class="col-sm-2">Employer</div>
 
 
-										<div class="col-sm-2"> 
+										<div class="col-sm-2">
 											<input type="text" name="employer" id="employer"
 												th:value="${personal?.employer}"
-												class="form-control form-control-sm bg-white border border-dark" readonly />
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
 										</div>
 
 
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Employment Nature</div>
-										<div class="col-sm-2"> 
-											<input type="text" name="employment_nature" id="employment_nature"
+										<div class="col-sm-2">
+											<input type="text" name="employment_nature"
+												id="employment_nature"
 												th:value="${personal?.employment_nature}"
-												class="form-control form-control-sm bg-white border border-dark" readonly />
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
 										</div>
 
 									</div>
@@ -715,10 +754,12 @@ input:hover+.password-info {
 										<div class="col-sm-2">Purpose of Personal Loan</div>
 
 
-										<div class="col-sm-2"> 
-											<input type="text" name="purpose_of_personal_loan" id="purpose_of_personal_loan"
+										<div class="col-sm-2">
+											<input type="text" name="purpose_of_personal_loan"
+												id="purpose_of_personal_loan"
 												th:value="${personal?.purpose_of_personal_loan}"
-												class="form-control form-control-sm bg-white border border-dark" readonly />
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
 										</div>
 
 
@@ -729,7 +770,8 @@ input:hover+.password-info {
 											<input type="text" name="loan_amount" id="loan_amount"
 												onchange="formatAndSetValue(this)"
 												th:value="${personal?.loan_amount}"
-												class="form-control form-control-sm bg-white border border-dark" readonly />
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
 
 										</div>
 									</div>
@@ -791,7 +833,413 @@ input:hover+.password-info {
 							<div class="card-footer text-center"
 								style="background-color: #e9ecef">
 								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
-								<button class="btn btn-primary p-2" onclick="SubProceed();">Proceed</button>
+								<button class="btn btn-primary p-2"  onclick="SubProceed();">
+									Proceed</button>
+
+								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+				
+								<!--------------------------------------Vehicle tab  ----------------------------->
+
+				<div th:if="${formmode}=='listForVehicle'">
+					<div class="panel panel-primary filterable">
+						<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+									<h6 style="font-size: 1.2rem;">VEHICLE LOAN HOLD/REJECT</h6>
+								</div>
+								<div class="float-right">
+									<button type="button"
+										class="btn btn-xs btn-primary btns p-2 border btn-filter ">Filter</button>
+								</div>
+							</div>
+							<div class="card-body">
+								<div class="table-responsive">
+									<table class="table table-bordered  table-hover table-sm"
+										style="table-layout: fixed; width: 100%;">
+										<thead>
+											<tr class="filters">
+												<th><input type="text"
+													class="form-control font-weight-bold"
+													placeholder="Appl Ref No" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold "
+													placeholder="Date of Application" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold "
+													placeholder="Customer Name" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold "
+													placeholder="Email ID" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold "
+													placeholder="Employer" disabled></th>
+												<th><input type="text"
+													class="form-control font-weight-bold" placeholder="Status"
+													disabled></th>
+												<th style="font-weight: bold; font-size: 14px; width: 8%">Select</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="customerrequest : ${holdrejectlist}">
+
+												<td style="font-size: 14px" th:text="${customerrequest.id}">456</td>
+												<td style="font-size: 14px"
+													th:text="${#dates.format(customerrequest.date_of_application, 'dd-MM-yyyy')}">TEST</td>
+
+
+												<td style="font-size: 14px"
+													th:text="${customerrequest.name}">l</td>
+												<td style="font-size: 14px"
+													th:text="${customerrequest.email_id}">l</td>
+												<td style="font-size: 14px"
+													th:text="${customerrequest.employer}">j</td>
+												<td style="font-size: 14px"
+													th:text="${customerrequest.hold_flg == 'Y' ? 'HOLD' : (customerrequest.reject_flg == 'Y' ? 'REJECT' : customerrequest.status)}">
+												</td>
+
+												<td align="center"><input type="radio"
+													th:attr="data-id=${customerrequest.id}"
+													onclick="listvehicleclick(this);" name="btnradio"></td>
+
+											</tr>
+										</tbody>
+									</table>
+								</div>
+
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+				
+				<!---------------------------------------------PERSONAL APPROVAL - VIEW ------------------------------------------>
+
+
+				<div th:if="${formmode}=='HolrejectVehicleView'">
+					<div class="panel panel-primary filterable">
+						<div class="card w-100 border panel panel-primary filterable">
+							<div class="card-header"
+								style="background-color: #e9ecef; height: 50px">
+								<div class="float-left">
+									<h6 style="font-size: 1.2rem;" th:if="${personal.hold_flg == 'Y'}">RETAIL VEHICLE LOAN -
+										HOLD</h6>
+										<h6 style="font-size: 1.2rem;" th:if="${personal.reject_flg == 'Y'}">RETAIL VEHICLE LOAN -
+										REJECT</h6>
+								</div>
+							</div>
+							<div class="card-body">
+								<form class=" border border-secondary" action="#" method="post"
+									id="VehicleHoldForm" autocomplete="off">
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Applicant
+											Personal Details</div>
+									</div>
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Appl Ref No</div>
+										<div class="col-sm-2">
+											<input type="text" name="id" id="id"
+												th:value="${personal?.id}" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Application</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_application"
+												id="date_of_application"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${#dates.format(personal?.date_of_application, 'yyyy-MM-dd')}"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Name</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="name" id="name"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly th:value="${personal?.name}" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Birth</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_birth" id="date_of_birth"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${#dates.format(personal?.date_of_birth, 'yyyy-MM-dd')}"
+												readonly />
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Phone Number</div>
+
+
+										<div class="col-sm-2">
+											<input type="number" name="phone_number" id="phone_number"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${personal?.phone_number}" readonly />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Email ID</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="email_id" id="email_id"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${personal?.email_id}" readonly />
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Home Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="home_address" id="home_address"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${personal?.home_address}" readonly />
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Marital Status</div>
+										<div class="col-sm-2">
+											<input type="text" name="marital_status" id="marital_status"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${personal?.marital_status}" readonly />
+										</div>
+
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Place of Work</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="place_of_work" id="place_of_work"
+												th:value="${personal?.place_of_work}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Job Title</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="job_title" id="job_title"
+												th:value="${personal?.job_title}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Work Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="work_address" id="work_address"
+												th:value="${personal?.work_address}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Service</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="service" id="service"
+												th:value="${personal?.service}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Monthly Income</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="monthly_income" id="monthly_income"
+												th:value="${personal?.monthly_income}"
+												onchange="formatAndSetValue(this)"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Annual Income</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="annual_income" id="annual_income"
+												th:value="${personal?.annual_income}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Employer</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="employer" id="employer"
+												th:value="${personal?.employer}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+										</div>
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Employment Nature</div>
+										<div class="col-sm-2">
+											<input type="text" name="employment_nature"
+												id="employment_nature"
+												th:value="${personal?.employment_nature}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+										</div>
+
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Vehicle
+											Loan Details</div>
+									</div>
+
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Vehicle type</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="vehicle_type"
+												id="vehicle_type"
+												th:value="${personal?.vehicle_type}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+										</div>
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Vehicle Value</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="vehicle_value" id="vehicle_value"
+												onchange="formatAndSetValue(this)"
+												th:value="${personal?.vehicle_value}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Vehicle model</div>
+
+
+										<div class="col-sm-2">
+											<input type="number" name="vehicle_model"
+												th:value="${personal?.vehicle_model}"
+												id="vehicle_model" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Registration Number</div>
+										<div class="col-sm-2">
+
+											<input type="number" name="registration_number"
+												th:value="${personal?.registration_number}"
+												id="registration_number" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Dealer Name</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="dealer_name"
+												th:value="${personal?.dealer_name}"
+												id="dealer_name" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Dealer Address</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="dealer_address" id="dealer_address"
+												th:value="${personal?.dealer_address}" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+
+								</form>
+
+							</div>
+							<div class="card-footer text-center"
+								style="background-color: #e9ecef">
+								<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+								<button class="btn btn-primary p-2" onclick="SubVehicleProceed();">
+									Proceed</button>
+
 								<button class="btn btn-primary p-2" onclick="Back();">Back</button>
 
 							</div>

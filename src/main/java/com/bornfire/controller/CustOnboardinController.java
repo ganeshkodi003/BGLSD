@@ -6021,28 +6021,71 @@ public class CustOnboardinController {
 		} else if (formmode.equals("listForPersonal")) {
 			md.addAttribute("formmode", "listForPersonal"); 
 			md.addAttribute("holdrejectlist", bLMS_PERSONALDET_REPO.getholdreject());
+		} else if (formmode.equals("listForVehicle")) {
+			md.addAttribute("formmode", "listForVehicle"); 
+			md.addAttribute("holdrejectlist", bLMS_VEHICLEDET_REPO.getholdreject());
 		} else if (formmode.equals("HolrejectPersView")) {
 			md.addAttribute("formmode", "HolrejectPersView");
 			md.addAttribute("personal", bLMS_PERSONALDET_REPO.getRefNo(id));
+		} else if (formmode.equals("HolrejectVehicleView")) {
+			md.addAttribute("formmode", "HolrejectVehicleView");
+			md.addAttribute("personal", bLMS_VEHICLEDET_REPO.getRefNo(id));
 		}
 		return "RetailloanHoldReject";
-	} 
+	}  
 	
-	@RequestMapping(value = "Holdsubmit", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "VehicleHoldsubmit", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public String Holdsubmit(@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY blmsPersonalLoanEntity, Model md, HttpServletRequest req) {
+	public String VehicleHoldsubmit(@ModelAttribute BLMS_VEHICLE_DET_ENTITY BLMS_VEHICLE_DET_ENTITY, Model md, HttpServletRequest req) {
 	    String userid = (String) req.getSession().getAttribute("USERID");
- System.out.println("submit");
-	    String srlno = bLMS_PERSONALDET_REPO.srlnum();
-	    blmsPersonalLoanEntity.setId(srlno);  
-	    blmsPersonalLoanEntity.setDel_flg("N");
-	    blmsPersonalLoanEntity.setHold_flg("N"); 
-	    blmsPersonalLoanEntity.setVerify_flg("N");
-	    blmsPersonalLoanEntity.setModify_flg("N");
+ System.out.println("vehicle");
+	    String srlno = bLMS_VEHICLEDET_REPO.srlnum();  
+	    BLMS_VEHICLE_DET_ENTITY.setDel_flg("N");
+	    BLMS_VEHICLE_DET_ENTITY.setHold_flg("N"); 
+	    BLMS_VEHICLE_DET_ENTITY.setVerify_flg("N");
+	    BLMS_VEHICLE_DET_ENTITY.setModify_flg("N");
+	    BLMS_VEHICLE_DET_ENTITY.setReject_flg("N");
  
-	    bLMS_PERSONALDET_REPO.save(blmsPersonalLoanEntity);
+	    bLMS_VEHICLEDET_REPO.save(BLMS_VEHICLE_DET_ENTITY);
  
 	    return "App Ref No: " + srlno + " has been Submitted Successfully<br>";
+	}
+	
+	@RequestMapping(value = "PersonalHoldsubmit", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public String Holdsubmit(@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY BLMS_PERSONAL_LOAN_ENTITY, Model md, 
+			HttpServletRequest req,@RequestParam(required = false) String id) {
+	    String userid = (String) req.getSession().getAttribute("USERID");
+
+	    System.out.println("ID"+id);
+	    String srlno = bLMS_PERSONALDET_REPO.srlnum();  
+	    BLMS_PERSONAL_LOAN_ENTITY.setDel_flg("N");
+	    BLMS_PERSONAL_LOAN_ENTITY.setHold_flg("N"); 
+	    BLMS_PERSONAL_LOAN_ENTITY.setVerify_flg("N");
+	    BLMS_PERSONAL_LOAN_ENTITY.setModify_flg("N");
+	    BLMS_PERSONAL_LOAN_ENTITY.setReject_flg("N");
+ 
+	    bLMS_PERSONALDET_REPO.save(BLMS_PERSONAL_LOAN_ENTITY);
+ 
+	    return "App Ref No: " + id + " has been Submitted Successfully<br>";
+	}
+	
+	@RequestMapping(value = "HoldVehiclesubmit", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public String HoldVehiclesubmit(@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY BLMS_PERSONAL_LOAN_ENTITY, Model md, 
+			HttpServletRequest req,@RequestParam(required = false) String id) {
+	    String userid = (String) req.getSession().getAttribute("USERID");
+	    
+	    System.out.println("ID"+id);
+	    BLMS_PERSONAL_LOAN_ENTITY.setDel_flg("N");
+	    BLMS_PERSONAL_LOAN_ENTITY.setHold_flg("N"); 
+	    BLMS_PERSONAL_LOAN_ENTITY.setVerify_flg("N");
+	    BLMS_PERSONAL_LOAN_ENTITY.setModify_flg("N");
+	    BLMS_PERSONAL_LOAN_ENTITY.setReject_flg("N");
+ 
+	    bLMS_PERSONALDET_REPO.save(BLMS_PERSONAL_LOAN_ENTITY);
+ 
+	    return "App Ref No: " + id + " has been Submitted Successfully<br>";
 	}
 
 }
