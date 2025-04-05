@@ -1967,274 +1967,47 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("closuredatas").style.display = "block";
         document.getElementById("loanHeader").innerHTML = "LOAN CLOSURE";
     }
-    
+
+    function getActiveAccountNumber() {
+        let input1 = document.getElementById("acct_num1234");
+        let input2 = document.getElementById("acct_num123456");
+
+        if (input1 && input1.offsetParent !== null && input1.value.trim() !== "") {
+            return input1.value.trim();
+        }
+
+        if (input2 && input2.offsetParent !== null && input2.value.trim() !== "") {
+            return input2.value.trim();
+        }
+
+        return null;
+    }
+
     function schedulePreClosure() {
-    	event.preventDefault();
-    	var id = document.getElementById("acct_num1234").value;
-    	var element = document.getElementById("acct_num1234");
+        event.preventDefault();
+        const acctNum = getActiveAccountNumber();
 
-    	if (element) {
-    	    var id = element.value.trim();  
+        if (!acctNum) {
+            $('#mypopup22').modal('show');
+            $("#popupmsg_body").html("Account number is required!...");
+            return;
+        }
 
-    	    if (!id) {  
-    	        
-    	        $('#mypopup22').modal('show'); 
-                $("#popupmsg_body").html("Account number is required!..."); 
-    	    } else {
-    	    	 $.ajax({
-    	    	        type: 'GET',
-    	    	        url: './FetchLoanDetails',
-    	    	        data: { id: id }, // ✅ Passing the correct value
-    	    	        success: function (data) {
-    	    	        	 
-    	    	              if(data.account_holderkey &&  data.encoded_key){
-    	    	            	  var holder_key = data.account_holderkey;
-    	    	                  var encodedKey = data.encoded_key ;
-    	    	              	var id = data.id ;
-    	    	                 location.href = 'loanSchedule?formmode=viewloanschedule1&id=' + id +
-    	    	       			'&holder_key=' + holder_key +
-    	    	       			'&encodedKey=' + encodedKey;
-    	    	              }else{
-    	    	            	  $('#mypopup22').modal('show'); 
-    	    	                  $("#popupmsg_body").html("No Data!..."); 
-    	    	              }
-    	    	                   
-    	    	  
-    	    	        },
-    	    	        error: function () {
-    	    	            $('#errorMessage').text('Error fetching data');
-    	    	            $('#errorModal').modal('show');
-    	    	        }
-    	    	    });
-    	    }
-    	} else {
-    	    alert("Element not found");
-    	}
-     
-       
+        // If needed, change this URL based on whether it's pre-closure or closure
+        location.href = 'drawDownLoanMaintanace?formmode=view&loan_accountno=' + acctNum;
     }
+
     function ledgerPreClosure() {
-    	event.preventDefault();
-    	var element = document.getElementById("acct_num1234");
+        event.preventDefault();
+        const acctNum = getActiveAccountNumber();
 
-    	if (element) {
-    	    var id = element.value.trim(); // Trim to remove leading/trailing spaces
+        if (!acctNum) {
+            $('#mypopup22').modal('show');
+            $("#popupmsg_body").html("Account number is required!...");
+            return;
+        }
 
-    	    if (!id) { // Checks for empty string, null, or undefined
-    	        
-    	        $('#mypopup22').modal('show'); 
-                $("#popupmsg_body").html("Account number is required!..."); 
-    	    } else {
-    	    	location.href = 'accountLedger2?formmode=view&acct_num='
-    				+ id;
-    	    }
-    	} else {
-    	    alert("Element not found");
-    	}
-     
-    }
-
-
-    function scheduleClosure() {
-    	event.preventDefault();
-    	var id = document.getElementById("acct_num").value;
-    	var element = document.getElementById("acct_num");
-
-    	if (element) {
-    	    var id = element.value.trim();  
-
-    	    if (!id) {  
-    	        
-    	        $('#mypopup22').modal('show'); 
-                $("#popupmsg_body").html("Account number is required!..."); 
-    	    } else {
-    	    	 $.ajax({
-    	    	        type: 'GET',
-    	    	        url: './FetchLoanDetails',
-    	    	        data: { id: id }, // ✅ Passing the correct value
-    	    	        success: function (data) {
-    	    	        	 
-    	    	              if(data.account_holderkey &&  data.encoded_key){
-    	    	            	  var holder_key = data.account_holderkey;
-    	    	                  var encodedKey = data.encoded_key ;
-    	    	              	var id = data.id ;
-    	    	                 location.href = 'loanSchedule?formmode=viewloanschedule1&id=' + id +
-    	    	       			'&holder_key=' + holder_key +
-    	    	       			'&encodedKey=' + encodedKey;
-    	    	              }else{
-    	    	            	  $('#mypopup22').modal('show'); 
-    	    	                  $("#popupmsg_body").html("No Data!..."); 
-    	    	              }
-    	    	                   
-    	    	  
-    	    	        },
-    	    	        error: function () {
-    	    	            $('#errorMessage').text('Error fetching data');
-    	    	            $('#errorModal').modal('show');
-    	    	        }
-    	    	    });
-    	    }
-    	} else {
-    	    alert("Element not found");
-    	}
-     
-       
-    }
-    function ledgerClosure() {
-    	event.preventDefault();
-    	var element = document.getElementById("acct_num");
-
-    	if (element) {
-    	    var id = element.value.trim(); // Trim to remove leading/trailing spaces
-
-    	    if (!id) { // Checks for empty string, null, or undefined
-    	        
-    	        $('#mypopup22').modal('show'); 
-                $("#popupmsg_body").html("Account number is required!..."); 
-    	    } else {
-    	    	location.href = 'accountLedger2?formmode=view&acct_num='
-    				+ id;
-    	    }
-    	} else {
-    	    alert("Element not found");
-    	}
-     
-    }
-    
-    
-    //schedule closure datas repaymrnt & ledger 
-    
-    function schedulePreClosure() {
-    	event.preventDefault();
-    	var id = document.getElementById("acct_num123456").value;
-    	var element = document.getElementById("acct_num123456");
-
-    	if (element) {
-    	    var id = element.value.trim();  
-
-    	    if (!id) {  
-    	        
-    	        $('#mypopup22').modal('show'); 
-                $("#popupmsg_body").html("Account number is required!..."); 
-    	    } else {
-    	    	 $.ajax({
-    	    	        type: 'GET',
-    	    	        url: './FetchLoanDetails',
-    	    	        data: { id: id }, // ✅ Passing the correct value
-    	    	        success: function (data) {
-    	    	        	 
-    	    	              if(data.account_holderkey &&  data.encoded_key){
-    	    	            	  var holder_key = data.account_holderkey;
-    	    	                  var encodedKey = data.encoded_key ;
-    	    	              	var id = data.id ;
-    	    	                 location.href = 'loanSchedule?formmode=viewloanschedule1&id=' + id +
-    	    	       			'&holder_key=' + holder_key +
-    	    	       			'&encodedKey=' + encodedKey;
-    	    	              }else{
-    	    	            	  $('#mypopup22').modal('show'); 
-    	    	                  $("#popupmsg_body").html("No Data!..."); 
-    	    	              }
-    	    	                   
-    	    	  
-    	    	        },
-    	    	        error: function () {
-    	    	            $('#errorMessage').text('Error fetching data');
-    	    	            $('#errorModal').modal('show');
-    	    	        }
-    	    	    });
-    	    }
-    	} else {
-    	    alert("Element not found");
-    	}
-     
-       
-    }
-    function ledgerPreClosure() {
-    	event.preventDefault();
-    	var element = document.getElementById("acct_num123456");
-
-    	if (element) {
-    	    var id = element.value.trim(); // Trim to remove leading/trailing spaces
-
-    	    if (!id) { // Checks for empty string, null, or undefined
-    	        
-    	        $('#mypopup22').modal('show'); 
-                $("#popupmsg_body").html("Account number is required!..."); 
-    	    } else {
-    	    	location.href = 'accountLedger2?formmode=view&acct_num='
-    				+ id;
-    	    }
-    	} else {
-    	    alert("Element not found");
-    	}
-     
-    }
-
-
-    function scheduleClosure() {
-    	event.preventDefault();
-    	var id = document.getElementById("acct_num123456").value;
-    	var element = document.getElementById("acct_num123456");
-
-    	if (element) {
-    	    var id = element.value.trim();  
-
-    	    if (!id) {  
-    	        
-    	        $('#mypopup22').modal('show'); 
-                $("#popupmsg_body").html("Account number is required!..."); 
-    	    } else {
-    	    	 $.ajax({
-    	    	        type: 'GET',
-    	    	        url: './FetchLoanDetails',
-    	    	        data: { id: id }, // ✅ Passing the correct value
-    	    	        success: function (data) {
-    	    	        	 
-    	    	              if(data.account_holderkey &&  data.encoded_key){
-    	    	            	  var holder_key = data.account_holderkey;
-    	    	                  var encodedKey = data.encoded_key ;
-    	    	              	var id = data.id ;
-    	    	                 location.href = 'loanSchedule?formmode=viewloanschedule1&id=' + id +
-    	    	       			'&holder_key=' + holder_key +
-    	    	       			'&encodedKey=' + encodedKey;
-    	    	              }else{
-    	    	            	  $('#mypopup22').modal('show'); 
-    	    	                  $("#popupmsg_body").html("No Data!..."); 
-    	    	              }
-    	    	                   
-    	    	  
-    	    	        },
-    	    	        error: function () {
-    	    	            $('#errorMessage').text('Error fetching data');
-    	    	            $('#errorModal').modal('show');
-    	    	        }
-    	    	    });
-    	    }
-    	} else {
-    	    alert("Element not found");
-    	}
-     
-       
-    }
-    function ledgerClosure() {
-    	event.preventDefault();
-    	var element = document.getElementById("acct_num123456");
-
-    	if (element) {
-    	    var id = element.value.trim(); // Trim to remove leading/trailing spaces
-
-    	    if (!id) { // Checks for empty string, null, or undefined
-    	        
-    	        $('#mypopup22').modal('show'); 
-                $("#popupmsg_body").html("Account number is required!..."); 
-    	    } else {
-    	    	location.href = 'accountLedger2?formmode=view&acct_num='
-    				+ id;
-    	    }
-    	} else {
-    	    alert("Element not found");
-    	}
-     
+        location.href = 'accountLedger2?formmode=view&acct_num=' + acctNum;
     }
 </script>
 </head>

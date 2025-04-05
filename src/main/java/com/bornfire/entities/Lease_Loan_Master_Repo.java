@@ -33,4 +33,7 @@ public interface Lease_Loan_Master_Repo extends JpaRepository<Lease_Loan_Master_
 	@Query(value = "select * from Loan_AccountMaster Order by loan_accountno", nativeQuery = true)
 	List<Lease_Loan_Master_Entity> getfewvalue();
 	
+	@Query(value = "select * from Loan_AccountMaster where loan_accountno= ?1", nativeQuery = true)
+	Lease_Loan_Master_Entity accountName1(String acid);
+	
 }

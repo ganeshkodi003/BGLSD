@@ -1330,57 +1330,61 @@ function rowadddcorporate() {
 
 <script>
 		//Sehdule View
-		function sechduleView(a) {
+	function sechduleView(a) {
+    var accountNo = a.getAttribute('data-loan_accountno');
+    console.log(accountNo);
 
-			var accountNo = a.getAttribute('data-loan_accountno');
-			console.log(accountNo);
+    $.ajax({
+        type: "GET",
+        url: "./getInterestDetailsView?accountNo=" + accountNo,
+        success: function (data) {
+            console.log(data);
+            var trHTML = '';
 
-			$
-				.ajax({
-					type: "GET",
-					url: "./getInterestDetailsView?accountNo=" + accountNo,
-					success: function (data) {
-						console.log(data);
-						var trHTML = '';
-						$
-							.each(
-								data,
-								function (index, entity) {
+            $.each(data, function (index, entity) {
+                var no_of_instalment = entity.no_of_instalment;
+                var from_date = formatDate(entity.from_date);
+                var installment_date = formatDate(entity.installment_date);
+                var installment_description = entity.installment_description;
 
-									var no_of_instalment = entity.no_of_instalment;
-									var from_date = formatDate(entity.from_date);
-									var installment_date = formatDate(entity.installment_date);
-									var installment_description = entity.installment_description;
-									var installment_amt = formatNumber(entity.installment_amt);
-									var principal_amt = formatNumber(entity.principal_amt);
-									var interest_amt = formatNumber(entity.interest_amt);
-									var charges_amt = formatNumber(entity.charges_amt);
-									var principal_outstanding = formatNumber(entity.principal_outstanding);
+                // ✅ Fix: use correct field name from backend (paid_amount)
+                var raw_installment_amt = parseFloat(entity.installment_amt) || 0;
+                var raw_paid_amount = parseFloat(entity.paid_amount) || 0;
 
+                console.log(`Installment ${installment_date} - Paid Amount: ${raw_paid_amount}`);
 
+                var total_outstanding = raw_installment_amt - raw_paid_amount;
 
-									trHTML += '<tr id="sechduleRow">'
-										+ '<td>' + no_of_instalment + '</td>'
-										+ '<td>' + installment_date + '</td>'
-										+ '<td>' + installment_description + '</td>'
-										+ '<td class="text-right">' + installment_amt + '</td>'
-										+ '<td class="text-right">' + principal_amt + '</td>'
-										+ '<td class="text-right">' + interest_amt + '</td>'
-										+ '<td class="text-right">' + charges_amt + '</td>'
-										+ '<td class="text-right">' + principal_outstanding + '</td>'
-										+ '</tr>';
+                var installment_amt = formatNumber(raw_installment_amt);
+                var paidamount = formatNumber(raw_paid_amount);
+                var principal_amt = formatNumber(entity.principal_amt);
+                var interest_amt = formatNumber(entity.interest_amt);
+                var charges_amt = formatNumber(entity.charges_amt);
+                var principal_outstanding = formatNumber(entity.principal_outstanding);
+                var outstanding_amt = formatNumber(total_outstanding);
 
-								});
-						$('#repaymentDet').empty().append(trHTML);
-						$('#demandtable').removeClass('d-none');
+                trHTML += '<tr id="sechduleRow">'
+                    + '<td>' + no_of_instalment + '</td>'
+                    + '<td>' + installment_date + '</td>'
+                    + '<td>' + installment_description + '</td>'
+                    + '<td class="text-right">' + installment_amt + '</td>'
+                    + '<td class="text-right">' + principal_amt + '</td>'
+                    + '<td class="text-right">' + interest_amt + '</td>'
+                    + '<td class="text-right">' + charges_amt + '</td>'
+                    + '<td class="text-right">' + principal_outstanding + '</td>'
+                    + '<td class="text-right">' + paidamount + '</td>'
+                    + '<td class="text-right">' + outstanding_amt + '</td>'
+                    + '</tr>';
+            });
 
-
-					},
-					error: function (error) {
-						console.error(error);
-					}
-				});
-		}
+            $('#repaymentDet').empty().append(trHTML);
+            $('#demandtable').removeClass('d-none');
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+}
 
 
 		function sechduleView1(a) {
@@ -1890,11 +1894,13 @@ function rowadddcorporate() {
 
 
 						</div>
-						<div class="card-body"  style="overflow-y: auto; border: 1px solid #ddd;">
-							<div class="table-responsive" id="cardBody"  >
+						<div class="card-body"
+							style="overflow-y: auto; border: 1px solid #ddd;">
+							<div class="table-responsive" id="cardBody">
 								<table class="table  table-bordered  table-hover table-sm"
 									style="margin-bottom: 0px; font-size: initial;" id="usertable">
-									<thead class="thead-light" style="position: sticky; top: 0;background-color: #f8f9fa; z-index: 1;">
+									<thead class="thead-light"
+										style="position: sticky; top: 0; background-color: #f8f9fa; z-index: 1;">
 										<tr class="filters">
 											<th class="pl-3">CUSTOMER ID</th>
 											<th>LOAN ACCT NO</th>
@@ -2277,9 +2283,9 @@ function rowadddcorporate() {
 													<option value="Standing Instructions">Standing
 														Instructions</option>
 
-												</select> <input type="text" id="ca_acct_type" hidden  /> <input
-													type="text" id="appl_ref_no" hidden /> <input type="text" hidden
-													id="rec_no"  />
+												</select> <input type="text" id="ca_acct_type" hidden /> <input
+													type="text" id="appl_ref_no" hidden /> <input type="text"
+													hidden id="rec_no" />
 											</div>
 										</div>
 										<div class="card-footer text-center mt-2">
@@ -2768,7 +2774,8 @@ function rowadddcorporate() {
 								style="padding: 4px 4px; position: relative; font-size: 13px; width: 98%;">
 								<div class="col">
 									<button class="tablinks active" id="smooth1"
-										style="width: 100%;" onclick="openTab(event, 'tab1')">Loan Details</button>
+										style="width: 100%;" onclick="openTab(event, 'tab1')">Loan
+										Details</button>
 								</div>
 								<div class="col">
 									<button class="tablinks" id="smooth2" style="width: 100%;"
@@ -2782,7 +2789,8 @@ function rowadddcorporate() {
 								<div class="col" th:if="${loanDetails?.entity_flg}=='Y'">
 									<button class="tablinks" id="smooth6" style="width: 100%;"
 										th:attr="data-loan_accountno = ${loanDetails?.loan_accountno}"
-										onclick="openTab(event, 'tab5');getLoanPosition(this);">Loan Position</button>
+										onclick="openTab(event, 'tab5');getLoanPosition(this);">Loan
+										Position</button>
 								</div>
 								<div class="col" th:if="${loanDetails?.entity_flg}=='Y'">
 									<button class="tablinks" id="smooth5" style="width: 100%;"
@@ -3275,28 +3283,41 @@ function rowadddcorporate() {
 										<div class="table-responsive d-none" id="demandtable"
 											style="font-size: 15px;">
 											<table class="table table-bordered">
-												<thead>
+												<thead class="thead-light">
 													<tr>
-														<th style="text-align: left; width: 60px !important;">Srl.
+														<th
+															style="text-align: left; width: 60px; white-space: nowrap;">Srl.
 															No.</th>
-
-														<th style="text-align: left; width: 60px !important;">
-															Installment Date</th>
-														<th style="text-align: left; width: 60px !important;">
-															Installment Description</th>
-														<th style="text-align: right; width: 60px !important;">
-															Installment Amt.</th>
-														<th style="text-align: right; width: 60px !important;">
-															Principal Amt.</th>
-														<th style="text-align: right; width: 60px !important;">Interest
+														<th
+															style="text-align: left; width: 60px; white-space: nowrap;">Installment
+															Date</th>
+														<th
+															style="text-align: left; width: 60px; white-space: nowrap;">Installment
+															Description</th>
+														<th
+															style="text-align: right; width: 60px; white-space: nowrap;">Installment
 															Amt.</th>
-														<th style="text-align: right; width: 60px !important;">Charges
+														<th
+															style="text-align: right; width: 60px; white-space: nowrap;">Principal
 															Amt.</th>
-														<th style="text-align: right; width: 60px !important;">
-															Principal Outstanding</th>
-
+														<th
+															style="text-align: right; width: 60px; white-space: nowrap;">Interest
+															Amt.</th>
+														<th
+															style="text-align: right; width: 60px; white-space: nowrap;">Charges
+															Amt.</th>
+														<th
+															style="text-align: right; width: 60px; white-space: nowrap;">Principal
+															Outstanding</th>
+														<th
+															style="text-align: right; width: 60px; white-space: nowrap;">Paid
+															Amount</th>
+														<th
+															style="text-align: right; width: 60px; white-space: nowrap;">Total
+															Outstanding</th>
 													</tr>
 												</thead>
+
 												<tbody id="repaymentDet">
 
 													<!-- More rows can be added similarly -->

@@ -19,6 +19,7 @@ public class TestPrincipalCalculation {
 	private BigDecimal interestOverdue;
 	private Date installmentFromDate;
 	private String installmentDescription;
+	private String paidamount;
 
 	public String getRateCode() {
 		return rateCode;
@@ -132,4 +133,11 @@ public class TestPrincipalCalculation {
 		this.installmentDescription = installmentDescription;
 	}
 
+	public String getPaidamount() {
+		return paidamount;
+	}
+
+	public void setPaidamount(String paidamount) {
+		this.paidamount = paidamount;
+	}
 }

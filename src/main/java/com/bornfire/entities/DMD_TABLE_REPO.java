@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -55,4 +56,13 @@ public interface DMD_TABLE_REPO extends JpaRepository<DMD_TABLE, DMD_TABLE_IDcla
 	@Query(value = "select TOP 1* from DEMAND_TBL aa where aa.loan_acct_no = ?1", nativeQuery = true)
 	DMD_TABLE gettranpopvalues21(String acct_num);
 
+	@Query(value = "SELECT * FROM DEMAND_TBL WHERE loan_acct_no = :accountNum AND FLOW_DATE IN (:flowDates)", nativeQuery = true)
+	List<DMD_TABLE> getLoanFlowsValueDatas1(@Param("accountNum") String accountNum,
+			@Param("flowDates") List<String> flowDates);
+	
+	@Query(value = "SELECT * FROM DEMAND_TBL WHERE loan_acct_no = ?1 AND FLOW_DATE =?2 and FLOW_CODE =?3", nativeQuery = true)
+	DMD_TABLE getLoanFlowsValueDatas11(String encodedkey, String flow_date,String flow_code);
+	
+	@Query(value = "select * from DEMAND_TBL aa where aa.loan_acct_no = ?1 AND paid_amount IS NOT NULL AND MODIFY_FLG = 'Y'", nativeQuery = true)
+	List<DMD_TABLE> gettranpopvaluesdatas(String acct_num);
 }
