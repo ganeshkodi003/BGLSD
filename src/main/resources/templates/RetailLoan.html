@@ -233,6 +233,14 @@ input:hover+.password-info {
 
 
 <script>
+function persapplsub() {
+	location.href = '/BGLS/RetailloanApproval?formmode=listForPersonal';
+}
+
+function vehiapplsub() {
+	location.href = '/BGLS/RetailloanApproval?formmode=listForVehicle';
+}
+
 	function Home() {
 
 		location.href = 'Dashboard';
@@ -361,8 +369,7 @@ input:hover+.password-info {
 		    }
 		   var formElement = document.getElementById('assosiateForm1'); // Get the form element
 		   var formData = new FormData(formElement); 
-	       var photoInput = formElement.querySelector("input[name='photo']");
-		   alert(photoInput)
+	       var photoInput = formElement.querySelector("input[name='photo']"); 
 	        
 		   if (photoInput && photoInput.files.length > 0) {
 	            formData.append("photoFile", photoInput.files[0]);
@@ -649,8 +656,7 @@ function SubPersonal(a) {
     }); 
 }
 
-function SubVehicle(a) { 
-	alert("vehicle");
+function SubVehicle(a) {  
     // Show the loader
     $('#loader1').show();
 
@@ -660,8 +666,8 @@ function SubVehicle(a) {
         url: './RetailVehicleDet',  
         data: $("#VehicleForm").serialize(),
         success: function (response) { 
-            $("#mypopup_alertmsg").html(response); 
-            $('#mypopup').modal('show');
+            $("#mypopup_alertmsg1").html(response); 
+            $('#mypopup1').modal('show');
         },
         complete: function() {
             // Hide the loader regardless of success or error
@@ -1059,14 +1065,12 @@ function renderScoreChart(score) {
 						<div class="card-header"
 							style="background-color: #e9ecef; height: 50px">
 							<div class="float-left">
-								<h6 style="font-size: 1.2rem; color: black;">RETAIL</h6>
+								<h6 style="font-size: 1.2rem; color: black;">LOAN ORIGINATION - RETAIL</h6>
 							</div>
 							<div class="float-right">
 								<button class="btn btn-primary p-2"
-									onclick="$('#emiModal').modal('show');">Calculate EMI</button>
-							</div>
-							<div class="float-right">
-								<button type="button" onclick="logFormFields()">Log Form Fields</button>
+									onclick="$('#emiModal').modal('show');">Calculate EMI</button> 
+								<button type="button" class="btn btn-primary p-2" onclick="logFormFields()">Log Form Fields</button>
 							</div>
 						</div>
 
@@ -1137,7 +1141,7 @@ function renderScoreChart(score) {
 
 
 										<div class="col-sm-2">
-											<input type="number" name="phone_number" id="phone_number"
+											<input type="text" name="phone_number" id="phone_number"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1451,7 +1455,7 @@ function renderScoreChart(score) {
 
 
 										<div class="col-sm-2">
-											<input type="number" name="phone_number" id="phone_number"
+											<input type="text" name="phone_number" id="phone_number"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -3446,14 +3450,29 @@ function renderScoreChart(score) {
 	</div>
 	<div class="modal fade" data-backdrop="false" data-keyboard="false"
 		tabindex="-1" role="dialog" aria-hidden="true"
-		style="padding-right: 850px" id="mypopup">
+		 id="mypopup">
 		<div
 			class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
 			style="height: 20%">
 			<div class="modal-content">
 				<div class="modal-body" style="text-align: center">
 					<p id="mypopup_alertmsg"></p>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="persapplsub()">Close</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" data-backdrop="false" data-keyboard="false"
+		tabindex="-1" role="dialog" aria-hidden="true"
+		 id="mypopup1">
+		<div
+			class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+			style="height: 20%">
+			<div class="modal-content">
+				<div class="modal-body" style="text-align: center">
+					<p id="mypopup_alertmsg1"></p>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="vehiapplsub()">Close</button>
 
 				</div>
 			</div>
@@ -3470,33 +3489,40 @@ function renderScoreChart(score) {
 				</div>
 				<div class="modal-body">
 					<form id="emiForm">
-						<div class="mb-3">
-							<label class="form-label slider-label">Amount You Need
-								(₹): <span id="loanAmountValue">500000</span>
-							</label> <input type="number" id="loanAmountInput"
-								class="form-control w-25" min="200000" max="1500000"
-								step="50000" value="500000"> <input type="range"
-								class="form-range" id="loanAmount" min="200000" max="1500000"
-								step="50000" value="500000">
-						</div>
-						<div class="mb-3">
-							<label class="form-label slider-label">For (Years): <span
-								id="loanYearsValue">7</span></label> <input type="number"
-								id="loanYearsInput" class="form-control w-25" min="1" max="10"
-								value="7"> <input type="range" class="form-range"
-								id="loanYears" min="1" max="10" value="7">
-						</div>
-						<div class="mb-3">
-							<label class="form-label slider-label">Interest Rate (%):
-								<span id="interestRateValue">7</span>
-							</label> <input type="number" id="interestRateInput"
-								class="form-control w-25" min="2" max="13" step="0.1" value="7">
-							<input type="range" class="form-range" id="interestRate" min="2"
-								max="13" step="0.1" value="7">
-						</div>
-						<button type="button" id="calculateBtn" class="btn btn-success"
-							onclick="calculateEMI()">Calculate</button>
-					</form>
+	<div class="d-flex justify-content-between flex-wrap">
+		<!-- Amount -->
+		<div class="mb-3 me-3" style="flex: 1;">
+			<label class="form-label slider-label">Amount You Need (₹): 
+				<span id="loanAmountValue">500000</span>
+			</label>
+			<input  type="number" id="loanAmountInput" class="form-control" min="200000" max="1500000"
+				step="50000" value="500000" style="width: 80%">
+			<input type="range" class="form-range" id="loanAmount" min="200000" max="1500000"
+				step="50000" value="500000">
+		</div>
+
+		<!-- Years -->
+		<div class="mb-3 me-3" style="flex: 1;">
+			<label class="form-label slider-label">For (Years): 
+				<span id="loanYearsValue">7</span>
+			</label>
+			<input type="number" id="loanYearsInput" class="form-control" min="1" max="10" value="7" style="width: 80%">
+			<input type="range" class="form-range" id="loanYears" min="1" max="10" value="7">
+		</div>
+
+		<!-- Interest Rate -->
+		<div class="mb-3" style="flex: 1;">
+			<label class="form-label slider-label">Interest Rate (%): 
+				<span id="interestRateValue">7</span>
+			</label>
+			<input type="number" id="interestRateInput" class="form-control" min="2" max="13" step="0.1" value="7" style="width: 80%">
+			<input type="range" class="form-range" id="interestRate" min="2" max="13" step="0.1" value="7">
+		</div>
+	</div>
+
+	<button type="button" id="calculateBtn" class="btn btn-success" onclick="calculateEMI()">Calculate</button>
+</form>
+
 
 					<div class="emi-output" id="emiResultBox">
 						<p id="emiResultText">Your Monthly EMI will be ₹7,546 per
