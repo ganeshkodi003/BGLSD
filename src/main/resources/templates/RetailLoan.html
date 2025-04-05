@@ -7,6 +7,8 @@
 -->
 
 <head>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css"
@@ -949,6 +951,7 @@ function logFormFields() {
     const alertMsg = document.getElementById("alertmsg");
     if (alertMsg) {
         alertMsg.innerText = `🎯 Your Total Score is: ${score}`;
+				renderScoreChart(score); // draw arc
     }
 
     // Show the Bootstrap modal
@@ -963,38 +966,6 @@ function logFormFields() {
     $('#scoreModal').modal('hide');
 
 }
-
-function showScoreChart(score) {
-    const remaining = 100 - score < 0 ? 0 : 100 - score;
-    const ctx = document.getElementById("scoreChart").getContext("2d");
-
-    new Chart(ctx, {
-        type: "pie",
-        data: {
-            labels: ["Your Score", "Remaining to 100"],
-            datasets: [{
-                label: "Score Distribution",
-                data: [score, remaining],
-                backgroundColor: ["#4caf50", "#f44336"],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: "Credit Evaluation Score",
-                    font: {
-                        size: 18
-                    }
-                }
-            }
-        }
-    });
-}
-
-
 
 function validateLoanAmount() {
     // Get input values
@@ -1015,6 +986,46 @@ function validateLoanAmount() {
 }
 
 
+let chartInstance = null;
+
+function renderScoreChart(score) {
+	const ctx = document.getElementById('scoreChart').getContext('2d');
+
+	// Normalize score to percentage (assuming max is 100)
+	const percentage = Math.min(score, 100);
+
+	// Destroy existing chart instance if exists
+	if (chartInstance) {
+		chartInstance.destroy();
+	}
+
+	chartInstance = new Chart(ctx, {
+		type: 'doughnut',
+		data: {
+			datasets: [{
+				data: [percentage, 100 - percentage],
+				backgroundColor: ['#28a745', '#E9DFC3'], // green + light gray
+				borderWidth: 0
+			}]
+		},
+		options: {
+			cutout: '75%',
+			rotation: -90,
+			circumference: 180,
+			plugins: {
+				tooltip: { enabled: false },
+				legend: { display: false },
+				title: {
+					display: true,
+					text: `${score}`,
+					position: 'bottom',
+					color: '#333',
+					font: { size: 20, weight: 'bold' }
+				}
+			}
+		}
+	});
+}
 
 
 </script>
@@ -3403,18 +3414,20 @@ function validateLoanAmount() {
 	</div>
 <!-- Show Score Modal -->
 <div class="modal fade" data-backdrop="false" data-keyboard="false"
-		id="scoreModal" tabindex="-1" role="dialog" aria-hidden="true">
-		<div
-			class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
+	id="scoreModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-body text-center">
+				<h6 id="alertmsg" class="mb-3"></h6>
 
-				<div class="modal-body" style="text-align: center;">
-					<h6 id="alertmsg"></h6>
-					<button type="button" class="btn btn-primary" onclick="closeModal()">Close</button>
-				</div>
+				<canvas id="scoreChart" width="200" height="100"></canvas>
+
+				<button type="button" class="btn btn-primary mt-3" onclick="closeModal()">Close</button>
 			</div>
 		</div>
 	</div>
+</div>
+
 
 
 
