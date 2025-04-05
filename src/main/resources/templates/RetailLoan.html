@@ -851,6 +851,172 @@ function formatNumberWithIndianSeparation(value) {
     let formattedIntegerPart = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThreeDigits;
     return decimalPart !== undefined ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
 }
+
+function logFormFields() {
+    const form = document.getElementById("PersonalForm");
+
+    if (!form) {
+        console.error("❌ Form not found!");
+        return;
+    }
+
+    const fields = form.querySelectorAll("input, select, textarea");
+    let formData = {};
+    let score = 0;
+
+    // Fields to exclude from normal scoring
+    const excludeFields = ["id", "remarks", "monthly_installment", "rate_of_interest", "date_of_application", "loan_amount"];
+
+    // Employer-based scoring
+    const employerScores = {
+        "Private Limited": 10,
+        "Public Sector": 15,
+        "Central Government": 20,
+        "State Government": 20,
+        "Local Bodies": 10
+    };
+
+    // Employment Nature-based scoring
+    const employmentScores = {
+        "Salaried": 20,
+        "Self-Employed": 15,
+        "Government Employee": 20,
+        "Contractual/Temporary Employee": 10,
+        "Retired/Pensioner": 10
+    };
+
+    let loanAmount = 0;
+    let annualIncome = 0;
+
+    fields.forEach(field => {
+        let value = field.value.trim();
+        let fieldName = field.name;
+
+        // Skip unchecked checkboxes/radios
+        if ((field.type === "radio" || field.type === "checkbox") && !field.checked) {
+            return;
+        }
+
+        // Store form data (excluding empty values)
+        if (value !== "") {
+            formData[fieldName] = value;
+        }
+
+        // Parse and store Loan Amount & Annual Income
+        if (fieldName === "loan_amount") {
+            loanAmount = parseFloat(value.replace(/,/g, "")) || 0;
+        }
+        if (fieldName === "annual_income") {
+            annualIncome = parseFloat(value.replace(/,/g, "")) || 0; // Remove commas before parsing
+        }
+
+        // Apply Employer scoring
+        if (fieldName === "employer" && employerScores[value]) {
+            score += employerScores[value];
+        } 
+        // Apply Employment Nature scoring
+        else if (fieldName === "employment_nature" && employmentScores[value]) {
+            score += employmentScores[value];
+        }
+        // Standard scoring for other fields (excluding specific ones)
+        else if (value !== "" && value !== "SELECT" && !excludeFields.includes(fieldName)) {
+            score += 5;
+        }
+    });
+
+    // Loan Amount Scoring based on percentage of Annual Income
+    if (annualIncome > 0 && loanAmount > 0) {
+        let loanPercentage = (loanAmount / annualIncome) * 100; // Fixed formula
+
+        if (loanPercentage <= 20) {
+            score += 20;
+        } else if (loanPercentage <= 40) {
+            score += 15;
+        } else if (loanPercentage <= 60) {
+            score += 10;
+        } else if (loanPercentage <= 80) {
+            score += 5;
+        } else {
+            score += 0; // If loan amount is very high compared to income, no score
+        }
+
+        console.log(`💰 Loan Percentage: ${loanPercentage.toFixed(2)}%`);
+    }
+
+    console.log("✅ Filtered Form Data:", formData);
+    console.log("🎯 Total Score:", score);
+    // Show score in the modal
+    const alertMsg = document.getElementById("alertmsg");
+    if (alertMsg) {
+        alertMsg.innerText = `🎯 Your Total Score is: ${score}`;
+    }
+
+    // Show the Bootstrap modal
+       $('#scoreModal').modal('show');
+
+
+
+	}
+
+	function closeModal() {
+
+    $('#scoreModal').modal('hide');
+
+}
+
+function showScoreChart(score) {
+    const remaining = 100 - score < 0 ? 0 : 100 - score;
+    const ctx = document.getElementById("scoreChart").getContext("2d");
+
+    new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: ["Your Score", "Remaining to 100"],
+            datasets: [{
+                label: "Score Distribution",
+                data: [score, remaining],
+                backgroundColor: ["#4caf50", "#f44336"],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Credit Evaluation Score",
+                    font: {
+                        size: 18
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+
+function validateLoanAmount() {
+    // Get input values
+    let loanAmountInput = document.getElementById("loan_amount");
+    let annualIncomeInput = document.getElementById("annual_income");
+
+    // Convert to numbers (handle empty values safely)
+    let loanAmount = parseFloat(loanAmountInput.value.replace(/,/g, '')) || 0;
+    let annualIncome = parseFloat(annualIncomeInput.value.replace(/,/g, '')) || 0;
+
+    // Check if loan amount exceeds annual income
+    if (loanAmount > annualIncome) {
+        alert("Loan amount cannot exceed Annual Income.");
+        loanAmountInput.value = annualIncome.toLocaleString(); // Set max allowed value
+    } else {
+        loanAmountInput.value = loanAmount.toLocaleString(); // Format input
+    }
+}
+
+
+
+
 </script>
 
 </head>
@@ -887,6 +1053,9 @@ function formatNumberWithIndianSeparation(value) {
 							<div class="float-right">
 								<button class="btn btn-primary p-2"
 									onclick="$('#emiModal').modal('show');">Calculate EMI</button>
+							</div>
+							<div class="float-right">
+								<button type="button" onclick="logFormFields()">Log Form Fields</button>
 							</div>
 						</div>
 
@@ -1140,7 +1309,7 @@ function formatNumberWithIndianSeparation(value) {
 										<div class="col-sm-2">Loan Amount</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="loan_amount" id="loan_amount"
+											<input type="text" name="loan_amount" id="loan_amount" oninput="validateLoanAmount()"
 												onchange="formatAndSetValue(this)"
 												class="form-control form-control-sm bg-white border border-dark" />
 
@@ -3232,6 +3401,21 @@ function formatNumberWithIndianSeparation(value) {
 
 		</div>
 	</div>
+<!-- Show Score Modal -->
+<div class="modal fade" data-backdrop="false" data-keyboard="false"
+		id="scoreModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div
+			class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content">
+
+				<div class="modal-body" style="text-align: center;">
+					<h6 id="alertmsg"></h6>
+					<button type="button" class="btn btn-primary" onclick="closeModal()">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 
 	<div class="modal fade" data-backdrop="false" data-keyboard="false"
