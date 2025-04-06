@@ -1804,7 +1804,7 @@
 											<font size="2"><B>Modify User :</B></font>
 										</td>
 										<td class="col-sm-2" style="width: 112px;"><input type="text" id="modifyuser"
-												name="modify_user" th:value="${ledgervalues?.modify_user}"
+												name="modify_user"th:value="${ledgervalues?.entry_user}"
 												style="width: 112px; border: none; outline: none; background-color: transparent; font-size: 12px;"
 												disabled></td>
 										<td class="col-sm-2" style="text-align: right;">
@@ -1829,7 +1829,7 @@
 													Time : </B></font>
 										</td>
 										<td style="width: 112px"><input type="text" id="modifytime" name="modify_time"
-												th:value="${#dates.format(ledgervalues?.modify_time, 'dd-MM-yyyy')}"
+											th:value="${#dates.format(ledgervalues?.entry_time, 'dd-MM-yyyy')}"
 												style="width: 112px; border: none; outline: none; background-color: transparent; font-size: 12px;"
 												disabled></td>
 										<td style="text-align: right;">
