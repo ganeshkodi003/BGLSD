@@ -3432,10 +3432,30 @@ public class BGLSNavigationController {
 	public String loanOperation(@RequestParam(required = false) String formmode, Model md, HttpServletRequest req) {
 
 		Date TRANDATE = (Date) req.getSession().getAttribute("TRANDATE");
+		System.out.println("THE GETTING TRAN_DATE IS HERE "+TRANDATE);
+
+		// Convert Date to LocalDate
+	    LocalDate tranLocalDate = TRANDATE.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+	    // Format TRANDATE to dd-MM-yyyy
+	    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+	    String formattedTrandate = sdf.format(TRANDATE);
+	    System.out.println("Formatted TRAN_DATE (dd-MM-yyyy): " + formattedTrandate);
+
+	    // Get the last day of the month for this date
+	    LocalDate lastDayOfMonth = tranLocalDate.withDayOfMonth(tranLocalDate.lengthOfMonth());
+
+	    // Format LASTTRANDATE to dd-MM-yyyy
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	    String formattedLastTrandate = lastDayOfMonth.format(formatter);
+	    System.out.println("Formatted LASTTRANDATE (Last day of month, dd-MM-yyyy): " + formattedLastTrandate);
+		
 		if (formmode == null || formmode.equals("list")) {
 			md.addAttribute("formmode", "list");
 			md.addAttribute("formmode", "list");
 			md.addAttribute("TRANDATE", TRANDATE);
+			md.addAttribute("TRANDATE11", formattedTrandate);
+			md.addAttribute("LASTTRANDATE", formattedLastTrandate);
 			md.addAttribute("booking", lease_Loan_Work_Repo.getActNo());
 			md.addAttribute("booking1", depositRep.getexistingData());
 

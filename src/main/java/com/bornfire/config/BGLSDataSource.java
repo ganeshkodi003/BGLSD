@@ -1,5 +1,6 @@
 package com.bornfire.config;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -77,6 +78,11 @@ public class BGLSDataSource {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setEntityManagerFactory(datasrc().getObject());
 		return transactionManager;
+	}
+
+	public Connection getConnection() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

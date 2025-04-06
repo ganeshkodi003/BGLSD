@@ -427,4 +427,7 @@ Object[] getcheck1();
 
 	@Query(value = "SELECT * FROM  BGLS_TRM_WRK_TRANSACTIONS WHERE TRAN_DATE=?1", nativeQuery = true)
 	List<TRAN_MAIN_TRM_WRK_ENTITY> getbalance( Date selectedDate);	
+	
+	@Query(value = "select  * from BGLS_TRM_WRK_TRANSACTIONS where  acct_num IN (:acctnum) AND TRAN_PARTICULAR LIKE '%Interest Debited%'", nativeQuery = true)
+	List<TRAN_MAIN_TRM_WRK_ENTITY> set_dab_acc_numval(@Param("acctnum") String accountNo);
 }

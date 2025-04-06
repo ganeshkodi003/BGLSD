@@ -35,9 +35,6 @@ public class DMD_TABLE {
 	private String part_tran_type;
 	private String tran_crncy;
 	private BigDecimal tran_amt;
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	private Date adj_dt;
-	private BigDecimal adj_amt;
 	private String cr_dr;
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	private Date entry_time;
@@ -142,18 +139,6 @@ public class DMD_TABLE {
 	public void setTran_amt(BigDecimal tran_amt) {
 		this.tran_amt = tran_amt;
 	}
-	public Date getAdj_dt() {
-		return adj_dt;
-	}
-	public void setAdj_dt(Date adj_dt) {
-		this.adj_dt = adj_dt;
-	}
-	public BigDecimal getAdj_amt() {
-		return adj_amt;
-	}
-	public void setAdj_amt(BigDecimal adj_amt) {
-		this.adj_amt = adj_amt;
-	}
 	public String getCr_dr() {
 		return cr_dr;
 	}
@@ -223,7 +208,7 @@ public class DMD_TABLE {
 	public DMD_TABLE(String loan_acid, String loan_acct_no, String acct_name, BigDecimal flow_id, String flow_frq,
 			Date flow_date, String flow_code, BigDecimal flow_amt, String flow_crncy_code, String tran_id,
 			Date tran_date, BigDecimal part_tran_id, String part_tran_type, String tran_crncy, BigDecimal tran_amt,
-			Date adj_dt, BigDecimal adj_amt, String cr_dr, Date entry_time, Date modify_time, String entry_user,
+			String cr_dr, Date entry_time, Date modify_time, String entry_user,
 			String modify_user, String modify_flg, String del_flg, BigDecimal srl_no, BigDecimal no_of_rev,
 			String single_rev, String paid_amount) {
 		super();
@@ -242,8 +227,6 @@ public class DMD_TABLE {
 		this.part_tran_type = part_tran_type;
 		this.tran_crncy = tran_crncy;
 		this.tran_amt = tran_amt;
-		this.adj_dt = adj_dt;
-		this.adj_amt = adj_amt;
 		this.cr_dr = cr_dr;
 		this.entry_time = entry_time;
 		this.modify_time = modify_time;
