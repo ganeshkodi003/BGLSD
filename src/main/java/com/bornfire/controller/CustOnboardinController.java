@@ -6011,7 +6011,7 @@ public class CustOnboardinController {
  
 	    bLMS_VEHICLEDET_REPO.save(BLMS_VEHICLE_DET_ENTITY);
  
-	    return "App Ref No: " + srlno + " has been Submitted Successfully<br>";
+	    return "Application Submitted Successfully";
 	}
 	
 	@RequestMapping(value = "PersonalHoldsubmit", method = { RequestMethod.GET, RequestMethod.POST })
@@ -6030,26 +6030,28 @@ public class CustOnboardinController {
  
 	    bLMS_PERSONALDET_REPO.save(BLMS_PERSONAL_LOAN_ENTITY);
  
-	    return "App Ref No: " + id + " has been Submitted Successfully<br>";
+	    return "Application Submitted Successfully";
 	}
 	
-	@RequestMapping(value = "HoldVehiclesubmit", method = { RequestMethod.GET, RequestMethod.POST })
-	@ResponseBody
-	public String HoldVehiclesubmit(@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY BLMS_PERSONAL_LOAN_ENTITY, Model md, 
-			HttpServletRequest req, @RequestParam(required = false) String id) {
-		String userid = (String) req.getSession().getAttribute("USERID");
-
-		System.out.println("ID" + id);
-		BLMS_PERSONAL_LOAN_ENTITY.setDel_flg("N");
-		BLMS_PERSONAL_LOAN_ENTITY.setHold_flg("N");
-		BLMS_PERSONAL_LOAN_ENTITY.setVerify_flg("N");
-		BLMS_PERSONAL_LOAN_ENTITY.setModify_flg("N");
-		BLMS_PERSONAL_LOAN_ENTITY.setReject_flg("N");
-
-		bLMS_PERSONALDET_REPO.save(BLMS_PERSONAL_LOAN_ENTITY);
-
-		return "App Ref No: " + id + " has been Submitted Successfully<br>";
-	}
+	/*
+	 * @RequestMapping(value = "HoldVehiclesubmit", method = { RequestMethod.GET,
+	 * RequestMethod.POST })
+	 * 
+	 * @ResponseBody public String HoldVehiclesubmit(@ModelAttribute
+	 * BLMS_PERSONAL_LOAN_ENTITY BLMS_PERSONAL_LOAN_ENTITY, Model md,
+	 * HttpServletRequest req, @RequestParam(required = false) String id) { String
+	 * userid = (String) req.getSession().getAttribute("USERID");
+	 * 
+	 * System.out.println("ID" + id); BLMS_PERSONAL_LOAN_ENTITY.setDel_flg("N");
+	 * BLMS_PERSONAL_LOAN_ENTITY.setHold_flg("N");
+	 * BLMS_PERSONAL_LOAN_ENTITY.setVerify_flg("N");
+	 * BLMS_PERSONAL_LOAN_ENTITY.setModify_flg("N");
+	 * BLMS_PERSONAL_LOAN_ENTITY.setReject_flg("N");
+	 * 
+	 * bLMS_PERSONALDET_REPO.save(BLMS_PERSONAL_LOAN_ENTITY);
+	 * 
+	 * return "App Ref No: " + id + " has been Submitted Successfully<br>"; }
+	 */
 
 	@GetMapping("getsbaccount")
 	@ResponseBody
