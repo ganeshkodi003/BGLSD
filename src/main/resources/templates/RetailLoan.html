@@ -826,25 +826,33 @@ document.addEventListener("DOMContentLoaded", function() {
 
 </script>
 <script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function() {
-    calculateAnnualIncome();
-    document.getElementById('monthly_income').addEventListener('input', calculateAnnualIncome);
+document.addEventListener("DOMContentLoaded", function () {
+    // Initial calculation
+    calculateAnnualIncome(1);
+    calculateAnnualIncome(2);
+
+    // Add listeners
+    document.querySelector('.monthly_income_1')?.addEventListener('input', () => calculateAnnualIncome(1));
+    document.querySelector('.monthly_income_2')?.addEventListener('input', () => calculateAnnualIncome(2));
 });
 
 // Function to calculate Annual Income from Monthly Income
-function calculateAnnualIncome() {
-    var monthlyIncome = document.getElementById('monthly_income').value;
-    console.log("Monthly Income: ", monthlyIncome);
+function calculateAnnualIncome(index) {
+    const monthlyInput = document.querySelector(`.monthly_income_${index}`);
+    const annualInput = document.querySelector(`.annual_income_${index}`);
 
-    if (monthlyIncome) {
-        var monthlyIncomeValue = parseFloat(monthlyIncome.replace(/,/g, ''));
-        var annualIncome = (monthlyIncomeValue * 12).toFixed(2);
-        console.log("Annual Income: ", annualIncome);
-        document.getElementById('annual_income').value = formatNumberWithIndianSeparation(annualIncome);
-    } else {
-        document.getElementById('annual_income').value = '';
-    }
+    if (!monthlyInput || !annualInput) return;
+
+    const monthlyValue = monthlyInput.value.replace(/,/g, '');
+    const monthlyIncome = parseFloat(monthlyValue) || 0;
+    const annualIncome = (monthlyIncome * 12).toFixed(2);
+
+    console.log(`Monthly Income ${index}:`, monthlyIncome);
+    console.log(`Annual Income ${index}:`, annualIncome);
+
+    annualInput.value = formatNumberWithIndianSeparation(annualIncome);
 }
+
 
 // Reuse or rename your formatter function
 function formatNumberWithIndianSeparation(value) {
@@ -1234,7 +1242,7 @@ function renderScoreChart(score) {
 										<div class="col-sm-2">
 											<input type="text" name="monthly_income" id="monthly_income"
 												onchange="formatAndSetValue(this)"
-												class="form-control form-control-sm bg-white border border-dark" />
+												class="form-control form-control-sm bg-white border border-dark monthly_income_1" />
 
 										</div>
 
@@ -1243,7 +1251,7 @@ function renderScoreChart(score) {
 										<div class="col-sm-2">
 
 											<input type="text" name="annual_income" id="annual_income" 
-												class="form-control form-control-sm bg-white border border-dark"
+												class="form-control form-control-sm bg-white border border-dark annual_income_1" 
 												readonly />
 
 										</div>
@@ -1547,7 +1555,7 @@ function renderScoreChart(score) {
 
 										<div class="col-sm-2">
 											<input type="text" name="monthly_income" id="monthly_income" onchange="formatAndSetValue(this)"
-												class="form-control form-control-sm bg-white border border-dark" />
+												class="form-control form-control-sm bg-white border border-dark monthly_income_2" />
 
 										</div>
 
@@ -1556,7 +1564,7 @@ function renderScoreChart(score) {
 										<div class="col-sm-2">
 
 											<input type="text" name="annual_income" id="annual_income" 
-												class="form-control form-control-sm bg-white border border-dark"
+												class="form-control form-control-sm bg-white border border-dark annual_income_2"
 												readonly />
 
 										</div>

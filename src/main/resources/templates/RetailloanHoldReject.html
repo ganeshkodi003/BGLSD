@@ -296,7 +296,7 @@ function SubProceed() {
 	alert("id"+id);
 	$.ajax({
 		type: "POST",
-		url: './PersonalHoldsubmit?id=' + id,  // ✅ Corrected URL
+		url: './PersonalHoldsubmit' , 
 		data: $("#HoldForm").serialize(),
 		success: function(response) {
 			$("#mypopup_alertmsg").html(response);
@@ -394,6 +394,16 @@ function SubVehicleProceed() {
 											}
 										});
 					});
+
+
+	function closemodal() {
+    // If using Bootstrap or any modal library, close the modal here if needed
+    // Example for Bootstrap modal:
+    // $('#yourModalId').modal('hide');
+
+    // Then go back to previous page
+    window.history.back();
+}
 </script>
 
 </head>
@@ -1262,7 +1272,7 @@ function SubVehicleProceed() {
 			<div class="modal-content">
 				<div class="modal-body" style="text-align: center">
 					<p id="mypopup_alertmsg"></p>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="closemodal()">Close</button>
 
 				</div>
 			</div>

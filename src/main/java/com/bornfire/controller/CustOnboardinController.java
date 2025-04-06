@@ -6016,11 +6016,10 @@ public class CustOnboardinController {
 	
 	@RequestMapping(value = "PersonalHoldsubmit", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public String Holdsubmit(@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY BLMS_PERSONAL_LOAN_ENTITY, Model md, 
-			HttpServletRequest req,@RequestParam(required = false) String id) {
+	public String PersonalHoldsubmit(@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY BLMS_PERSONAL_LOAN_ENTITY, Model md, 
+			HttpServletRequest req) {
 	    String userid = (String) req.getSession().getAttribute("USERID");
 
-	    System.out.println("ID"+id);
 	    String srlno = bLMS_PERSONALDET_REPO.srlnum();  
 	    BLMS_PERSONAL_LOAN_ENTITY.setDel_flg("N");
 	    BLMS_PERSONAL_LOAN_ENTITY.setHold_flg("N"); 
@@ -6030,7 +6029,7 @@ public class CustOnboardinController {
  
 	    bLMS_PERSONALDET_REPO.save(BLMS_PERSONAL_LOAN_ENTITY);
  
-	    return "Application Submitted Successfully";
+	    return "App Ref No: " + BLMS_PERSONAL_LOAN_ENTITY.getId() + " has been Submitted Successfully<br>";
 	}
 	
 	/*
