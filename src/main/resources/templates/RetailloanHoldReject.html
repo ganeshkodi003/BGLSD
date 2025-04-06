@@ -311,7 +311,7 @@ function SubVehicleProceed() {
 	var id = document.getElementById("id").value;  
 	$.ajax({
 		type: "POST",
-		url: './VehicleHoldsubmit?id=' + id,  // ✅ Corrected URL
+		url: './VehicleHoldsubmit',  // ✅ Corrected URL
 		data: $("#VehicleHoldForm").serialize(),
 		success: function(response) {
 			$("#mypopup_alertmsg").html(response);

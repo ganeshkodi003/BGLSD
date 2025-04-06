@@ -6009,7 +6009,7 @@ public class CustOnboardinController {
  
 	    bLMS_VEHICLEDET_REPO.save(BLMS_VEHICLE_DET_ENTITY);
  
-	    return "Application Submitted Successfully";
+	    return "App Ref No: " + BLMS_VEHICLE_DET_ENTITY.getId() + " has been Submitted Successfully<br>";
 	}
 	
 	@RequestMapping(value = "PersHoldsubmit", method = { RequestMethod.GET, RequestMethod.POST })
