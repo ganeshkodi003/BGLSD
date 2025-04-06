@@ -292,8 +292,7 @@ input:hover+.password-info {
 </script>
 <script type="text/javascript">
 function SubProceed() {
-	var id = document.getElementById("id").value; 
-	alert("id"+id);
+	var id = document.getElementById("id").value;  
 	$.ajax({
 		type: "POST",
 		url: './PersonalHoldsubmit' , 
@@ -309,8 +308,7 @@ function SubProceed() {
 }
 
 function SubVehicleProceed() {
-	var id = document.getElementById("id").value; 
-	alert("id"+id);
+	var id = document.getElementById("id").value;  
 	$.ajax({
 		type: "POST",
 		url: './VehicleHoldsubmit?id=' + id,  // ✅ Corrected URL
