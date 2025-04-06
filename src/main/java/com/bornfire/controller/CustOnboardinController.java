@@ -5956,8 +5956,6 @@ public class CustOnboardinController {
 	@ResponseBody
 	public String RetailVehicleDet(@ModelAttribute BLMS_VEHICLE_DET_ENTITY BLMS_VEHICLE_DET_ENTITY, Model md, HttpServletRequest req) {
 		String userid = (String) req.getSession().getAttribute("USERID");
-		String srlno = bLMS_VEHICLEDET_REPO.srlnum();
-		BLMS_VEHICLE_DET_ENTITY.setId(srlno);
 		BLMS_VEHICLE_DET_ENTITY.setEntity_user(userid);
 		BLMS_VEHICLE_DET_ENTITY.setEntity_time(new Date());
 		BLMS_VEHICLE_DET_ENTITY.setModify_user(userid);

@@ -441,6 +441,7 @@ function vehiapplsub() {
 <script>
 	function openTab(evt, tabName) {
 		// Hide all main tab content
+		tab = tabName;
 		let i, tabcontent, tablinks;
 		tabcontent = document.getElementsByClassName("tabcontent");
 		for (i = 0; i < tabcontent.length; i++) {
@@ -868,9 +869,18 @@ function formatNumberWithIndianSeparation(value) {
     return decimalPart !== undefined ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
 }
 
-function logFormFields() {
-    const form = document.getElementById("PersonalForm");
+var tab = "tab1";
 
+function logFormFields() {
+	alert(tab);
+ var form =  '';
+ 
+	if(tab == "tab2" ){
+		 form = document.getElementById("VehicleForm");
+	}
+	else if(tab == 'tab1'){
+		form = document.getElementById("PersonalForm");
+	}
     if (!form) {
         console.error("❌ Form not found!");
         return;
@@ -1425,7 +1435,7 @@ function renderScoreChart(score) {
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Appl Ref No</div> 
 										<div class="col-sm-2">
-											<input type="text" name="id" id="id"  th:value="${SrlNo}"
+											<input type="text" name="id" id="id"  th:value="ARN+${SrlNo}"
 												class="form-control form-control-sm bg-white border border-dark" /> 
 										</div>
 
