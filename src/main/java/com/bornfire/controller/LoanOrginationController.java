@@ -82,11 +82,7 @@ public class LoanOrginationController {
 		
 		if (formmode.equals("approveAcc")) {
 
-			up.setVerify_flg("Y");
-			up.setVerify_time(new Date());
-			up.setVerify_user(user);
-
-
+		
 			if(loan.equals("personal")) {
 				
 				up.setVerify_flg("Y");
@@ -95,9 +91,9 @@ public class LoanOrginationController {
 				blms_PERSONALDET_REPO.save(up);
 			}else {
 				
-				up.setVerify_flg("Y");
-				up.setVerify_time(new Date());
-				up.setVerify_user(user);
+				up1.setVerify_flg("Y");
+				up1.setVerify_time(new Date());
+				up1.setVerify_user(user);
 				bLMS_VEHICLEDET_REPO.save(up1);
 			}
 			
@@ -117,32 +113,30 @@ public class LoanOrginationController {
 				blms_PERSONALDET_REPO.save(up);
 			}else {
 				
-				up.setVerify_flg("Y");
-				up.setVerify_time(new Date());
-				up.setVerify_user(user);
-				up.setHold_remarks(hold_remarks);
+				up1.setVerify_flg("Y");
+				up1.setVerify_time(new Date());
+				up1.setVerify_user(user);
+				up1.setHold_remarks(hold_remarks);
 				bLMS_VEHICLEDET_REPO.save(up1);
 			}
 			msg = "Reference No: " + ApprefNO + " has been moved to HOLD LIST ";
 
 		} else if (formmode.equals("Reject_acc")) {
-			/* if(loan.equals("personal")) { */
+			if(loan.equals("personal")) { 
 					up.setReject_flg("Y");
 					up.setVerify_flg("N");
 					up.setReject_date(new Date());
 					up.setReject_user(user);
 					up.setReject_remarks(reject_remarks);
 					blms_PERSONALDET_REPO.save(up);
-
-					
-			/*	}else {
-					up.setReject_flg("Y");
-					up.setVerify_flg("N");
-					up.setReject_date(new Date());
-					up.setReject_user(user);
-					up.setReject_remarks(reject_remarks);
+			}else {
+				up1.setReject_flg("Y");
+				up1.setVerify_flg("N");
+				up1.setReject_date(new Date());
+				up1.setReject_user(user);
+				up1.setReject_remarks(reject_remarks);
 					bLMS_VEHICLEDET_REPO.save(up1);
-				}*/
+				}
 			 msg = "Reference No: " + ApprefNO + " has been REJECTED and moved to HOLD LIST ";
 		}
 
