@@ -6012,10 +6012,10 @@ public class CustOnboardinController {
 	    return "Application Submitted Successfully";
 	}
 	
-	@RequestMapping(value = "PersonalHoldsubmit", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "PersHoldsubmit", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public String PersonalHoldsubmit(@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY BLMS_PERSONAL_LOAN_ENTITY, Model md, 
-			HttpServletRequest req) {
+	public String PersHoldsubmit(@ModelAttribute BLMS_PERSONAL_LOAN_ENTITY BLMS_PERSONAL_LOAN_ENTITY, Model md, 
+			HttpServletRequest req,@RequestParam(required = false) String id) {
 	    String userid = (String) req.getSession().getAttribute("USERID");
 
 	    String srlno = bLMS_PERSONALDET_REPO.srlnum();  

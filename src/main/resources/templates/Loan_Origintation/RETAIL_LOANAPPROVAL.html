@@ -1300,8 +1300,294 @@ input:hover+.password-info {
 							    </div>
 							</div>
 							<div class="card-body">
-							 
-							
+								<form class=" border border-secondary" action="#" method="post"
+									id="VehicleHoldForm" autocomplete="off">
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Applicant
+											Personal Details</div>
+									</div>
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Appl Ref No</div>
+										<div class="col-sm-2">
+											<input type="text" name="id" id="id"
+												th:value="${vehicle?.id}" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Application</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_application"
+												id="date_of_application"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${#dates.format(personal?.date_of_application, 'yyyy-MM-dd')}"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Name</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="name" id="name"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly th:value="${vehicle?.name}" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Date of Birth</div>
+										<div class="col-sm-2">
+											<input type="date" name="date_of_birth" id="date_of_birth"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${#dates.format(personal?.date_of_birth, 'yyyy-MM-dd')}"
+												readonly />
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Phone Number</div>
+
+
+										<div class="col-sm-2">
+											<input type="number" name="phone_number" id="phone_number"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${vehicle?.phone_number}" readonly />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Email ID</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="email_id" id="email_id"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${vehicle?.email_id}" readonly />
+
+										</div>
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Home Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="home_address" id="home_address"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${vehicle?.home_address}" readonly />
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Marital Status</div>
+										<div class="col-sm-2">
+											<input type="text" name="marital_status" id="marital_status"
+												class="form-control form-control-sm bg-white border border-dark"
+												th:value="${vehicle?.marital_status}" readonly />
+										</div>
+
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Place of Work</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="place_of_work" id="place_of_work"
+												th:value="${vehicle?.place_of_work}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Job Title</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="job_title" id="job_title"
+												th:value="${vehicle?.job_title}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Work Address</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="work_address" id="work_address"
+												th:value="${vehicle?.work_address}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Service</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="service" id="service"
+												th:value="${vehicle?.service}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Monthly Income</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="monthly_income" id="monthly_income"
+												th:value="${vehicle?.monthly_income}"
+												onchange="formatAndSetValue(this)"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Annual Income</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="annual_income" id="annual_income"
+												th:value="${vehicle?.annual_income}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Employer</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="employer" id="employer"
+												th:value="${vehicle?.employer}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+										</div>
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Employment Nature</div>
+										<div class="col-sm-2">
+											<input type="text" name="employment_nature"
+												id="employment_nature"
+												th:value="${vehicle?.employment_nature}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+										</div>
+
+									</div>
+
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2 font-weight-bold" style="font-size: 16px">Vehicle
+											Loan Details</div>
+									</div>
+
+									<div class="row formline" style="padding: 10px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Vehicle type</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="vehicle_type"
+												id="vehicle_type"
+												th:value="${vehicle?.vehicle_type}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+										</div>
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Vehicle Value</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="vehicle_value" id="vehicle_value"
+												onchange="formatAndSetValue(this)"
+												th:value="${vehicle?.vehicle_value}"
+												class="form-control form-control-sm bg-white border border-dark"
+												readonly />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Vehicle model</div>
+
+
+										<div class="col-sm-2">
+											<input type="number" name="vehicle_model"
+												th:value="${vehicle?.vehicle_model}"
+												id="vehicle_model" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Registration Number</div>
+										<div class="col-sm-2">
+
+											<input type="number" name="registration_number"
+												th:value="${vehicle?.registration_number}"
+												id="registration_number" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Dealer Name</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="dealer_name"
+												th:value="${vehicle?.dealer_name}"
+												id="dealer_name" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Dealer Address</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="dealer_address" id="dealer_address"
+												th:value="${vehicle?.dealer_address}" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
+
+								</form>
+
 							</div>
 						   <!-- Loader HTML -->
 							<div id="loader"
