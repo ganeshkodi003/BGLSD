@@ -221,7 +221,9 @@ public class CustomerRequestService {
 			up.setDel_flg("N");
 			up.setEntity_flg("N");
 			up.setVerify_flg("N");
-			
+			up.setModify_user(userId);
+			up.setModify_time(new Date());
+			up.setModify_flg("Y");
 			// Save customer profile
 			bACP_CUS_PROFILE_REPO.save(up);
 

@@ -5192,7 +5192,7 @@ input:hover+.password-info {
 																	class="form-control form-control-sm bg-white border border-dark"
 																	maxlength="10" id="currency" name="currency"
 																	th:value=${customerdata?.currency} autocomplete="off"
-																	value="SCR" title="Seychelles"   readonly />
+																	value="BTN" title="BHUTANESE NGULTRUM"   readonly />
 															</div>
 
 														</div>
@@ -5383,8 +5383,8 @@ input:hover+.password-info {
 																<input type="text"
 																	class="form-control form-control-sm bg-white border border-dark"
 																	th:value="${loanDetails?.loan_currency}" maxlength="10"
-																	id="loan_currency" name="loan_currency" value="SCR"
-																	title="Seychelles" autocomplete="off"
+																	id="loan_currency" name="loan_currency" value="BTN"
+																	title="BHUTANESE NGULTRUM"autocomplete="off"
 																	   readonly />
 															</div>
 															<div class="col-sm-1"></div>
@@ -6312,7 +6312,7 @@ input:hover+.password-info {
 						</div>
 						<div class="col-sm-2">
 							<input type="text" id="Annu_income"
-								th:value="${customerRequest?.annual_income== 0 ? '0.00' :#numbers.formatDecimal(customerRequest?.annual_income, 0, 'COMMA', 2, 'POINT')}"
+								th:value="${customerRequest?.annual_income}"
 								class="form-control form-control-sm bg-white border border-dark"
 								autocomplete="off"  readonly />
 						</div>

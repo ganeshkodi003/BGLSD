@@ -3424,6 +3424,7 @@ public class CustOnboardinController {
 
 					up.setStatus("APPROVED");
 					up.setApproval_flg("Y");
+					up.setModify_flg("N");	
 					up.setVerify_time(new Date());
 					up.setVerify_user(user);
 					bACP_CUS_PROFILE_REPO.save(up);
@@ -3449,6 +3450,7 @@ public class CustOnboardinController {
 					System.out.println("CORPORATE");
 					up.setStatus("APPROVED");
 					up.setApproval_flg("Y");
+					up.setModify_flg("N");	
 					up.setVerify_time(new Date());
 					up.setVerify_user(user);
 					bACP_CUS_PROFILE_REPO.save(up);
