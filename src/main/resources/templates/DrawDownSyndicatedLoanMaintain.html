@@ -2364,7 +2364,7 @@
 
 						<div class="card-header" style="background-color: #e9ecef; height: 50px">
 							<div class="float-left">
-								<h6 style="font-size: 1.2rem;">LEASE LOAN - LIST </h6>
+								<h6 style="font-size: 1.2rem;"> LOAN - LIST </h6>
 							</div>
 							<!--<div class="btn-group nav-buttons float-right">
 								<button type="button" class="btn btn-primary p-2" id="btnAdd"
@@ -2462,7 +2462,7 @@
 							</div>
 						</div>
 						<div class="card-footer text-center">
-							<button class="btn btn-primary p-2" id="btnHome" onclick=" home();">Home</button>
+							<button class="btn btn-primary p-2" id="btnHome" onclick="">Home</button>
 							<button class="btn btn-primary p-2" id="btnBack" onclick="back();">Back</button>
 						</div>
 					</div>
@@ -2475,7 +2475,7 @@
 					<div class="card">
 						<div class="card-header" style="background-color: #e9ecef; height: 50px">
 							<div class="float-left">
-								<h6 style="font-size: 1.2rem;" class="ml-3">LEASE LOAN - ADD </h6>
+								<h6 style="font-size: 1.2rem;" class="ml-3"> LOAN - ADD </h6>
 							</div>
 
 
@@ -2670,7 +2670,7 @@
 											</div>
 										</div>
 										<div class="card-footer text-center mt-2">
-											<button class="btn btn-primary p-2" onclick="home();">Home</button>
+											<button class="btn btn-primary p-2" onclick="">Home</button>
 											<button class="btn btn-primary p-2" onclick="submitparam()">Submit</button>
 											<button class="btn btn-primary p-2" onclick="back();">Back</button>
 										</div>
@@ -2810,8 +2810,7 @@
 											</div>
 										</div>
 										<div class="card-footer text-center">
-											<button class="btn btn-primary" id="btnHome"
-												onclick="window.location.href='/.Dashboard';">Home</button>
+											<button class="btn btn-primary" id="btnHome">Home</button>
 											<!-- <button class="btn btn-primary"
 										th:if="${formmode}=='modify' OR ${formmode}=='add' ">Validate</button> -->
 											<button type="button" class="btn btn-primary p-2"
@@ -2996,7 +2995,7 @@
 											</div>
 										</div>
 										<div class="card-footer text-center">
-											<button class="btn btn-primary p-2" onclick="home();">Home</button>
+											<button class="btn btn-primary p-2" >Home</button>
 											<button class="btn btn-primary p-2" onclick="addFormSubmit(this)"
 												id="addSubmitData">Submit</button>
 											<button class="btn btn-primary p-2" onclick="back();">Back</button>
@@ -3069,9 +3068,9 @@
 					<div class="card">
 						<div class="card-header" style="background-color: #e9ecef; height: 50px">
 							<div class="float-left">
-								<h6 th:if="${formmode}=='verify'" style="font-size: 1.2rem;" class="ml-3">LEASE LOAN -
+								<h6 th:if="${formmode}=='verify'" style="font-size: 1.2rem;" class="ml-3"> LOAN -
 									VERIFY </h6>
-								<h6 th:if="${formmode}=='inquiry'" style="font-size: 1.2rem;" class="ml-3">LEASE LOAN -
+								<h6 th:if="${formmode}=='inquiry'" style="font-size: 1.2rem;" class="ml-3"> LOAN -
 									VIEW
 								</h6>
 							</div>
@@ -3280,7 +3279,7 @@
 										</div>
 									</div>
 									<div class="card-footer text-center mt-2">
-										<button class="btn btn-primary p-2" onclick="home();">Home</button>
+										<button class="btn btn-primary p-2" onclick="">Home</button>
 										<button class="btn btn-primary p-2" onclick="submitparam()">Submit</button>
 										<button class="btn btn-primary p-2" onclick="back();">Back</button>
 									</div>
@@ -3431,7 +3430,7 @@
 										</div>
 									</div>
 									<div class="card-footer text-center">
-										<button class="btn btn-primary p-2" onclick="home2();">Home</button>
+										<button class="btn btn-primary p-2" onclick="">Home</button>
 										<button class="btn btn-primary p-2" onclick="SubmitVerify(this)"
 											th:attr="dd_notice_ref = ${getGeneralDetails?.dd_notice_ref}"
 											th:if="${formmode}=='verify'">Verify</button>
@@ -3632,7 +3631,7 @@
 										</div>
 									</div>
 									<div class="card-footer text-center">
-										<button class="btn btn-primary p-2" onclick="home4();">Home</button>
+										<button class="btn btn-primary p-2" onclick="">Home</button>
 										<button class="btn btn-primary p-2" onclick="SubmitVerify(this)"
 											th:attr="dd_notice_ref = ${getGeneralDetails?.dd_notice_ref}"
 											th:if="${formmode}=='verify'" id="verifyButton">Verify</button>
@@ -3906,7 +3905,7 @@
 										</div>
 
 										<div class="card-footer text-center">
-											<button class="btn btn-primary p-2" onclick="home1();">Home</button>
+											<button class="btn btn-primary p-2" onclick="">Home</button>
 											<button class="btn btn-primary p-2" onclick="submitparam()">Submit</button>
 											<button class="btn btn-primary p-2" onclick="back();">Back</button>
 										</div>
@@ -4070,7 +4069,7 @@
 
 										</div>
 										<div class="card-footer text-center">
-											<button class="btn btn-primary p-2" onclick="home2();">Home</button>
+											<button class="btn btn-primary p-2" onclick="">Home</button>
 											<button class="btn btn-primary p-2" onclick="submitparam1()">Submit</button>
 											<button class="btn btn-primary p-2" onclick="back();">Back</button>
 										</div>
@@ -4269,7 +4268,7 @@
 										</div>
 
 										<div class="card-footer text-center">
-											<button class="btn btn-primary p-2" onclick="home4();">Home</button>
+											<button class="btn btn-primary p-2" onclick="">Home</button>
 											<button class="btn btn-primary p-2" th:if="${formmode}=='modify'"
 												th:attr="dd_notice_ref = ${getGeneralDetails?.dd_notice_ref}"
 												onclick="ModifySubmit(this)">Submit</button>
