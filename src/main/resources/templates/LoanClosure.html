@@ -1447,41 +1447,33 @@ function handleCheckboxClickCollectiondata() {
 }
 
 function proceedWithTransaction() {
-     var loanBal = parseFloat(document.getElementById("loan_bal").value.replace(/,/g, '')) || 0;
+    var loanBal = parseFloat(document.getElementById("loan_bal").value.replace(/,/g, '')) || 0;
     var acctBalance = parseFloat(document.getElementById("acct_balancedatas").value.replace(/,/g, '')) || 0;
 
     alert("THE LOAN ACCOUNT BALANCE IS " + loanBal);
     alert("THE PRECLOSURE ACCOUNT BALANCE IS " + acctBalance);
 
     var selectedData = [];
-    var encodedKey = "";
 
-    $("table tbody tr").each(function () {
+    $("#flowIdTbodynew tr").each(function () {
         var row = $(this);
-        var flowAmt = row.find("input[name='flow_amt']").val();
-        var flowCode = row.find("input[name='flow_code']").val();
-        var flowDate = row.find("input[name='flow_date']").val();
-        var flowId = row.find("input[name='flow_id']").val();
-        var loanAcctNo = row.find("input[name='loan_acct_no']").val();
-        var acctName = row.find("input[name='acct_name']").val();
-        var radioBtn = row.find("input[name='und_pct_radio']:checked");
+        let flowAmt = row.find("input[name='flow_amt']").val() || row.find("input[name='flow_amtvals']").val();
 
-        if (radioBtn.length > 0) {
-            encodedKey = radioBtn.data("encoded_key");
-        }
+        if (!flowAmt) return true; // Skip row if no amount
 
-        if (flowAmt && flowCode && flowDate && flowId && loanAcctNo && acctName && encodedKey) {
-            var rowData = {
-                flow_amt: flowAmt.replace(/,/g, ''), // Remove commas from numbers
-                flow_code: flowCode,
-                flow_date: flowDate,
-                flow_id: flowId,
-                loan_acct_no: loanAcctNo,
-                acct_name: acctName,
-                encoded_key: encodedKey
-            };
-            selectedData.push(rowData);
-        }
+        let selectedRadio = row.find("input[type='radio']:checked").val() || "None";
+
+        let rowData = {
+            flow_amt: flowAmt.replace(/,/g, ''),
+            flow_code: row.find("input[name='flow_code']").val() || '',
+            flow_date: row.find("input[name='flow_date']").val() || '',
+            flow_id: row.find("input[name='flow_id']").val() || '',
+            loan_acct_no: row.find("input[name='loan_acct_no']").val() || '',
+            acct_name: row.find("input[name='acct_name']").val() || '',
+            selected_option: selectedRadio
+        };
+
+        selectedData.push(rowData); // ✅ Properly pushing to selectedData
     });
 
     if (selectedData.length === 0) {
@@ -1493,7 +1485,7 @@ function proceedWithTransaction() {
     console.log("Preclosure Balance:", acctBalance);
     console.log("Comparison Result:", Math.abs(loanBal) === Math.abs(acctBalance));
 
-    // Compare absolute values and process accordingly
+    // Compare absolute values and send data to correct endpoint
     if (Math.abs(loanBal) === Math.abs(acctBalance)) {
         processTransaction('./transactionCollectiondatas121', selectedData);
     } else {
@@ -1501,7 +1493,6 @@ function proceedWithTransaction() {
     }
 }
 
-// Function to handle AJAX transaction request
 function processTransaction(url, selectedData) {
     $.ajax({
         type: 'POST',
@@ -1511,11 +1502,10 @@ function processTransaction(url, selectedData) {
         success: function (data) {
             console.log("Server response:", data);
             var tranId = data.trim();
-            var parttranid = "1";
             var redirectUrl = 'accountLedgerPost?formmode=verify' +
                 '&acct_num=' + encodeURIComponent(selectedData[0].loan_acct_no) +
                 '&tran_id=' + encodeURIComponent(tranId) +
-                '&part_tran_id=' + encodeURIComponent(parttranid);
+                '&part_tran_id=1';
             location.href = redirectUrl;
         },
         error: function () {
@@ -1539,6 +1529,7 @@ function handleCheckboxClickCollectiondata1() {
         location.reload(); // Refresh the page
     });
 }
+
 function proceedWithTransaction1() {
     var loanBal = parseFloat(document.getElementById("loan_bal1").value.replace(/,/g, '')) || 0;
     var acctBalance = parseFloat(document.getElementById("acct_balancedatas1").value.replace(/,/g, '')) || 0;
@@ -1547,7 +1538,7 @@ function proceedWithTransaction1() {
 
     $("#flowIdTbodynew1 tr").each(function () {
         var row = $(this);
-        let flowAmt = row.find("input[name='flow_amt']").val() || row.find("input[name='flow_amtvals']").val();
+        let flowAmt = row.find("input[name='flow_amt']").val() || row.find("input[name='flow_amtvals1']").val();
 
         if (!flowAmt) return true; // Skip row if no amount
 
@@ -1560,7 +1551,6 @@ function proceedWithTransaction1() {
             flow_id: row.find("input[name='flow_id']").val() || '',
             loan_acct_no: row.find("input[name='loan_acct_no']").val() || '',
             acct_name: row.find("input[name='acct_name']").val() || '',
-            encoded_key: row.find("input[name='row_select']").data("encoded_key") || '',
             selected_option: selectedRadio
         };
 
@@ -1576,7 +1566,6 @@ function proceedWithTransaction1() {
     console.log("Preclosure Balance:", acctBalance);
     console.log("Comparison Result:", Math.abs(loanBal) === Math.abs(acctBalance));
 
-    // **Compare absolute values to match -20807 and 20807**
     if (Math.abs(loanBal) === Math.abs(acctBalance)) {
         processTransaction1('./transactionCollectiondatas1212', processRows);
     } else {
@@ -1666,7 +1655,6 @@ function fetchacctnum() {
                             var flowAmount = entity.flow_amt !== null ? formatNumberWithCommas(entity.flow_amt) : "0.00";
                             var acctNo = entity.loan_acct_no !== null ? entity.loan_acct_no : "";
                             var acctName = entity.acct_name !== null ? entity.acct_name : "";
-                            var encodedkey = entity.encoded_key !== null ? entity.encoded_key : "";
 
                             tHTML += "<tr>"
                                 + "<td><input type='text' name='flow_date' value='" + flowDate + "' class='border-0' readonly /></td>"
@@ -1684,7 +1672,6 @@ function fetchacctnum() {
                                 + "' data-acct_name='" + acctName
                                 + "' data-flow_date='" + flowDate
                                 + "' data-flow_id='" + flowId
-                                + "' data-encoded_key='" + encodedkey
                                 + "' name='und_pct_radio' /></td>"
                                 + "</tr>";
                         });
@@ -1750,7 +1737,6 @@ function fetchacctnum1() {
                             var flowAmount = entity.flow_amt ? formatNumberWithCommas(entity.flow_amt) : "0.00";
                             var acctNo = entity.loan_acct_no || "";
                             var acctName = entity.acct_name || "";
-                            var encodedKey = entity.encoded_key || "";
 
                             var isEditable = (flowCode === "FEEDEM" && flowDate === tranDate);
 
@@ -1767,7 +1753,7 @@ function fetchacctnum1() {
                                     <td><input type='text' name='loan_acct_no' value='${acctNo}' class='border-0' readonly /></td>
                                     <td><input type='text' name='acct_name' value='${acctName}' class='border-0' readonly /></td>
                                     <td>
-                                        <input type="radio" name="row_select" data-encoded_key="${encodedKey}" onclick="handleCheckboxClickCollectiondata1()" />
+                                        <input type="radio" name="row_select" onclick="handleCheckboxClickCollectiondata1()" />
                                     </td>
                                 </tr>`;
                         });
@@ -1797,7 +1783,7 @@ function fetchacctnum1() {
 let flowCounter = 2; // Initialize flow_id starting from 2
 
 function deleteloanRow() {
-    let table = document.getElementById("flowIdTbodynew1");
+    let table = document.getElementById("flowIdTbodynew");
 
     // Ensure at least 2 rows remain
     if (table.getElementsByClassName("deletable-row").length <= 0) {
@@ -1812,6 +1798,32 @@ function deleteloanRow() {
 
         // Get the amount from the deleted row
         let deletedAmountInput = lastRow.querySelector("input[name='flow_amtvals']");
+        let deletedAmount = deletedAmountInput ? parseFloat(deletedAmountInput.value.replace(/,/g, "")) || 0 : 0;
+
+        // Remove the row
+        lastRow.remove();
+
+        // Update balance after row removal
+        updateBalanceAfterDeletion(deletedAmount);
+    }
+}
+
+function deleteloanRow1() {
+    let table = document.getElementById("flowIdTbodynew1");
+
+    // Ensure at least 2 rows remain
+    if (table.getElementsByClassName("deletable-row").length <= 0) {
+        alert("At least 1 dynamically added row must remain.");
+        return;
+    }
+
+    // Find the last dynamically added row
+    let rows = table.getElementsByClassName("deletable-row");
+    if (rows.length > 0) {
+        let lastRow = rows[rows.length - 1];
+
+        // Get the amount from the deleted row
+        let deletedAmountInput = lastRow.querySelector("input[name='flow_amtvals1']");
         let deletedAmount = deletedAmountInput ? parseFloat(deletedAmountInput.value.replace(/,/g, "")) || 0 : 0;
 
         // Remove the row
@@ -1850,14 +1862,14 @@ function updateBalanceAfterDeletion(deletedAmount) {
 
 
 function addloanRow() {
-    var accountNumber = document.getElementById("acct_num123456").value;
+    var accountNumber = document.getElementById("acct_num1234").value;
 
     $.ajax({
         type: 'GET',
         url: './getloanclosetdatas511',
         data: { accountNumber: accountNumber }, 
         success: function (data) {
-            let table = document.getElementById("flowIdTbodynew1"); 
+            let table = document.getElementById("flowIdTbodynew"); 
 
             let newRow = table.insertRow();
             newRow.classList.add("deletable-row"); 
@@ -1872,7 +1884,7 @@ function addloanRow() {
                 <td><input type="text" name="loan_acct_no" class="border-0" value="${data.loan_data.loan_acct_no}" readonly /></td>
                 <td><input type="text" name="acct_name" class="border-0" value="${data.loan_data.acct_name}" readonly /></td>
                 <td>
-                    <input type="radio" name="row_select" data-encoded_key="${data.loan_data.id}" onclick="handleCheckboxClickCollectiondata1()" />
+                    <input type="radio" name="row_select" onclick="handleCheckboxClickCollectiondata()" />
                 </td>
             `;
 
@@ -1894,7 +1906,89 @@ function addloanRow() {
     });
 }
 
+function addloanRow1() {
+    var accountNumber = document.getElementById("acct_num123456").value;
+
+    $.ajax({
+        type: 'GET',
+        url: './getloanclosetdatas511',
+        data: { accountNumber: accountNumber }, 
+        success: function (data) {
+            let table = document.getElementById("flowIdTbodynew1"); 
+
+            let newRow = table.insertRow();
+            newRow.classList.add("deletable-row"); 
+
+            newRow.innerHTML = `
+                <td><input type="text" name="flow_date" class="border-0" value="${data.tran_date || ''}" readonly></td>
+                <td><input type="text" name="flow_id" value="${flowCounter}" class="border-0" readonly /></td>
+                <td><input type="text" name="flow_code" value="FEEDEM" class="border-0" readonly /></td>
+                <td style="text-align:right;">
+                    <input type="text" name="flow_amtvals1" class="border-0 text-right" />
+                </td>
+                <td><input type="text" name="loan_acct_no" class="border-0" value="${data.loan_data.loan_acct_no}" readonly /></td>
+                <td><input type="text" name="acct_name" class="border-0" value="${data.loan_data.acct_name}" readonly /></td>
+                <td>
+                    <input type="radio" name="row_select" data-encoded_key="${data.loan_data.id}" onclick="handleCheckboxClickCollectiondata1()" />
+                </td>
+            `;
+
+            flowCounter++;
+
+            let amountInput = newRow.querySelector("input[name='flow_amtvals1']");
+            amountInput.addEventListener("input", updateBalance1);
+            amountInput.addEventListener("blur", function () {
+                formatAmountAndUpdate(this);
+                updateBalance1();
+            });
+
+            updateBalance1();
+        },
+        error: function () {
+            $('#errorMessage').text('Error fetching data');
+            $('#errorModal').modal('show');
+        }
+    });
+}
+
 function updateBalance() {
+    let total = 0;
+    
+    let balanceElem = document.getElementById("acct_balancedatas");
+
+    if (!balanceElem) {
+        console.error("Error: Balance field not found!");
+        return;
+    }
+
+    // Get the original balance only if it's not already set
+    if (!balanceElem.dataset.originalBalance) {
+        balanceElem.dataset.originalBalance = balanceElem.value.replace(/,/g, "") || "0";
+    }
+
+    let initialBalance = parseFloat(balanceElem.dataset.originalBalance) || 0;
+
+    // Loop through all input fields with name 'flow_amtvals' and sum their values
+    document.querySelectorAll("input[name='flow_amtvals']").forEach(input => {
+        let value = parseFloat(input.value.replace(/,/g, "")) || 0;
+        total += value;
+    });
+
+    let finalBalance = initialBalance + total;
+
+    // Debugging - Ensure values are updating correctly
+    console.log("Initial Balance:", initialBalance);
+    console.log("Total Flow Amount:", total);
+    console.log("Final Balance:", finalBalance);
+
+    // Update the loan balance field with the new total
+    balanceElem.value = finalBalance.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function updateBalance1() {
     let total = 0;
     
     let balanceElem = document.getElementById("acct_balancedatas1");
@@ -1912,7 +2006,7 @@ function updateBalance() {
     let initialBalance = parseFloat(balanceElem.dataset.originalBalance) || 0;
 
     // Loop through all input fields with name 'flow_amtvals' and sum their values
-    document.querySelectorAll("input[name='flow_amtvals']").forEach(input => {
+    document.querySelectorAll("input[name='flow_amtvals1']").forEach(input => {
         let value = parseFloat(input.value.replace(/,/g, "")) || 0;
         total += value;
     });
@@ -2111,6 +2205,16 @@ document.addEventListener("DOMContentLoaded", function () {
 							</tbody>
 						</table>
 
+						<div class="mt-4"
+							style="display: flex; justify-content: right; margin-bottom: 10px;">
+							<img th:src="@{/images/add.png}" aria-hidden="true"
+								style="cursor: pointer; width: 20px; height: 20px; margin-right: 10px;"
+								onclick="addloanRow()" alt="Add"> <img
+								th:src="@{/images/MinusIcon.png}" aria-hidden="true"
+								style="cursor: pointer; width: 20px; height: 20px;"
+								onclick="deleteloanRow()" alt="Remove">
+						</div>
+
 						<table class="table table-bordered table-sm mt-2"
 							style="margin-bottom: 0px; font-size: initial;"
 							id="serviceflowIdTable">
@@ -2203,10 +2307,10 @@ document.addEventListener("DOMContentLoaded", function () {
 							style="display: flex; justify-content: right; margin-bottom: 10px;">
 							<img th:src="@{/images/add.png}" aria-hidden="true"
 								style="cursor: pointer; width: 20px; height: 20px; margin-right: 10px;"
-								onclick="addloanRow()" alt="Add"> <img
+								onclick="addloanRow1()" alt="Add"> <img
 								th:src="@{/images/MinusIcon.png}" aria-hidden="true"
 								style="cursor: pointer; width: 20px; height: 20px;"
-								onclick="deleteloanRow()" alt="Remove">
+								onclick="deleteloanRow1()" alt="Remove">
 						</div>
 
 						<table class="table table-bordered table-sm mt-2"
