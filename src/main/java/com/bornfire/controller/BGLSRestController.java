@@ -2259,150 +2259,146 @@ public class BGLSRestController {
 
 	@GetMapping("getInterestDetailsView")
 	public List<Principle_and_intrest_shedule_Entity> getInterestDetailsView(@RequestParam String accountNo)
-	        throws ParseException {
+			throws ParseException {
 
-	    Lease_Loan_Work_Entity loandetails = lease_Loan_Work_Repo.getLeaseAccount(accountNo);
-	    NoticeDetailsPayment0Entity paymentDetails = noticeDetailsPayment0Rep.getPaymentDetails(accountNo);
-	    List<DMD_TABLE> repaymentDetails = dMD_TABLE_REPO.gettranpopvaluesdatas(accountNo);
+		Lease_Loan_Work_Entity loandetails = lease_Loan_Work_Repo.getLeaseAccount(accountNo);
+		NoticeDetailsPayment0Entity paymentDetails = noticeDetailsPayment0Rep.getPaymentDetails(accountNo);
+		List<DMD_TABLE> repaymentDetails = dMD_TABLE_REPO.gettranpopvaluesdatas(accountNo);
 
-	    BigDecimal productAmt = loandetails.getLoan_sanctioned();
-	    BigDecimal intRate = loandetails.getEffective_interest_rate();
-	    Date creationDate = loandetails.getDate_of_loan();
-	    int noOfInst = Integer.parseInt(paymentDetails.getNo_of_inst());
-	    Date startDateRaw = paymentDetails.getInst_start_dt();
-	    LocalDate startDate = startDateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-	    LocalDate endDate = startDate.plus(noOfInst, ChronoUnit.MONTHS);
-	    Date calculatedEndDate = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		BigDecimal productAmt = loandetails.getLoan_sanctioned();
+		BigDecimal intRate = loandetails.getEffective_interest_rate();
+		Date creationDate = loandetails.getDate_of_loan();
+		int noOfInst = Integer.parseInt(paymentDetails.getNo_of_inst());
+		Date startDateRaw = paymentDetails.getInst_start_dt();
+		LocalDate startDate = startDateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate endDate = startDate.plus(noOfInst, ChronoUnit.MONTHS);
+		Date calculatedEndDate = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-	    BigDecimal installmentAmount = paymentDetails.getInst_amount();
-	    String principleFrequency = paymentDetails.getInst_freq();
-	    String interestFrequency = paymentDetails.getInterest_frequency();
+		BigDecimal installmentAmount = paymentDetails.getInst_amount();
+		String principleFrequency = paymentDetails.getInst_freq();
+		String interestFrequency = paymentDetails.getInterest_frequency();
 
-	    List<TestPrincipalCalculation> interestAmountList = interestCalculationServices.calculatePrincialPaymentNotice(
-	            startDateRaw, calculatedEndDate, productAmt, productAmt, principleFrequency, intRate, noOfInst,
-	            installmentAmount, interestFrequency);
+		List<TestPrincipalCalculation> interestAmountList = interestCalculationServices.calculatePrincialPaymentNotice(
+				startDateRaw, calculatedEndDate, productAmt, productAmt, principleFrequency, intRate, noOfInst,
+				installmentAmount, interestFrequency);
 
-	    repaymentDetails = dMD_TABLE_REPO.gettranpopvaluesdatas(accountNo); // Refresh
-	    List<DMD_TABLE> finalRepaymentDetails = new ArrayList<>(repaymentDetails);
+		repaymentDetails = dMD_TABLE_REPO.gettranpopvaluesdatas(accountNo); // Refresh
+		List<DMD_TABLE> finalRepaymentDetails = new ArrayList<>(repaymentDetails);
 
-	    Set<LocalDate> calculatedDates = interestAmountList.stream()
-	            .map(r -> r.getInstallmentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-	            .collect(Collectors.toSet());
+		Set<LocalDate> calculatedDates = interestAmountList.stream()
+				.map(r -> r.getInstallmentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+				.collect(Collectors.toSet());
 
-	    List<LocalDate> unmatchedDates = finalRepaymentDetails.stream()
-	            .map(r -> r.getFlow_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-	            .filter(d -> !calculatedDates.contains(d)).distinct().sorted().collect(Collectors.toList());
+		List<LocalDate> unmatchedDates = finalRepaymentDetails.stream()
+				.map(r -> r.getFlow_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+				.filter(d -> !calculatedDates.contains(d)).distinct().sorted().collect(Collectors.toList());
 
-	    LocalDate lastDueDate = interestAmountList.stream()
-	            .map(r -> r.getInstallmentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-	            .max(LocalDate::compareTo).orElse(startDate);
+		LocalDate lastDueDate = interestAmountList.stream()
+				.map(r -> r.getInstallmentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+				.max(LocalDate::compareTo).orElse(startDate);
 
-	    Set<LocalDate> handledDates = new HashSet<>();
-	    AtomicReference<LocalDate> lastPreClosureDateRef = new AtomicReference<>(null);
+		Set<LocalDate> handledDates = new HashSet<>();
+		AtomicReference<LocalDate> lastPreClosureDateRef = new AtomicReference<>(null);
 
-	    for (LocalDate unmatchedDate : unmatchedDates) {
-	        List<DMD_TABLE> entriesForDate = finalRepaymentDetails.stream()
-	                .filter(r -> unmatchedDate
-	                        .equals(r.getFlow_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()))
-	                .collect(Collectors.toList());
+		for (LocalDate unmatchedDate : unmatchedDates) {
+			List<DMD_TABLE> entriesForDate = finalRepaymentDetails.stream()
+					.filter(r -> unmatchedDate
+							.equals(r.getFlow_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()))
+					.collect(Collectors.toList());
 
-	        BigDecimal prdemAmt = entriesForDate.stream().filter(r -> "PRDEM".equalsIgnoreCase(r.getFlow_code()))
-	                .map(r -> parseAmount(r.getPaid_amount())).reduce(BigDecimal.ZERO, BigDecimal::add);
+			BigDecimal prdemAmt = entriesForDate.stream().filter(r -> "PRDEM".equalsIgnoreCase(r.getFlow_code()))
+					.map(r -> parseAmount(r.getPaid_amount())).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-	        BigDecimal indemAmt = entriesForDate.stream().filter(r -> "INDEM".equalsIgnoreCase(r.getFlow_code()))
-	                .map(r -> parseAmount(r.getPaid_amount())).reduce(BigDecimal.ZERO, BigDecimal::add);
+			BigDecimal indemAmt = entriesForDate.stream().filter(r -> "INDEM".equalsIgnoreCase(r.getFlow_code()))
+					.map(r -> parseAmount(r.getPaid_amount())).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-	        BigDecimal feedemAmt = entriesForDate.stream().filter(r -> "FEEDEM".equalsIgnoreCase(r.getFlow_code()))
-	                .map(r -> parseAmount(r.getPaid_amount())).reduce(BigDecimal.ZERO, BigDecimal::add);
+			BigDecimal feedemAmt = entriesForDate.stream().filter(r -> "FEEDEM".equalsIgnoreCase(r.getFlow_code()))
+					.map(r -> parseAmount(r.getPaid_amount())).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-	        if (prdemAmt.compareTo(BigDecimal.ZERO) > 0 || indemAmt.compareTo(BigDecimal.ZERO) > 0
-	                || feedemAmt.compareTo(BigDecimal.ZERO) > 0) {
+			if (prdemAmt.compareTo(BigDecimal.ZERO) > 0 || indemAmt.compareTo(BigDecimal.ZERO) > 0
+					|| feedemAmt.compareTo(BigDecimal.ZERO) > 0) {
 
-	            TestPrincipalCalculation extra = new TestPrincipalCalculation();
-	            Date unmatchedDateUtil = Date.from(unmatchedDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+				TestPrincipalCalculation extra = new TestPrincipalCalculation();
+				Date unmatchedDateUtil = Date.from(unmatchedDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-	            extra.setInstallmentDate(unmatchedDateUtil);
-	            extra.setInstallmentFromDate(unmatchedDateUtil);
-	            extra.setPrincipalAmount(prdemAmt);
-	            extra.setInterestAmount(indemAmt);
-	            extra.setChargesAmount(feedemAmt);
-	            extra.setPrincipalAmountOutstanding(BigDecimal.ZERO);
+				extra.setInstallmentDate(unmatchedDateUtil);
+				extra.setInstallmentFromDate(unmatchedDateUtil);
+				extra.setPrincipalAmount(prdemAmt);
+				extra.setInterestAmount(indemAmt);
+				extra.setChargesAmount(feedemAmt);
+				extra.setPrincipalAmountOutstanding(BigDecimal.ZERO);
 
-	            if (unmatchedDate.isBefore(lastDueDate)) {
-	                extra.setInstallmentDescription("PRE - CLOSURE APPLY");
-	                lastPreClosureDateRef.set(unmatchedDate); // Save last pre-closure date
-	            } else {
-	                extra.setInstallmentDescription("CLOSURE APPLY");
-	            }
+				if (unmatchedDate.isBefore(lastDueDate)) {
+					extra.setInstallmentDescription("PRE - CLOSURE APPLY");
+					lastPreClosureDateRef.set(unmatchedDate); // Save last pre-closure date
+				} else {
+					extra.setInstallmentDescription("CLOSURE APPLY");
+				}
 
-	            interestAmountList.add(extra);
-	            handledDates.add(unmatchedDate);
-	        }
-	    }
+				interestAmountList.add(extra);
+				handledDates.add(unmatchedDate);
+			}
+		}
 
-	    // Remove regular EMI rows after PRE-CLOSURE
-	    LocalDate finalPreClosureDate = lastPreClosureDateRef.get();
-	    if (finalPreClosureDate != null) {
-	        interestAmountList = interestAmountList.stream()
-	                .filter(e -> {
-	                    LocalDate date = e.getInstallmentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-	                    return !date.isAfter(finalPreClosureDate)
-	                            || (e.getInstallmentDescription() != null
-	                            && (e.getInstallmentDescription().equalsIgnoreCase("PRE - CLOSURE APPLY")
-	                            || e.getInstallmentDescription().equalsIgnoreCase("CLOSURE APPLY")));
-	                })
-	                .collect(Collectors.toList());
-	    }
+		// Remove regular EMI rows after PRE-CLOSURE
+		LocalDate finalPreClosureDate = lastPreClosureDateRef.get();
+		if (finalPreClosureDate != null) {
+			interestAmountList = interestAmountList.stream().filter(e -> {
+				LocalDate date = e.getInstallmentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				return !date.isAfter(finalPreClosureDate) || (e.getInstallmentDescription() != null
+						&& (e.getInstallmentDescription().equalsIgnoreCase("PRE - CLOSURE APPLY")
+								|| e.getInstallmentDescription().equalsIgnoreCase("CLOSURE APPLY")));
+			}).collect(Collectors.toList());
+		}
 
-	    interestAmountList.sort(Comparator.comparing(TestPrincipalCalculation::getInstallmentDate));
+		interestAmountList.sort(Comparator.comparing(TestPrincipalCalculation::getInstallmentDate));
 
-	    List<Principle_and_intrest_shedule_Entity> principleEntities = new ArrayList<>();
-	    int installmentNo = 1;
+		List<Principle_and_intrest_shedule_Entity> principleEntities = new ArrayList<>();
+		int installmentNo = 1;
 
-	    for (TestPrincipalCalculation record : interestAmountList) {
-	        Principle_and_intrest_shedule_Entity entity = new Principle_and_intrest_shedule_Entity();
+		for (TestPrincipalCalculation record : interestAmountList) {
+			Principle_and_intrest_shedule_Entity entity = new Principle_and_intrest_shedule_Entity();
 
-	        entity.setLoan_amt(productAmt);
-	        entity.setNo_of_instalment(BigDecimal.valueOf(installmentNo));
-	        entity.setAccount_creation_date(creationDate);
-	        entity.setEffective_interest_rate(intRate);
-	        entity.setTotal_installment(BigDecimal.valueOf(interestAmountList.size()));
-	        entity.setFrom_date(record.getInstallmentFromDate());
-	        entity.setInstallment_date(record.getInstallmentDate());
-	        entity.setInterest_amt(record.getInterestAmount());
-	        entity.setPrincipal_amt(record.getPrincipalAmount());
-	        entity.setPrincipal_outstanding(record.getPrincipalAmountOutstanding());
-	        entity.setInstallment_description(record.getInstallmentDescription());
-	        entity.setCharges_amt(record.getChargesAmount() != null ? record.getChargesAmount() : BigDecimal.ZERO);
+			entity.setLoan_amt(productAmt);
+			entity.setNo_of_instalment(BigDecimal.valueOf(installmentNo));
+			entity.setAccount_creation_date(creationDate);
+			entity.setEffective_interest_rate(intRate);
+			entity.setTotal_installment(BigDecimal.valueOf(interestAmountList.size()));
+			entity.setFrom_date(record.getInstallmentFromDate());
+			entity.setInstallment_date(record.getInstallmentDate());
+			entity.setInterest_amt(record.getInterestAmount());
+			entity.setPrincipal_amt(record.getPrincipalAmount());
+			entity.setPrincipal_outstanding(record.getPrincipalAmountOutstanding());
+			entity.setInstallment_description(record.getInstallmentDescription());
+			entity.setCharges_amt(record.getChargesAmount() != null ? record.getChargesAmount() : BigDecimal.ZERO);
 
-	        BigDecimal totalInstallmentAmt = record.getInterestAmount().add(record.getPrincipalAmount())
-	                .add(record.getChargesAmount() != null ? record.getChargesAmount() : BigDecimal.ZERO);
+			BigDecimal totalInstallmentAmt = record.getInterestAmount().add(record.getPrincipalAmount())
+					.add(record.getChargesAmount() != null ? record.getChargesAmount() : BigDecimal.ZERO);
 
-	        entity.setInstallment_amt(totalInstallmentAmt);
+			entity.setInstallment_amt(totalInstallmentAmt);
 
-	        LocalDate instDate = record.getInstallmentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-	        BigDecimal paidAmount = finalRepaymentDetails.stream().filter(
-	                r -> instDate.equals(r.getFlow_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-	                        && ("INDEM".equalsIgnoreCase(r.getFlow_code())
-	                        || "PRDEM".equalsIgnoreCase(r.getFlow_code())
-	                        || "FEEDEM".equalsIgnoreCase(r.getFlow_code())))
-	                .map(r -> parseAmount(r.getPaid_amount())).reduce(BigDecimal.ZERO, BigDecimal::add);
+			LocalDate instDate = record.getInstallmentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			BigDecimal paidAmount = finalRepaymentDetails.stream().filter(
+					r -> instDate.equals(r.getFlow_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+							&& ("INDEM".equalsIgnoreCase(r.getFlow_code()) || "PRDEM".equalsIgnoreCase(r.getFlow_code())
+									|| "FEEDEM".equalsIgnoreCase(r.getFlow_code())))
+					.map(r -> parseAmount(r.getPaid_amount())).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-	        entity.setPaid_amount(paidAmount != null ? paidAmount.toPlainString() : "0.00");
+			entity.setPaid_amount(paidAmount != null ? paidAmount.toPlainString() : "0.00");
 
-	        principleEntities.add(entity);
-	        installmentNo++;
-	    }
+			principleEntities.add(entity);
+			installmentNo++;
+		}
 
-	    return principleEntities;
+		return principleEntities;
 	}
 
 	private BigDecimal parseAmount(String amtStr) {
-	    try {
-	        return new BigDecimal(amtStr == null || amtStr.trim().isEmpty() ? "0" : amtStr.trim());
-	    } catch (Exception e) {
-	        return BigDecimal.ZERO;
-	    }
+		try {
+			return new BigDecimal(amtStr == null || amtStr.trim().isEmpty() ? "0" : amtStr.trim());
+		} catch (Exception e) {
+			return BigDecimal.ZERO;
+		}
 	}
 
 	@GetMapping("getdemandflow")
@@ -5826,6 +5822,34 @@ public class BGLSRestController {
 				existingDates.add(tranDateFormatted); // Optional: Add to prevent future duplicates
 			} else {
 				System.out.println("❌ No match or already exists for: " + tranDateFormatted);
+			}
+
+		}
+
+		List<DMD_TABLE> MATCHEDVALUESES = dMD_TABLE_REPO.gettranpopvalues111(accountNo1);
+
+		Date tranDateObj1 = bGLS_CONTROL_TABLE_REP.getLatestTranDate();
+		LocalDate tranDate1 = (tranDateObj1 instanceof java.sql.Date) ? ((java.sql.Date) tranDateObj1).toLocalDate()
+				: tranDateObj1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+		System.out.println("✅ Latest TRANSACTION DATE: " + tranDate1);
+
+		for (DMD_TABLE datavalue : MATCHEDVALUESES) {
+			Date flowDateObj = datavalue.getFlow_date();
+
+			if (flowDateObj == null) {
+				System.out.println("⚠️ Skipping null flow_date for SRL_NO: " + datavalue.getSrl_no());
+				continue;
+			}
+
+			LocalDate flowDate = (flowDateObj instanceof java.sql.Date) ? ((java.sql.Date) flowDateObj).toLocalDate()
+					: flowDateObj.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+			if (flowDate.isAfter(tranDate1)) {
+				System.out.println("🚨 Flow date " + flowDate + " is AFTER transaction date " + tranDate1);
+				datavalue.setDel_flg("Y");
+			} else {
+				System.out.println("✅ Flow date " + flowDate + " is NOT after transaction date " + tranDate1);
 			}
 		}
 

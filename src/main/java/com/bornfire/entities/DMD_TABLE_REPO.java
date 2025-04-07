@@ -1,10 +1,14 @@
 package com.bornfire.entities;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -65,6 +69,7 @@ public interface DMD_TABLE_REPO extends JpaRepository<DMD_TABLE, DMD_TABLE_IDcla
 			+ "        SUM(ISNULL(aa.FLOW_AMT, 0) - ISNULL(aa.PAID_AMOUNT, 0)) AS amount\r\n"
 			+ "    FROM DEMAND_TBL aa\r\n" + "    JOIN ControlDate cd ON 1=1\r\n" + "    WHERE \r\n"
 			+ "        aa.loan_acct_no = ?1\r\n" + "        AND aa.flow_frq <> 'DISBT'\r\n"
+			+ "        AND aa.DEL_FLG = 'N'\r\n"
 			+ "        AND (ISNULL(aa.FLOW_AMT, 0) - ISNULL(aa.PAID_AMOUNT, 0)) != 0\r\n"
 			+ "        AND aa.flow_code = 'PRDEM'\r\n" + "        AND aa.flow_date > cd.TRAN_DATE\r\n"
 			+ "    GROUP BY aa.loan_acct_no, aa.acct_name, cd.TRAN_DATE\r\n" + "\r\n" + "    UNION ALL\r\n" + "\r\n"
@@ -73,6 +78,7 @@ public interface DMD_TABLE_REPO extends JpaRepository<DMD_TABLE, DMD_TABLE_IDcla
 			+ "        SUM(ISNULL(aa.FLOW_AMT, 0) - ISNULL(aa.PAID_AMOUNT, 0)) AS amount\r\n"
 			+ "    FROM DEMAND_TBL aa\r\n" + "    JOIN ControlDate cd ON 1=1\r\n" + "    WHERE \r\n"
 			+ "        aa.loan_acct_no = ?1\r\n" + "        AND aa.flow_frq <> 'DISBT'\r\n"
+			+ "        AND aa.DEL_FLG = 'N'\r\n"
 			+ "        AND (ISNULL(aa.FLOW_AMT, 0) - ISNULL(aa.PAID_AMOUNT, 0)) != 0\r\n"
 			+ "        AND aa.flow_code = 'PRDEM'\r\n" + "        AND aa.flow_date < cd.TRAN_DATE\r\n"
 			+ "    GROUP BY aa.loan_acct_no, aa.acct_name, aa.flow_date, cd.TRAN_DATE\r\n" + "),\r\n"
@@ -80,7 +86,7 @@ public interface DMD_TABLE_REPO extends JpaRepository<DMD_TABLE, DMD_TABLE_IDcla
 			+ "        aa.acct_name,\r\n" + "        'INDEM' AS flow_code,\r\n" + "        aa.flow_date,\r\n"
 			+ "        ISNULL(aa.FLOW_AMT, 0) AS amount\r\n" + "    FROM DEMAND_TBL aa\r\n"
 			+ "    JOIN ControlDate cd ON 1=1\r\n" + "    WHERE \r\n" + "        aa.loan_acct_no = ?1\r\n"
-			+ "        AND aa.flow_frq <> 'DISBT'\r\n"
+			+ "        AND aa.flow_frq <> 'DISBT'\r\n" + "        AND aa.DEL_FLG = 'N'\r\n"
 			+ "        AND (ISNULL(aa.FLOW_AMT, 0) - ISNULL(aa.PAID_AMOUNT, 0)) != 0\r\n"
 			+ "        AND aa.flow_code = 'INDEM'\r\n" + "        AND aa.flow_date < cd.TRAN_DATE\r\n" + "\r\n"
 			+ "    UNION ALL\r\n" + "\r\n" + "    SELECT \r\n" + "        aa.loan_acct_no,\r\n"
@@ -88,16 +94,18 @@ public interface DMD_TABLE_REPO extends JpaRepository<DMD_TABLE, DMD_TABLE_IDcla
 			+ "        cd.TRAN_DATE AS flow_date,\r\n" + "        ISNULL(aa.FLOW_AMT, 0) AS amount\r\n"
 			+ "    FROM DEMAND_TBL aa\r\n" + "    JOIN ControlDate cd ON 1=1\r\n" + "    WHERE \r\n"
 			+ "        aa.loan_acct_no = ?1\r\n" + "        AND aa.flow_frq <> 'DISBT'\r\n"
+			+ "        AND aa.DEL_FLG = 'N'\r\n"
 			+ "        AND (ISNULL(aa.FLOW_AMT, 0) - ISNULL(aa.PAID_AMOUNT, 0)) != 0\r\n"
 			+ "        AND aa.flow_code = 'INDEM'\r\n" + "        AND aa.flow_date = (\r\n"
 			+ "            SELECT MAX(flow_date)\r\n" + "            FROM DEMAND_TBL\r\n" + "            WHERE \r\n"
 			+ "                loan_acct_no = aa.loan_acct_no\r\n" + "                AND flow_code = 'INDEM'\r\n"
-			+ "                AND flow_date < cd.TRAN_DATE\r\n" + "        )\r\n" + "),\r\n" + "FEEDEMData AS (\r\n"
-			+ "    SELECT \r\n" + "        aa.loan_acct_no,\r\n" + "        3 AS flow_id,  -- FEEDEM flow_id = 3\r\n"
-			+ "        aa.acct_name,\r\n" + "        'FEEDEM' AS flow_code,\r\n" + "        aa.flow_date,\r\n"
-			+ "        ISNULL(aa.FLOW_AMT, 0) AS amount\r\n" + "    FROM DEMAND_TBL aa\r\n"
-			+ "    JOIN ControlDate cd ON 1=1\r\n" + "    WHERE \r\n" + "        aa.loan_acct_no = ?1\r\n"
-			+ "        AND aa.flow_frq <> 'DISBT'\r\n"
+			+ "                AND DEL_FLG = 'N'\r\n" + "                AND flow_date < cd.TRAN_DATE\r\n"
+			+ "        )\r\n" + "),\r\n" + "FEEDEMData AS (\r\n" + "    SELECT \r\n" + "        aa.loan_acct_no,\r\n"
+			+ "        3 AS flow_id,\r\n" + "        aa.acct_name,\r\n" + "        'FEEDEM' AS flow_code,\r\n"
+			+ "        aa.flow_date,\r\n" + "        ISNULL(aa.FLOW_AMT, 0) AS amount\r\n"
+			+ "    FROM DEMAND_TBL aa\r\n" + "    JOIN ControlDate cd ON 1=1\r\n" + "    WHERE \r\n"
+			+ "        aa.loan_acct_no = ?1\r\n" + "        AND aa.flow_frq <> 'DISBT'\r\n"
+			+ "        AND aa.DEL_FLG = 'N'\r\n"
 			+ "        AND (ISNULL(aa.FLOW_AMT, 0) - ISNULL(aa.PAID_AMOUNT, 0)) != 0\r\n"
 			+ "        AND aa.flow_code = 'FEEDEM'\r\n" + "        AND aa.flow_date <= cd.TRAN_DATE\r\n" + "),\r\n"
 			+ "FinalResult AS (\r\n"
@@ -110,7 +118,7 @@ public interface DMD_TABLE_REPO extends JpaRepository<DMD_TABLE, DMD_TABLE_IDcla
 			+ "        WHEN aa.flow_code = 'INDEM' THEN ISNULL(aa.amount, 0)\r\n" + "        ELSE aa.amount\r\n"
 			+ "    END AS amount,\r\n" + "    aa.loan_acct_no,\r\n" + "    aa.acct_name\r\n" + "FROM FinalResult aa\r\n"
 			+ "ORDER BY \r\n" + "    aa.flow_date, \r\n" + "    aa.flow_id,\r\n" + "    aa.flow_code,\r\n"
-			+ "    aa.amount,\r\n" + "    aa.loan_acct_no,\r\n" + "    aa.acct_name\r\n" + "", nativeQuery = true)
+			+ "    aa.amount,\r\n" + "    aa.loan_acct_no,\r\n" + "    aa.acct_name", nativeQuery = true)
 	List<Object[]> gettranpopvalues11(String acct_num);
 
 	@Query(value = "select TOP 1* from DEMAND_TBL aa where aa.loan_acct_no = ?1", nativeQuery = true)
@@ -188,4 +196,8 @@ public interface DMD_TABLE_REPO extends JpaRepository<DMD_TABLE, DMD_TABLE_IDcla
 
 	@Query("SELECT MAX(d.flow_id) FROM DMD_TABLE d WHERE d.loan_acct_no = :loanAcctNo")
 	BigDecimal findMaxFlowIdByLoanAcct(@Param("loanAcctNo") String loanAcctNo);
+
+	
+	@Query(value = "SELECT * FROM DEMAND_TBL aa WHERE aa.loan_acct_no = ?1 AND aa.flow_frq <> 'DISBT'", nativeQuery = true)
+	List<DMD_TABLE> gettranpopvalues111(String acct_num);
 }
