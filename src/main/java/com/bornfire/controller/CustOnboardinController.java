@@ -3229,6 +3229,8 @@ public class CustOnboardinController {
 
 					/* verify customer lease account */
 					Lease_Loan_Work_Entity leasy = lease_Loan_Work_Repo.getLeaseAccount(AccountNO);
+					System.out.println("act"+AccountNO);
+					System.out.println("act1"+user);
 					String leaseAccountSaved = leaseLoanService.verifyleaseloan(AccountNO, user);
 					System.out.println(leaseAccountSaved);
 
