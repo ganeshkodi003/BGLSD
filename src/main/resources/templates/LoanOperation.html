@@ -916,7 +916,6 @@ input:hover+.password-info {
           var lastTrandateObj = parseDate(lastTrandate);
 
 			if (trandateObj.getTime() === lastTrandateObj.getTime()) {
-				alert("✅ Dates match — Month-end processing allowed.");
 				
 					$("#collectionTypeDiv").addClass("d-none");
 					
@@ -1063,7 +1062,6 @@ input:hover+.password-info {
 						});
 					}
 			    } else {
-			        alert("❌ Booking is only allowed on the Month-End date.");
 			        $('#errorMessage').text("Booking is only allowed on Month-End date.");
 			        $('#errorModal').modal('show');
 			        return; // Stop further processing if dates don't match

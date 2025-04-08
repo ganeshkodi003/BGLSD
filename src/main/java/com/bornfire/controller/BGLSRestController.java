@@ -2329,10 +2329,10 @@ public class BGLSRestController {
 				extra.setPrincipalAmountOutstanding(BigDecimal.ZERO);
 
 				if (unmatchedDate.isBefore(lastDueDate)) {
-					extra.setInstallmentDescription("PRE - CLOSURE APPLY");
+					extra.setInstallmentDescription("PRE - CLOSURE PAYMENT");
 					lastPreClosureDateRef.set(unmatchedDate); // Save last pre-closure date
 				} else {
-					extra.setInstallmentDescription("CLOSURE APPLY");
+					extra.setInstallmentDescription("CLOSURE PAYMENT");
 				}
 
 				interestAmountList.add(extra);
@@ -2346,8 +2346,8 @@ public class BGLSRestController {
 			interestAmountList = interestAmountList.stream().filter(e -> {
 				LocalDate date = e.getInstallmentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				return !date.isAfter(finalPreClosureDate) || (e.getInstallmentDescription() != null
-						&& (e.getInstallmentDescription().equalsIgnoreCase("PRE - CLOSURE APPLY")
-								|| e.getInstallmentDescription().equalsIgnoreCase("CLOSURE APPLY")));
+						&& (e.getInstallmentDescription().equalsIgnoreCase("PRE - CLOSURE PAYMENT")
+								|| e.getInstallmentDescription().equalsIgnoreCase("CLOSURE PAYMENT")));
 			}).collect(Collectors.toList());
 		}
 
