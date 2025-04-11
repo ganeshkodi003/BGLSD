@@ -1887,6 +1887,17 @@ public class BGLSRestController {
 			@RequestParam(defaultValue = "0") double int_amt, @RequestParam String interestFrequency)
 			throws ParseException {
 
+		System.out.println("======= Incoming Request Parameters =======");
+		System.out.println("Creation Date        : " + creation_Date);
+		System.out.println("Start Date           : " + start_date);
+		System.out.println("Product Value        : " + Product_value);
+		System.out.println("Principal Frequency  : " + principle_frequency);
+		System.out.println("Interest Rate (%)    : " + int_rate);
+		System.out.println("No of Installments   : " + no_of_inst);
+		System.out.println("Interest Amount      : " + int_amt);
+		System.out.println("Interest Frequency   : " + interestFrequency);
+		System.out.println("==========================================");
+
 		LocalDate startDate = start_date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		LocalDate endDate = startDate.plus(no_of_inst, ChronoUnit.MONTHS);
 		Date calculatedEndDate = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -2137,7 +2148,6 @@ public class BGLSRestController {
 			System.out.println(up.getFlow_code());
 		}
 		return newTdDefnTables;
-
 	}
 
 	@GetMapping("FlowForDateloan")
@@ -2145,55 +2155,65 @@ public class BGLSRestController {
 			@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateFrom)
 			throws ParseException {
 
-		System.out.println("dateFrom" + dateFrom);
-		// Retrieve existing data
+		System.out.println(">>> Step 1: Input dateFrom = " + dateFrom);
+
+		// Step 2: Get flow for the exact date
 		DMD_TABLE defn = dMD_TABLE_REPO.getflowcode(actno1, dateFrom);
-		System.out.println(defn + "defncdscv");
+		System.out.println(">>> Step 2: Flow on exact date: " + defn);
+
+		// Step 3: If no exact flow, get the latest one before the date
 		if (defn == null) {
 			defn = dMD_TABLE_REPO.getPreviousFlowCode(actno1, dateFrom);
-			System.out.println(defn + "defn2132");
+			if (defn != null) {
+				System.out.println(">>> Step 3: Flow from previous date: " + defn.getFlow_date());
+			}
 		}
 
-		BigDecimal amt = defn.getFlow_amt();
-		Date flowdate = defn.getFlow_date();
+		// Step 4: Handle null
+		if (defn == null) {
+			System.out.println(">>> ERROR: No flow found for or before given date.");
+			throw new RuntimeException("No flow data found for or before date: " + dateFrom);
+		}
 
-		LocalDate localDate = flowdate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		// Step 5: Extract values
+		BigDecimal flowAmt = defn.getFlow_amt();
+		Date flowDate = defn.getFlow_date();
+		System.out.println(">>> Step 5: Using flowDate = " + flowDate + ", flowAmt = " + flowAmt);
 
-		// Subtract one month from the LocalDate
-		LocalDate previousMonthSameDay = localDate.minusMonths(1);
+		// Step 6: Get one month before the flow date
+		LocalDate flowLocalDate = convertToLocalDate(flowDate);
+		LocalDate oneMonthBeforeFlow = flowLocalDate.minusMonths(1);
+		Date previousMonthDate = convertToDate(oneMonthBeforeFlow);
+		System.out.println(">>> Step 6: One month before flowDate = " + previousMonthDate);
 
-		// Convert the LocalDate back to Date
-		Date resultDate = Date.from(previousMonthSameDay.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		// Step 7: Calculate days
+		long daysInFlowPeriod = ChronoUnit.DAYS.between(oneMonthBeforeFlow, flowLocalDate);
+		long daysFromPreviousToInput = ChronoUnit.DAYS.between(oneMonthBeforeFlow, convertToLocalDate(dateFrom)) + 1; // inclusive
+		System.out.println(">>> Step 7: Days in flow period = " + daysInFlowPeriod);
+		System.out.println(">>> Step 8: Days from previous month date to input date = " + daysFromPreviousToInput);
 
-		System.out.println("Previous month, same day: " + resultDate);
+		// Step 9: Calculate per-day amount and interest
+		BigDecimal perDayAmount = flowAmt.divide(BigDecimal.valueOf(daysInFlowPeriod), 2, RoundingMode.HALF_UP);
+		BigDecimal finalInterest = perDayAmount.multiply(BigDecimal.valueOf(daysFromPreviousToInput));
+		System.out.println(">>> Step 9: Per-day amount = " + perDayAmount);
+		System.out.println(">>> Step 10: Final calculated interest = " + finalInterest);
 
-		LocalDate startDate = convertToLocalDate(resultDate);
-		LocalDate endDate = convertToLocalDate(flowdate);
-		long monthsBetween = ChronoUnit.DAYS.between(startDate, endDate);
-		System.out.println(monthsBetween + "monthsBetween");
-
-		LocalDate startDate1 = convertToLocalDate(resultDate);
-		LocalDate endDate1 = convertToLocalDate(dateFrom);
-		long monthsBetween1 = ChronoUnit.DAYS.between(startDate1, endDate1);
-		System.out.println(monthsBetween1 + "monthsBetween1");
-
-		BigDecimal daysInMonthDecimal = new BigDecimal(monthsBetween);
-		BigDecimal singledayamount = amt.divide(daysInMonthDecimal, 2, RoundingMode.HALF_UP);
-		System.out.println(singledayamount + "singledayamount");
-
-		BigDecimal betweendaysDecimal = new BigDecimal(monthsBetween1);
-		// betweendaysDecimal=betweendaysDecimal.add(BigDecimal.ONE);
-		BigDecimal finalamount = singledayamount.multiply(betweendaysDecimal);
-		System.out.println(finalamount + "finalamount");
-
-		defn.setTran_amt(finalamount);
-		defn.setPart_tran_id(betweendaysDecimal);
+		// Step 10: Set and return
+		defn.setTran_amt(finalInterest);
+		defn.setPart_tran_id(BigDecimal.valueOf(daysFromPreviousToInput));
+		System.out.println(">>> Step 11: Updated DMD_TABLE object = " + defn);
 
 		return defn;
 	}
 
+	// Utility method: Convert Date to LocalDate
 	private static LocalDate convertToLocalDate(Date date) {
 		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+
+	// Utility method: Convert LocalDate to Date
+	private static Date convertToDate(LocalDate localDate) {
+		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 
 	@GetMapping("FlowForDate")
@@ -3074,37 +3094,83 @@ public class BGLSRestController {
 
 			System.out.println("Loan Account Interest");
 
-			LocalDate localDate = flow_date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();/* 15-04-2024 */
+			/*
+			 * // Convert to LocalDate LocalDate localDate =
+			 * flow_date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			 * System.out.println("Flow Date       : " + localDate); // 08-05-2025
+			 * 
+			 * LocalDate previousMonthSameDay = localDate.minusMonths(1);
+			 * System.out.println("Previous Month Same Day: " + previousMonthSameDay); //
+			 * 08-04-2025
+			 * 
+			 * Date resultDate =
+			 * Date.from(previousMonthSameDay.atStartOfDay(ZoneId.systemDefault()).toInstant
+			 * ());
+			 * 
+			 * Calendar calendar = Calendar.getInstance(); calendar.setTime(resultDate);
+			 * calendar.set(Calendar.DAY_OF_MONTH,
+			 * calendar.getActualMaximum(Calendar.DAY_OF_MONTH)); Date bookingDate =
+			 * calendar.getTime(); // 30-04-2025
+			 * 
+			 * LocalDate startDate = convertToLocalDate(resultDate); // 08-04-2025 LocalDate
+			 * endDate = convertToLocalDate(flow_date); // 08-05-2025 LocalDate endDate1 =
+			 * convertToLocalDate(bookingDate); // 30-04-2025
+			 * 
+			 * long daysBetween = ChronoUnit.DAYS.between(startDate, endDate) + 1; //
+			 * Inclusive long daysBetween1 = ChronoUnit.DAYS.between(startDate, endDate1) +
+			 * 1; // Inclusive
+			 * 
+			 * System.out.println("Start Date      : " + startDate);
+			 * System.out.println("End Date        : " + endDate);
+			 * System.out.println("Booking Date    : " + endDate1);
+			 * System.out.println("Total Days      : " + daysBetween);
+			 * System.out.println("Booking Days    : " + daysBetween1);
+			 * 
+			 * BigDecimal daysInMonthDecimal = new BigDecimal(daysBetween); // 31 BigDecimal
+			 * singleDayAmount = flowAmount.divide(daysInMonthDecimal, 2,
+			 * RoundingMode.HALF_UP); // 6200/31 System.out.println("Per Day Interest: " +
+			 * singleDayAmount);
+			 * 
+			 * BigDecimal betweendaysDecimal = new BigDecimal(daysBetween1); // 23
+			 * BigDecimal finalAmount = singleDayAmount.multiply(betweendaysDecimal); //
+			 * Per-day * 23 System.out.println("Booking Amount  : " + finalAmount);
+			 * 
+			 * BigDecimal creditAmount = flowAmount.subtract(finalAmount); // 6200 - 4600
+			 * System.out.println("Credit Amount   : " + creditAmount); TRM table entry set
+			 * here
+			 */
+			
+			LocalDate localDate = flow_date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			LocalDate previousMonthSameDay = localDate.minusMonths(1);
-			/* flow date -1 month */
-			Date resultDate = Date
-					.from(previousMonthSameDay.atStartOfDay(ZoneId.systemDefault()).toInstant());/* 15-03-2024 */
+			Date resultDate = Date.from(previousMonthSameDay.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(resultDate);
 			calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+			Date bookingDate = calendar.getTime();
 
-			Date bookingDate = calendar.getTime();/* 30-03-2024 */
+			LocalDate startDate = convertToLocalDate(resultDate);
+			LocalDate endDate = convertToLocalDate(flow_date);
+			LocalDate bookingEndDate = convertToLocalDate(bookingDate);
 
-			LocalDate startDate = convertToLocalDate(resultDate);/* 15-03-2024 */
-			LocalDate endDate = convertToLocalDate(flow_date);/* 15-04-2024 */
-			long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);/* 30 days */
-
-			LocalDate startDate1 = convertToLocalDate(resultDate);/* 15-03-2024 */
-			LocalDate endDate1 = convertToLocalDate(bookingDate);/* 30-03-2024 */
-			long daysBetween1 = ChronoUnit.DAYS.between(startDate1, endDate1);/* 15 days */
+			// Inclusive range: add 1
+			long daysBetween = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+			long daysBetween1 = ChronoUnit.DAYS.between(startDate, bookingEndDate) + 1;
 
 			BigDecimal flowAmount = new BigDecimal(flow_amount);
+			BigDecimal roundedFlowAmount = flowAmount.setScale(0, RoundingMode.HALF_UP);
 
-			BigDecimal daysInMonthDecimal = new BigDecimal(daysBetween);
-			BigDecimal singledayamount = flowAmount.divide(daysInMonthDecimal, 2,
-					RoundingMode.HALF_UP);/* 6000/30=200 */
+			BigDecimal singledayamount = flowAmount.divide(BigDecimal.valueOf(daysBetween), 2, RoundingMode.HALF_UP);
+			BigDecimal finalamount = singledayamount.multiply(BigDecimal.valueOf(daysBetween1));
 
-			BigDecimal betweendaysDecimal = new BigDecimal(daysBetween1);
-			BigDecimal finalamount = singledayamount.multiply(betweendaysDecimal);/* 200*15=3000 */
+			String acct_num11 = "1200001220";
+			TRAN_MAIN_TRM_WRK_ENTITY leasydebitval = tRAN_MAIN_TRM_WRK_REP.getaedit1(acct_num11);
 
-			BigDecimal creditAmount = flowAmount.subtract(finalamount);/* 6000-3000=3000 */
-			/* TRM table entry set here */
+			BigDecimal reveral_amt = leasydebitval.getTran_amt();
+			System.out.println("Reversal Amount       : " + reveral_amt);
+
+			BigDecimal creditAmount1 = flowAmount.subtract(reveral_amt).setScale(0, RoundingMode.HALF_UP);
+			System.out.println("Final Credit Amount   : " + creditAmount1);
 
 			Lease_Loan_Work_Entity loandetails = lease_Loan_Work_Repo.getLeaseAccount(account_no);
 
@@ -3146,7 +3212,7 @@ public class BGLSRestController {
 			creditTrm.setTran_type("TRANSFER");
 			creditTrm.setPart_tran_type("Credit");
 			creditTrm.setAcct_crncy(leasydebit.getAcct_crncy());
-			creditTrm.setTran_amt(creditAmount);
+			creditTrm.setTran_amt(creditAmount1);
 			creditTrm.setTran_particular(loandetails.getLoan_accountno() + " " + tranParticulars);
 			creditTrm.setTran_remarks(loandetails.getLoan_accountno() + " " + tranParticulars);
 			creditTrm.setTran_date(flow_date);
@@ -3174,7 +3240,7 @@ public class BGLSRestController {
 			creditTrm1.setTran_type("TRANSFER");
 			creditTrm1.setPart_tran_type("Credit");
 			creditTrm1.setAcct_crncy(leasydebit1.getAcct_crncy());
-			creditTrm1.setTran_amt(finalamount);
+			creditTrm1.setTran_amt(reveral_amt);
 			creditTrm1.setTran_particular(loandetails.getLoan_accountno() + " " + "Reversal of Booking");
 			creditTrm1.setTran_remarks(loandetails.getLoan_accountno() + " " + "Reversal of Booking");
 			creditTrm1.setTran_date(flow_date);

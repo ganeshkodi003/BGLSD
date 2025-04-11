@@ -430,4 +430,8 @@ Object[] getcheck1();
 	
 	@Query(value = "select  * from BGLS_TRM_WRK_TRANSACTIONS where  acct_num IN (:acctnum) AND TRAN_PARTICULAR LIKE '%Interest Debited%'", nativeQuery = true)
 	List<TRAN_MAIN_TRM_WRK_ENTITY> set_dab_acc_numval(@Param("acctnum") String accountNo);
+	
+	@Query(value = "SELECT * FROM BGLS_TRM_WRK_TRANSACTIONS WHERE acct_num = ?1 "
+			+ "AND tran_id = (SELECT MAX(tran_id) FROM BGLS_TRM_WRK_TRANSACTIONS WHERE acct_num = ?1)", nativeQuery = true)
+	TRAN_MAIN_TRM_WRK_ENTITY getaedit1(String acct_num);
 }
