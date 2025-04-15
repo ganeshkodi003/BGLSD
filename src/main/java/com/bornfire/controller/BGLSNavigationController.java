@@ -3505,4 +3505,42 @@ public class BGLSNavigationController {
 		}
 		return "scf_status";
 	}
+	
+	@RequestMapping(value = "AccLedgerReport", method = { RequestMethod.GET, RequestMethod.POST })
+	public String AccLedgerReport(@RequestParam(required = false) String formmode,
+			@RequestParam(required = false) String acct_num, String keyword, Model md, HttpServletRequest req) {
+		if (formmode == null || formmode.equals("list")) {
+			md.addAttribute("formmode", "list");
+			md.addAttribute("chartaccount", chart_Acc_Rep.getListoffice());
+		} else if (formmode.equals("view")) {
+			md.addAttribute("formmode", "view");
+			md.addAttribute("dataList", tRAN_MAIN_TRM_WRK_REP.getList(acct_num));/* Journal Entries */
+			md.addAttribute("chartaccount", chart_Acc_Rep.getaedit(acct_num));/* COA */
+
+		}
+		return "AccountLedgerReport.html";
+	}
+ 
+	@RequestMapping(value = "acctLedgerReportMaint", method = { RequestMethod.GET, RequestMethod.POST })
+	public String acctLedgerReportMaint(@RequestParam(required = false) String formmode,
+			@RequestParam(required = false) String acct_num, String keyword, Model md, HttpServletRequest req) {
+
+		Date TRANDATE = (Date) req.getSession().getAttribute("TRANDATE");
+		if (formmode == null || formmode.equals("list")) {
+			md.addAttribute("formmode", "list");
+			md.addAttribute("chartaccount", chart_Acc_Rep.getList());
+		} else if (formmode.equals("view")) {
+			md.addAttribute("formmode", "view");
+			md.addAttribute("dataList", tRAN_MAIN_TRM_WRK_REP.getList(acct_num));/* Journal Entries */
+			md.addAttribute("chartaccount", chart_Acc_Rep.getaedit(acct_num));/* COA */
+			md.addAttribute("TRANDATE", TRANDATE);
+
+		} else if (formmode.equals("downstate")) {
+			md.addAttribute("formmode", "downstate");
+			md.addAttribute("chartaccount", chart_Acc_Rep.getValue(acct_num));/* COA */
+			md.addAttribute("dataList", tRAN_MAIN_TRM_WRK_REP.getList(acct_num));/* Journal Entries */
+			md.addAttribute("TRANDATE", TRANDATE);
+		}
+		return "AcctLedgerReportMaint";
+	}
 }

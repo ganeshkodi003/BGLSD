@@ -6551,5 +6551,26 @@ public class BGLSRestController {
 // Save all credit transactions at once (if needed)
 		tRAN_MAIN_TRM_WRK_REP.saveAll(transactionList);
 	}
+	
+	@RequestMapping(value = "getAcctLedgerRecords", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Chart_Acc_Entity> getAcctLedgerRecords(
+	    @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date valueDate,
+	    @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date FromDate) {
+
+	    SimpleDateFormat dateFormatWithMonthName = new SimpleDateFormat("dd-MMM-yyyy");
+	    String valueDateRef = dateFormatWithMonthName.format(valueDate).toUpperCase();
+	    String FromDateRef = dateFormatWithMonthName.format(FromDate).toUpperCase();
+	    List<Chart_Acc_Entity> records = new ArrayList<>();
+
+	    System.out.println("transaction List : " + FromDateRef + " : " + valueDateRef);
+
+	    records = chart_Acc_Rep.getTranDevlstHists(FromDateRef, valueDateRef);
+	    System.out.println("Records " + records);
+
+	    return records;
+	}
+
+
 
 }
