@@ -138,6 +138,23 @@ Object[] getglcode();
             "LEFT JOIN BGLS_CONTROL_TABLE ct ON 1=1 " +
             "WHERE a.acct_num = :acctNum", nativeQuery = true)
     Object[] getValue(@Param("acctNum") String acctNum);
+    
+    @Query(value = "SELECT t.TRAN_PARTICULAR, " +
+            "CASE WHEN t.PART_TRAN_TYPE = 'credit' THEN t.TRAN_AMT ELSE 0 END AS Credit, " +
+            "CASE WHEN t.PART_TRAN_TYPE = 'debit' THEN t.TRAN_AMT ELSE 0 END AS Debit, " +
+            "SUM(CASE WHEN t.PART_TRAN_TYPE = 'credit' THEN t.TRAN_AMT " +
+            "         WHEN t.PART_TRAN_TYPE = 'debit' THEN -t.TRAN_AMT ELSE 0 END) " +
+            "OVER (PARTITION BY t.ACCT_NUM ORDER BY t.TRAN_DATE, t.TRAN_ID, t.PART_TRAN_ID " +
+            "ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS Balance, " +
+            "t.TRAN_DATE AS tran_date " +
+            "FROM coa a " +
+            "LEFT JOIN Loan_AccountMaster lam ON lam.Loan_AccountNo = a.ACCT_NUM " +
+            "LEFT JOIN BGLS_CONTROL_TABLE ct ON 1 = 1 " +
+            "LEFT JOIN BGLS_TRM_WRK_TRANSACTIONS t ON t.acct_num = a.acct_num AND t.TRAN_STATUS = 'POSTED' " +
+            "WHERE a.acct_num = :acctNum " +
+            "ORDER BY t.TRAN_DATE, t.TRAN_ID, t.PART_TRAN_ID",
+            nativeQuery = true)
+    List<Object[]> getValue1(@Param("acctNum") String acctNum);
 
     @Query(value = "SELECT * FROM BGLS_CHART_OF_ACCOUNTS WHERE CAST(acct_open_date AS DATE) BETWEEN CAST(?1 AS DATE) AND CAST(?2 AS DATE) ORDER BY acct_open_date;", nativeQuery = true)
   	List<Chart_Acc_Entity> getTranDevlstHists(String fromdate,String valueDate);

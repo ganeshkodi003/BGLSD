@@ -999,7 +999,7 @@ input:hover+.password-info {
 									<div class="col-sm-2">
 										<input type="text" name="acct_num" id="acct_num"
 											class="form-control form-control-sm bg-white border border-dark"
-											th:value="${chartaccount[0][0] ?: ''}" readonly />
+											th:value="${chartaccount[0][1] ?: ''}" readonly />
 									</div>
 								</div>
 
@@ -1010,7 +1010,7 @@ input:hover+.password-info {
 									<div class="col-sm-2">
 										<input type="text" name="acct_name" id="acct_name"
 											class="form-control form-control-sm bg-white border border-dark"
-											th:value="${chartaccount[0][1] ?: ''}" readonly />
+											th:value="${chartaccount[0][2] ?: ''}" readonly />
 									</div>
 								</div>
                                  <div class="row formline"
@@ -1020,7 +1020,7 @@ input:hover+.password-info {
 									<div class="col-sm-2">
 										<input type="text" name="acct_open_date" id="acct_open_date"
 											class="form-control form-control-sm bg-white border border-dark"
-											th:value="${#dates.format(chartaccount[0][2], 'dd-MM-yyyy')}" readonly />
+											th:value="${#dates.format(chartaccount[0][3], 'dd-MM-yyyy')}" readonly />
 									</div>
 								</div>
 								<div class="row formline"
@@ -1030,7 +1030,7 @@ input:hover+.password-info {
 									<div class="col-sm-2">
 										<input type="text" name="acct_name" id="acct_name"
 											class="form-control form-control-sm bg-white border border-dark"
-											th:value="${chartaccount[0][3] ?: ''}" readonly />
+											th:value="${chartaccount[0][4] ?: ''}" readonly />
 									</div>
 								</div>
                                 <div class="row formline"
@@ -1038,7 +1038,7 @@ input:hover+.password-info {
 									<div class="col-sm-3"></div>
 									<div class="col-sm-2">Statement Period From</div>
 									<div class="col-sm-2">
-										<input type="text" name="fromdate" id="fromdate"
+										<input type="text" name="fromdate" id="fromdate" th:value="${chartaccount[0][0] != null ? #dates.format(chartaccount[0][0], 'dd-MM-yyyy') : ''}"
 											class="form-control form-control-sm bg-white border border-dark" readonly/>
 									</div>
 								</div>
@@ -1048,7 +1048,7 @@ input:hover+.password-info {
 									<div class="col-sm-2">Statement Period To</div>
 									<div class="col-sm-2">
 										<input type="text" name="todate" id="todate"
-											th:value="${#dates.format(TRANDATE, 'dd-MM-yyyy')}"
+											th:value="${chartaccount[0][5] != null ? #dates.format(chartaccount[0][5], 'dd-MM-yyyy') : ''}"
 											class="form-control form-control-sm bg-white border border-dark" readonly/>
 									</div>
 								</div>
@@ -1074,15 +1074,17 @@ input:hover+.password-info {
 										<tr th:if="${#lists.isEmpty(dataList)}">
 											<td colspan="7" style="text-align: center;">No records</td>
 										</tr>
-										<tr th:each="data : ${dataList}"
-											th:unless="${#lists.isEmpty(dataList)}">
-											<td th:text="${#dates.format(data[0], 'dd-MM-yyyy')}" style="text-align: left;"></td>
-											<td th:text="${data[2]}" style="width: 30%; text-align: left;"></td>
-											<td th:text="${data[5]== 0 ? '0.00' :#numbers.formatDecimal(data[5], 0, 'COMMA', 2, 'POINT')}" style="text-align: right;"></td>
-											<td th:text="${data[6]== 0 ? '0.00' :#numbers.formatDecimal(data[6], 0, 'COMMA', 2, 'POINT')}" style="text-align: right;"></td>
-											<td style="text-align: right;"><span class="balancelist" th:text="0.00"></span></td>
+										<tr th:each="data : ${dataList}" th:unless="${#lists.isEmpty(dataList)}">
+											<td th:text="${data[4] != null ? #dates.format(data[4], 'dd-MM-yyyy') : ''}" style="text-align: left;"></td>
+											<td th:text="${data[0]}" style="width: 30%; text-align: left;"></td>
+											<td th:text="${data[1] == 0 ? '0.00' : #numbers.formatDecimal(data[1], 0, 'COMMA', 2, 'POINT')}"
+												style="text-align: right;"></td>
+											<td th:text="${data[2] == 0 ? '0.00' : #numbers.formatDecimal(data[2], 0, 'COMMA', 2, 'POINT')}"
+												style="text-align: right;"></td>
+											<td th:text="${data[3] == 0 ? '0.00' : #numbers.formatDecimal(data[3], 0, 'COMMA', 2, 'POINT')}"
+												style="text-align: right;"></td>
 										</tr>
-									</tbody>
+										</tbody>
 								</table>
 							</div>
 						</div>

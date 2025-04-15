@@ -3546,7 +3546,7 @@ public class BGLSNavigationController {
 		} else if (formmode.equals("downstate")) {
 			md.addAttribute("formmode", "downstate");
 			md.addAttribute("chartaccount", chart_Acc_Rep.getValue(acct_num));/* COA */
-			md.addAttribute("dataList", tRAN_MAIN_TRM_WRK_REP.getList(acct_num));/* Journal Entries */
+			md.addAttribute("dataList", chart_Acc_Rep.getValue1(acct_num));/* Journal Entries */
 			md.addAttribute("TRANDATE", TRANDATE);
 		}
 		return "AcctLedgerReportMaint";
