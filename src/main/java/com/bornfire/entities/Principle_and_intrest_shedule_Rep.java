@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface Principle_and_intrest_shedule_Rep extends JpaRepository<Principle_and_intrest_shedule_Entity, BigDecimal>{
 
-	@Query(value = "SELECT INFOSYS.P_AND_I_SCHE_SEQ.NEXTVAL AS SRL_NO FROM DUAL", nativeQuery = true)
+	@Query(value = "SELECT NEXT VALUE FOR P_AND_I_SCHE_SEQ", nativeQuery = true)
 	BigDecimal getSrlNo();
 	
 	@Query(value = "SELECT TOP 1 INSTALLMENT_ID FROM principle_and_interest_schedule_table WHERE LOAN_ACCOUNT_NO = ?1 ORDER BY CAST(INSTALLMENT_ID AS INT) DESC", nativeQuery = true)

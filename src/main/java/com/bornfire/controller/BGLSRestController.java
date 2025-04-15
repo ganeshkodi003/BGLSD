@@ -3,6 +3,7 @@ package com.bornfire.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -97,6 +98,7 @@ import com.bornfire.entities.Organization_Branch_Rep;
 import com.bornfire.entities.Organization_Entity;
 import com.bornfire.entities.Organization_Repo;
 import com.bornfire.entities.Principle_and_intrest_shedule_Entity;
+import com.bornfire.entities.Principle_and_intrest_shedule_Rep;
 import com.bornfire.entities.Reference_Code_Entity;
 import com.bornfire.entities.Reference_code_Rep;
 import com.bornfire.entities.RepaymentScheduleEntity;
@@ -239,6 +241,9 @@ public class BGLSRestController {
 
 	@Autowired
 	BLMS_VEHICLEDET_REPO blsm_VEHICLEDET_REPO;
+	
+	@Autowired
+	Principle_and_intrest_shedule_Rep principle_and_intrest_shedule_Rep;
 
 	/* THANVEER */
 	@RequestMapping(value = "employeeAdd", method = RequestMethod.POST)
@@ -2193,8 +2198,10 @@ public class BGLSRestController {
 		System.out.println(">>> Step 8: Days from previous month date to input date = " + daysFromPreviousToInput);
 
 		// Step 9: Calculate per-day amount and interest
-		BigDecimal perDayAmount = flowAmt.divide(BigDecimal.valueOf(daysInFlowPeriod), 2, RoundingMode.HALF_UP);
-		BigDecimal finalInterest = perDayAmount.multiply(BigDecimal.valueOf(daysFromPreviousToInput));
+		BigDecimal perDayAmount = flowAmt.divide(BigDecimal.valueOf(daysInFlowPeriod), MathContext.DECIMAL128);
+		BigDecimal finalInterest = perDayAmount.multiply(BigDecimal.valueOf(daysFromPreviousToInput)).setScale(0,
+				RoundingMode.HALF_UP);
+
 		System.out.println(">>> Step 9: Per-day amount = " + perDayAmount);
 		System.out.println(">>> Step 10: Final calculated interest = " + finalInterest);
 
@@ -2285,6 +2292,7 @@ public class BGLSRestController {
 		NoticeDetailsPayment0Entity paymentDetails = noticeDetailsPayment0Rep.getPaymentDetails(accountNo);
 		List<DMD_TABLE> repaymentDetails = dMD_TABLE_REPO.gettranpopvaluesdatas(accountNo);
 
+		String accountname = repaymentDetails.get(0).getAcct_name();
 		BigDecimal productAmt = loandetails.getLoan_sanctioned();
 		BigDecimal intRate = loandetails.getEffective_interest_rate();
 		Date creationDate = loandetails.getDate_of_loan();
@@ -2396,6 +2404,9 @@ public class BGLSRestController {
 					.add(record.getChargesAmount() != null ? record.getChargesAmount() : BigDecimal.ZERO);
 
 			entity.setInstallment_amt(totalInstallmentAmt);
+			entity.setSrl_no(principle_and_intrest_shedule_Rep.getSrlNo());
+			entity.setLoan_account_no(accountNo);
+			entity.setAcct_name(accountname);
 
 			LocalDate instDate = record.getInstallmentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			BigDecimal paidAmount = finalRepaymentDetails.stream().filter(
@@ -2406,6 +2417,8 @@ public class BGLSRestController {
 
 			entity.setPaid_amount(paidAmount != null ? paidAmount.toPlainString() : "0.00");
 
+			principle_and_intrest_shedule_Rep.save(entity);
+			
 			principleEntities.add(entity);
 			installmentNo++;
 		}
@@ -3139,7 +3152,7 @@ public class BGLSRestController {
 			 * System.out.println("Credit Amount   : " + creditAmount); TRM table entry set
 			 * here
 			 */
-			
+
 			LocalDate localDate = flow_date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			LocalDate previousMonthSameDay = localDate.minusMonths(1);
 			Date resultDate = Date.from(previousMonthSameDay.atStartOfDay(ZoneId.systemDefault()).toInstant());
