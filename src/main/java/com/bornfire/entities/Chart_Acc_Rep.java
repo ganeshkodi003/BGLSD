@@ -126,4 +126,10 @@ Object[] getglcode();
     
     @Query(value = "SELECT ACCT_BAL  FROM BGLS_CHART_OF_ACCOUNTS WHERE ACCT_NUM =?1", nativeQuery = true)
     String getsbBalance(String acct_num);
+    
+    @Query(value = "SELECT a.ACCT_NUM,a.ACCT_NAME, r.INST_START_DT,r.INST_AMOUNT FROM BGLS_CHART_OF_ACCOUNTS a JOIN REPAYMENT_SCHEDULE r ON a.acct_num = r.ACCOUNT_NO WHERE a.acct_num = ?1", nativeQuery = true)
+    Object[] getValue(String acctNum);
+
+    @Query(value = "SELECT * FROM BGLS_CHART_OF_ACCOUNTS WHERE CAST(acct_open_date AS DATE) BETWEEN CAST(?1 AS DATE) AND CAST(?2 AS DATE) ORDER BY acct_open_date;", nativeQuery = true)
+  	List<Chart_Acc_Entity> getTranDevlstHists(String fromdate,String valueDate);
 }
