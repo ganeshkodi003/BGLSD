@@ -1,5 +1,7 @@
 package com.bornfire.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -26,8 +28,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import javax.swing.JOptionPane;
 import javax.transaction.Transactional;
 
 import org.hibernate.SessionFactory;
@@ -39,7 +41,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping; 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,7 +52,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bornfire.entities.Access_Role_Repo;
-       
 import com.bornfire.entities.Account_Ledger_Entity;
 import com.bornfire.entities.Account_Ledger_Rep;
 import com.bornfire.entities.Assosiate_Profile_Entity;
@@ -122,9 +123,13 @@ import com.bornfire.entities.paystructureentity;
 import com.bornfire.entities.paystructurerep;
 import com.bornfire.services.AdminOperServices;
 import com.bornfire.services.BGLS_Inventeryservice;
+import com.bornfire.services.DownloadService;
 import com.bornfire.services.LoginServices;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.monitorjbl.xlsx.exceptions.ParseException;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.repo.InputStreamResource;
 
 @Controller
 @ConfigurationProperties("default")
@@ -289,6 +294,9 @@ public class BGLSNavigationController {
 
 	@Autowired
 	HolidayMaster_Rep holidayMaster_Rep;
+	
+	@Autowired
+	DownloadService downloadService;
 
 	public String getPagesize() {
 		return pagesize;
@@ -3543,4 +3551,31 @@ public class BGLSNavigationController {
 		}
 		return "AcctLedgerReportMaint";
 	}
+
+	@RequestMapping(value = "accountledgerdownload", method = RequestMethod.GET)
+	@ResponseBody
+	public InputStreamResource AccountLedgerDownload(HttpServletResponse response, 
+			@RequestParam(required = false) String acct_num,@RequestParam(required = false) String filetype
+	) throws IOException, SQLException {
+
+		response.setContentType("application/octet-stream");
+		System.out.println("===============" + acct_num);
+		InputStreamResource resource = null;
+		try {
+
+			 
+			File repfile = downloadService.getFileAcccount_Ledger(filetype, acct_num );
+
+			response.setHeader("Content-Disposition", "attachment; filename=" + repfile.getName());
+			resource = new InputStreamResource();
+
+		} catch (JRException e) {
+
+			e.printStackTrace();
+		}
+
+		return resource;
+	}
+
+	
 }

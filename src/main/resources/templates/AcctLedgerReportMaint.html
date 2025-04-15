@@ -640,11 +640,20 @@ input:hover+.password-info {
 				+ '&part_tran_id=' + navi2 + '&acct_num=' + acctnum;
 		} 
 		
-	function downloadstate() {
+	function downloadstate(btn) {
 		var acct_num = document.getElementById("acct_num").value;
-		alert(acct_num);
-		location.href = 'acctLedgerReportMaint?formmode=downstate&acct_num='
-			+ acct_num;
+		var filetype = btn.getAttribute("data-fileType");
+        var a = document.getElementById("acct_num").value;
+	 
+
+    	 $
+		.ajax({
+			type : 'get',
+			url : './accountledgerdownload?acct_num=' +a+ '&filetype='+filetype ,
+			success : function(data) {
+            alert(data);
+			}
+		}) 
 	}
 	</script>
 
@@ -957,6 +966,27 @@ input:hover+.password-info {
 							style="background-color: #e9ecef; height: 50px">
 							<div class="float-left">
 								<h6 style="font-size: 1.2rem; color: black;">MODAL BANK</h6>
+							</div>
+							<div class="float-right">
+								 
+								<div class="btn-group nav-buttons ml-3">
+						<div class="dropdown">
+							<button class="btn btn-xs btn-primary btns p-2 dropdown-toggle" type="button" id="dropdownMenuButton" title="Action"
+								style="line-height: 0.7; font-size: 18px;   font-weight: 700;   padding: 10px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+							>Download Statement</button>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" title="Modify" style="line-height: 0.7; background-color: white;">
+								<a class="dropdown-item"
+									style="cursor: pointer; height: 20px; width: 200px; background:white; border-radius: .20rem; padding: 8px 10px; top: 10px; font-size: 15px; color: #162b75; font-weight: 700;"
+									th:attr="data-fileType='pdf'" onclick="downloadstate(this);"
+								>PDF</a>
+								<div class="dropdown-divider" style="height: 2px; line-height: 0.7;"></div>
+								<a class="dropdown-item" th:attr="data-fileType='xlsx'"
+									style="cursor: pointer; height: 20px; width: 200px; background: white; border-radius: .20rem; padding: 8px 10px; top: 10px; font-size: 15px; color: #162b75; font-weight: 700;"
+									onclick="downloadstate(this);" title="Verify"
+								>Excel</a>
+							</div>
+						</div>
+					</div>
 							</div>
 						</div>
 						<div class="card-body">
