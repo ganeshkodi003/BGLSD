@@ -638,14 +638,9 @@ input:hover+.password-info {
 
 			location.href = './journalEntries?formmode=view&tran_id=' + navi1
 				+ '&part_tran_id=' + navi2 + '&acct_num=' + acctnum;
-		} 
-		
-	function downloadstate() {
-		var acct_num = document.getElementById("acct_num").value;
-		alert(acct_num);
-		location.href = 'accountLedger2?formmode=downstate&acct_num='
-			+ acct_num;
-	}
+		}
+
+
 	</script>
 
 
@@ -786,11 +781,7 @@ input:hover+.password-info {
 							<div class="float-left">
 								<h6 style="font-size: 1.2rem; color: black;">ACCOUNT LEDGER</h6>
 							</div>
-							<div class="float-right">
-								<button type="button" class="btn btn-xs btn-primary btns p-2 border btn-filter" onclick="downloadstate()">
-									Download Statement
-								</button>
-							</div>
+
 						</div>
 						<div class="card-body">
 							<form action="#" id="" th:object="${Accountvalue}">
@@ -1052,128 +1043,17 @@ input:hover+.password-info {
 							<button class="btn btn-primary" onclick="Home();">Home</button>
 							<button class="btn btn-primary" onclick="Back();">Back</button>
 						</div>
+
+
 					</div>
-				</div>
-<!-- ------------------------------------Account Ledger downstate---------------------------------- -->
-				<div th:if="${formmode}=='downstate'">
 
 
-					<div class="card w-100 border">
-						<div class="card-header"
-							style="background-color: #e9ecef; height: 50px">
-							<div class="float-left">
-								<h6 style="font-size: 1.2rem; color: black;">MODAL BANK</h6>
-							</div>
-						</div>
-						<div class="card-body">
-							<form action="#" id="" th:object="${Accountvalue}">
-								<div class="row formline"
-									style="padding: 0px 0px 2px 0px; margin-left: -130px">
-									<div class="col-sm-3"></div>
 
-									<div class="col-sm-2">Account Number</div>
-									<div class="col-sm-2">
-										<input type="text" name="acct_num" id="acct_num"
-											class="form-control form-control-sm bg-white border border-dark"
-											th:value="${chartaccount[0][0]}" readonly />
-									</div>
-								</div>
-
-								<div class="row formline"
-									style="padding: 0px 0px 2px 0px; margin-left: -130px">
-									<div class="col-sm-3"></div>
-									<div class="col-sm-2">Account Name</div>
-									<div class="col-sm-2">
-										<input type="text" name="acct_name" id="acct_name"
-											class="form-control form-control-sm bg-white border border-dark"
-											th:value="${chartaccount[0][1]}" readonly />
-									</div>
-								</div>
-                                 <div class="row formline"
-									style="padding: 0px 0px 2px 0px; margin-left: -130px">
-									<div class="col-sm-3"></div>
-									<div class="col-sm-2">Date of Loan</div>
-									<div class="col-sm-2">
-										<input type="text" name="acct_open_date" id="acct_open_date"
-											class="form-control form-control-sm bg-white border border-dark"
-											th:value="${#dates.format(chartaccount[0][2], 'dd-MM-yyyy')}" readonly />
-									</div>
-								</div>
-								<div class="row formline"
-									style="padding: 0px 0px 2px 0px; margin-left: -130px">
-									<div class="col-sm-3"></div>
-									<div class="col-sm-2">Loan Amount</div>
-									<div class="col-sm-2">
-										<input type="text" name="acct_name" id="acct_name"
-											class="form-control form-control-sm bg-white border border-dark"
-											th:value="${chartaccount[0][3]}" readonly />
-									</div>
-								</div>
-                                <div class="row formline"
-									style="padding: 0px 0px 2px 0px; margin-left: -130px">
-									<div class="col-sm-3"></div>
-									<div class="col-sm-2">Statement Period From</div>
-									<div class="col-sm-2">
-										<input type="text" name="fromdate" id="fromdate"
-											class="form-control form-control-sm bg-white border border-dark" readonly/>
-									</div>
-								</div>
-								<div class="row formline"
-									style="padding: 0px 0px 2px 0px; margin-left: -130px">
-									<div class="col-sm-3"></div>
-									<div class="col-sm-2">Statement Period To</div>
-									<div class="col-sm-2">
-										<input type="text" name="todate" id="todate"
-											th:value="${#dates.format(TRANDATE, 'dd-MM-yyyy')}"
-											class="form-control form-control-sm bg-white border border-dark" readonly/>
-									</div>
-								</div>
-								</div>
-							</form>
-							<!-- ----------------------------------------------------------------------------------------------------- -->
-						<div class="card-body">
-							<div class="table-responsive">
-								<table class="table table-bordered table-hover table-sm"
-									style="margin-bottom: 0px; font-size: initial;" id="list1">
-									<thead class="thead-light">
-										<tr class="filters">
-											<th>Tran Date</th>
-											<th>Tran Particulars</th>
-											<th style="text-align: right">Credits</th>
-											<th style="text-align: right">Debits</th>
-											<th style="text-align: right">Balance</th>
-
-										</tr>
-									</thead>
-
-									<tbody id="listvalues">
-										<tr th:if="${#lists.isEmpty(dataList)}">
-											<td colspan="7" style="text-align: center;">No records</td>
-										</tr>
-										<tr th:each="data : ${dataList}"
-											th:unless="${#lists.isEmpty(dataList)}">
-											<td th:text="${#dates.format(data[0], 'dd-MM-yyyy')}" style="text-align: left;"></td>
-											<td th:text="${data[2]}" style="width: 30%; text-align: left;"></td>
-											<td th:text="${data[5]== 0 ? '0.00' :#numbers.formatDecimal(data[5], 0, 'COMMA', 2, 'POINT')}" style="text-align: right;"></td>
-											<td th:text="${data[6]== 0 ? '0.00' :#numbers.formatDecimal(data[6], 0, 'COMMA', 2, 'POINT')}" style="text-align: right;"></td>
-											<td style="text-align: right;"><span class="balancelist" th:text="0.00"></span></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-						</div>
-
-						
-<!---------------------------------------------------------------------------------------------------->
-						<div class="card-footer text-center"
-							style="background-color: #e9ecef">
-							<button class="btn btn-primary" onclick="Home();">Home</button>
-							<button class="btn btn-primary" onclick="Back();">Back</button>
-						</div>
-					</div>
 				</div>
 			</div>
+
+
+
 		</div>
 	</div>
 
