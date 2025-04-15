@@ -2486,6 +2486,11 @@ public class BGLSNavigationController {
 			md.addAttribute("chartaccount", chart_Acc_Rep.getaedit(acct_num));/* COA */
 			md.addAttribute("TRANDATE", TRANDATE);
 
+		} else if (formmode.equals("downstate")) {
+			md.addAttribute("formmode", "downstate");
+			md.addAttribute("chartaccount", chart_Acc_Rep.getValue(acct_num));/* COA */
+			md.addAttribute("dataList", tRAN_MAIN_TRM_WRK_REP.getList(acct_num));/* Journal Entries */
+			md.addAttribute("TRANDATE", TRANDATE);
 		}
 		return "AccountLedger_IR";
 	}
