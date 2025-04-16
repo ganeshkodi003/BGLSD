@@ -384,4 +384,28 @@ ORDER BY t.TRAN_DATE, t.TRAN_ID, t.PART_TRAN_ID;]]>
 			</textField>
 		</band>
 	</detail>
+	<summary>
+		<band height="470">
+			<staticText>
+				<reportElement x="0" y="0" width="550" height="40" uuid="4acaa621-225d-4e8e-8ab2-a68766c894ad"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="550" height="39" uuid="422476a3-5211-43f7-83ad-ac54a70f49a5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[This is a computer generated statement and does not require signature]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="420" width="544" height="1" uuid="cdaf3eeb-163b-4395-9dc9-c2894d4b9e09"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="430" width="540" height="20" uuid="9c7d1aa4-2e71-4de8-b70a-ea7711fc99cb"/>
+				<text><![CDATA[This is an authenticated intimation/statment.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="450" width="540" height="20" uuid="48a6105f-8e69-4bdc-8edf-f90f009f76e1"/>
+				<text><![CDATA[Customers are requested to immediately notify the Bank of any discrepancy in the statement]]></text>
+			</staticText>
+		</band>
+	</summary>
 </jasperReport>

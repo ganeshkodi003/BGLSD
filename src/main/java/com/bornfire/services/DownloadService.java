@@ -75,7 +75,7 @@ public class DownloadService {
 	        HashMap<String, Object> map = new HashMap<>();
 	        map.put("Account_Number", acct_num);
 	       
-	        System.out.println(acct_num);
+	      
 	            //for excel code
 	           if ("pdf".equals(filetype)) {
 	               fileName = fileName + ".pdf";
@@ -84,6 +84,7 @@ public class DownloadService {
 	           }
 
 	           path = path + fileName;
+	          
 	            if ("pdf".equals(filetype)) {
 	                logger.info("Generating PDF...");
 	                JasperPrint jp = JasperFillManager.fillReport(jr, map, srcdataSource.getConnection());

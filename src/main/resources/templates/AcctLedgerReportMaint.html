@@ -643,15 +643,12 @@ input:hover+.password-info {
 	function downloadstate(btn) {
 		var acct_num = document.getElementById("acct_num").value;
 		var filetype = btn.getAttribute("data-fileType");
-        var a = document.getElementById("acct_num").value;
-	 
-
     	 $
 		.ajax({
 			type : 'get',
-			url : './accountledgerdownload?acct_num=' +a+ '&filetype='+filetype ,
+			url : './accountledgerdownload?acct_num=' +acct_num+ '&filetype='+filetype ,
 			success : function(data) {
-            alert(data);
+            alert("Success...");
 			}
 		}) 
 	}
