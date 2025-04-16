@@ -3577,5 +3577,27 @@ public class BGLSNavigationController {
 		return resource;
 	}
 
-	
+	@RequestMapping(value = "RepaymentReport", method = { RequestMethod.GET, RequestMethod.POST })
+	public String RepaymentReport(@RequestParam(required = false) String formmode, Model md,
+			HttpServletRequest req, @RequestParam(required = false) String loan_accountno) {
+
+		if (formmode == null || formmode.equals("list")) {
+			md.addAttribute("formmode", "list");
+			md.addAttribute("getDDDetails", lease_Loan_Work_Repo.getLeaseAccountList());
+
+		} else if (formmode.equals("view")) {
+
+			md.addAttribute("formmode", "view");
+			md.addAttribute("loanDetails", lease_Loan_Work_Repo.getLeaseAccount(loan_accountno));
+			md.addAttribute("paymentDetails", noticeDetailsPayment0Rep.getPaymentDetails(loan_accountno));
+
+		} else if (formmode.equals("verify")) {
+
+			md.addAttribute("formmode", "verify");
+			md.addAttribute("loanDetails", lease_Loan_Work_Repo.getLeaseAccount(loan_accountno));
+			md.addAttribute("paymentDetails", noticeDetailsPayment0Rep.getPaymentDetails(loan_accountno));
+
+		}
+		return "RepaymentDetReport";
+	}
 }
