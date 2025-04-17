@@ -156,6 +156,6 @@ Object[] getglcode();
             nativeQuery = true)
     List<Object[]> getValue1(@Param("acctNum") String acctNum);
 
-    @Query(value = "SELECT * FROM BGLS_CHART_OF_ACCOUNTS WHERE CAST(acct_open_date AS DATE) BETWEEN CAST(?1 AS DATE) AND CAST(?2 AS DATE) ORDER BY acct_open_date;", nativeQuery = true)
+    @Query(value = "SELECT * FROM BGLS_CHART_OF_ACCOUNTS WHERE CAST(acct_open_date AS DATE) BETWEEN CAST(?1 AS DATE) AND CAST(?2 AS DATE) ORDER BY acct_open_date", nativeQuery = true)
   	List<Chart_Acc_Entity> getTranDevlstHists(String fromdate,String valueDate);
 }

@@ -40,4 +40,7 @@ public interface Lease_Loan_Work_Repo  extends JpaRepository<Lease_Loan_Work_Ent
 
 	@Query(value = "select loan_accountno,customer_name from Loan_AccountMaster_Work where del_flg = 'N' AND entity_flg = 'Y' union all select loan_accountno,customer_name from Loan_AccountMaster where del_flg = 'N' AND entity_flg = 'Y' order by LOAN_ACCOUNTNO", nativeQuery = true)
 	List<Object[]> getActNoVALUES();
+	
+    @Query(value = "SELECT * FROM (SELECT * FROM Loan_AccountMaster UNION ALL SELECT * FROM Loan_AccountMaster_Work) AS combined WHERE CAST(date_of_loan AS DATE) BETWEEN CAST(?1 AS DATE) AND CAST(?2 AS DATE) ORDER BY date_of_loan", nativeQuery = true)
+  	List<Lease_Loan_Work_Entity> getRepaymentDet(String fromdate,String valueDate);
 }

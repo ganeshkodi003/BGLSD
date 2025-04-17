@@ -6584,6 +6584,23 @@ public class BGLSRestController {
 	    return records;
 	}
 
+	@RequestMapping(value = "RepaymentDetRecords", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Chart_Acc_Entity> RepaymentDetRecords(
+	    @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date valueDate,
+	    @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date FromDate) {
 
+	    SimpleDateFormat dateFormatWithMonthName = new SimpleDateFormat("dd-MMM-yyyy");
+	    String valueDateRef = dateFormatWithMonthName.format(valueDate).toUpperCase();
+	    String FromDateRef = dateFormatWithMonthName.format(FromDate).toUpperCase();
+	    List<Chart_Acc_Entity> records = new ArrayList<>();
+
+	    System.out.println("Repayment List : " + FromDateRef + " : " + valueDateRef);
+
+	    records = chart_Acc_Rep.getTranDevlstHists(FromDateRef, valueDateRef);
+	    System.out.println("Repayment Records " + records);
+
+	    return records;
+	}
 
 }

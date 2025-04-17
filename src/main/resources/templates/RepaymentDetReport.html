@@ -53,6 +53,11 @@
 
 
 <style>
+  .ui-datepicker {
+    z-index: 9999 !important;
+  }
+</style>
+<style>
 .modal {
 	display: none;
 	/* Hidden by default */
@@ -1861,7 +1866,198 @@ function rowadddcorporate() {
 			}
 		}
 	</script>
+<script type="text/javascript">
 
+$(document).ready(function () {
+    // Initialize date fields with the current date
+    const currentDate = $.datepicker.formatDate('dd-mm-yy', new Date());
+    $("#FromDate1").val(currentDate);
+    $("#currentDate1").val(currentDate);
+
+    // Initialize the FromDate datepicker
+    $("#FromDate1").datepicker({
+        dateFormat: 'dd-mm-yy',
+        maxDate: new Date(),
+        onSelect: function (selectedDate) {
+            // Set the minimum date for ToDate based on FromDate
+            $("#currentDate1").datepicker("option", "minDate", selectedDate);
+
+            // Check if the current ToDate is invalid, and clear it if necessary
+            const toDate = $("#currentDate1").val();
+            if (toDate && new Date(toDate.split('-').reverse().join('-')) < new Date(selectedDate.split('-').reverse().join('-'))) {
+                $("#currentDate1").val(""); // Clear ToDate if it is invalid
+            }
+
+            getTransactionRecords22(); // Trigger filter
+        },
+    });
+
+    // Initialize the currentDate (ToDate) datepicker
+    $("#currentDate1").datepicker({
+        dateFormat: 'dd-mm-yy',
+        maxDate: new Date(),
+        beforeShow: function () {
+            // Ensure the minDate is dynamically set based on FromDate
+            const fromDate = $("#FromDate1").val();
+            if (fromDate) {
+                $(this).datepicker("option", "minDate", fromDate);
+            }
+        },
+        onSelect: function (selectedDate) {
+            const fromDate = $("#FromDate1").val();
+
+            if (!fromDate) {
+                showErrorModal("Please select a From Date first.");
+                $("#currentDate1").val(""); // Clear ToDate
+                return;
+            }
+
+            if (new Date(selectedDate.split('-').reverse().join('-')) < new Date(fromDate.split('-').reverse().join('-'))) {
+                showErrorModal("To Date cannot be earlier than From Date.");
+                $("#currentDate1").val(""); // Clear ToDate if invalid
+                return;
+            }
+
+            getTransactionRecords22(); // Trigger filter
+        },
+    });
+
+    // Automatically fetch and filter transaction records on page load
+    getTransactionRecords22();
+
+    // Fetch and filter transaction records based on the selected dates
+// Fetch and filter transaction records based on the selected dates
+function getTransactionRecords22() { 
+    const fromDate = $('#FromDate1').val();
+    const toDate = $('#currentDate1').val();
+    console.log(toDate);
+
+    if (!toDate) {
+        showErrorModal("Please select a valid To Date.");
+        return;
+    }
+
+    $.ajax({
+        url: `./RepaymentDetRecords?valueDate=${toDate}&FromDate=${fromDate}`,
+        type: 'GET',
+        success: function (data) {
+            if (data && Array.isArray(data)) {
+            	console.log("get tran...")
+                populateTransactionTable(data); // Ensure data is passed correctly
+            } else {
+            	console.log("No tran...")
+                showErrorModal("No data available.");
+            }
+        },
+        error: function () {
+            showErrorModal('Error fetching data.');
+        },
+    });
+}
+
+// Populate the transaction table with filtered data
+function populateTransactionTable(data) {
+    let trHTML = '';
+    if (data.length > 0) {
+        data.forEach((chartacc) => {
+            const classification = chartacc.classification || "";
+            const acctNum = chartacc.acct_num || "";
+            const acctName = chartacc.acct_name || "";
+            const acctCrncy = chartacc.acct_crncy || "";
+            const crAmt = formatNumberWithCommas(chartacc.cr_amt || 0.00);
+            const drAmt = formatNumberWithCommas(chartacc.dr_amt || 0.00);
+            const acctBal = formatNumberWithCommas(chartacc.acct_bal || 0.00);
+            const status = chartacc.entity_flg === 'Y' ? 
+                           '<td style="color: green;">Active</td>' : 
+                           '<td style="color: red;">UnActive</td>';
+
+            trHTML += `
+                <tr>
+                    <td>${classification}</td>
+                    <td style="color:blue;" data-attr="${acctNum}" onclick="enquiryLedger(this);">${acctNum}</td>
+                    <td>${acctName}</td>
+                    <td>${acctCrncy}</td>
+                    <td style="text-align: right;">${crAmt}</td>
+                    <td style="text-align: right;">${drAmt}</td>
+                    <td style="text-align: right;">${acctBal}</td>
+                    ${status}
+                </tr>`;
+        });
+
+        // First, clear the table and then append rows
+        $('#transactionBody22').html(trHTML);
+
+        // Initialize DataTable after appending the rows
+        if ($.fn.dataTable.isDataTable('#usertable')) {
+            $('#usertable').DataTable().clear().destroy();  // Clear and destroy the existing DataTable instance
+        }
+
+        $('#usertable').DataTable({
+            scrollCollapse: true,
+            paging: true,
+            autoWidth: false,
+            ordering: true,
+            oLanguage: {
+                sSearch: "",
+                sSearchPlaceholder: "Search Here"
+            },
+            searching: true,
+            pageLength: 10,
+            lengthChange: false
+        });
+
+    } else {
+        trHTML = '<tr><td colspan="8" class="text-center" style="color:red;">No data available</td></tr>';
+        $('#transactionBody22').empty().append(trHTML);
+
+        // Initialize DataTable after appending the rows
+        if ($.fn.dataTable.isDataTable('#usertable')) {
+            $('#usertable').DataTable().clear().destroy();
+        }
+
+        $('#usertable').DataTable({
+            scrollCollapse: true,
+            paging: true,
+            autoWidth: false,
+            ordering: true,
+            oLanguage: {
+                sSearch: "",
+                sSearchPlaceholder: "Search Here"
+            },
+            searching: true,
+            pageLength: 10,
+            lengthChange: false
+        });
+    }
+}
+
+
+
+    // Format date to 'dd-mm-yyyy'
+    function formatDate(date) {
+        if (!date) return "";
+        const parsedDate = new Date(date);
+        const day = String(parsedDate.getDate()).padStart(2, '0');
+        const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+        const year = parsedDate.getFullYear();
+        return `${day}-${month}-${year}`;
+    }
+
+    // Format number with commas and two decimal places
+    function formatNumberWithCommas(number) {
+        return parseFloat(number).toLocaleString('en-IN', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
+    }
+
+    // Show error modal with a custom message
+    function showErrorModal(message) {
+        $('#myModalpopup1').modal("toggle");
+        $('#myModalpopup1 .modal-body').text(message);
+    }
+});	
+</script>
 </head>
 <title>BGLS</title>
 
@@ -1875,20 +2071,31 @@ function rowadddcorporate() {
 			<div class="col-sm-11 ml-5 mt-2" style="font-size: 0.8rem;">
 				<div th:if="${formmode}=='list'" class="">
 					<div class="card">
-
-						<div class="card-header"
-							style="background-color: #e9ecef; height: 50px">
-							<div class="float-left">
-								<h6 style="font-size: 1.2rem;">LOAN REPORTS - LIST</h6>
+<div
+								class="card-header d-flex justify-content-between align-items-center"
+								style="background-color: #e9ecef; padding: 10px 15px;">
+								<div>
+									<h6 style="font-size: 1.2rem; color: black; margin: 0;">LOAN REPORT - LIST</h6>
+								</div>
+								<div class="d-flex align-items-center flex-wrap">
+									<div class="d-flex align-items-center mr-3">
+										<label class="mb-0 mr-2 white-space-nowrap font-weight-bold"
+											style="font-size: 0.9rem; white-space: nowrap;">From
+											Date:</label> <input
+											class="form-control form-control-sm font-weight-bold"
+											type="text" id="FromDate1" readonly />
+									</div>
+									<div class="d-flex align-items-center mr-3">
+										<label class="mb-0 mr-2 font-weight-bold"
+											style="font-size: 0.9rem; white-space: nowrap;">To
+											Date:</label> <input
+											class="form-control form-control-sm font-weight-bold"
+											type="text" id="currentDate1" readonly />
+									</div>
+									<button type="button"
+										class="btn btn-primary btns p-2 btn-filter">Filter</button>
+								</div>
 							</div>
-							<!--<div class="btn-group nav-buttons float-right">
-								<button type="button" class="btn btn-primary p-2" id="btnAdd"
-									onclick="addscreen();">ADD</button>
-
-							</div>-->
-
-
-						</div>
 						<div class="card-body"
 							style="overflow-y: auto; border: 1px solid #ddd;">
 							<div class="table-responsive" id="cardBody">
