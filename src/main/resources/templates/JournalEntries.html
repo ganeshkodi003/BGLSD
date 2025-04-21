@@ -4875,8 +4875,8 @@
 									<td th:text="${salpay?.acct_bal== 0 ? '0.00' :#numbers.formatDecimal(salpay?.acct_bal, 0, 'COMMA', 2, 'POINT')}"
 										style="text-align: right;"></td>
 
-									<td style="text-align: center"><input type="radio" th:attr="data-acct_num=${salpay.acct_num},data-acct_name=${salpay.acct_name},data-acct_crncy=${salpay.acct_crncy}
-											,data-ref_crncy=${salpay.ref_crncy}" onclick="setAccountDetails(this)" /></td>
+									<td style="text-align: center"><input type="radio" th:attr="data-acct_num=${salpay?.acct_num},data-acct_name=${salpay?.acct_name},data-acct_crncy=${salpay?.acct_crncy}
+											,data-ref_crncy=${salpay?.ref_crncy}" onclick="setAccountDetails(this)" /></td>
 								</tr>
 							</tbody>
 						</table>
@@ -5000,7 +5000,7 @@
 
 									<td style="text-align: center">
 										<input type="radio"
-											th:attr="data-acct_num=${salpay.acct_num},data-acct_name=${salpay.acct_name},data-acct_crncy=${salpay.acct_crncy},data-ref_crncy=${salpay.ref_crncy}"
+											th:attr="data-acct_num=${salpay?.acct_num},data-acct_name=${salpay?.acct_name},data-acct_crncy=${salpay?.acct_crncy},data-ref_crncy=${salpay?.ref_crncy}"
 											onclick="setAccountDetailsmassentry(this)" />
 									</td>
 								</tr>
