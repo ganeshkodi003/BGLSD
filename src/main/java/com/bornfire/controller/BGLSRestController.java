@@ -2292,7 +2292,7 @@ public class BGLSRestController {
 		NoticeDetailsPayment0Entity paymentDetails = noticeDetailsPayment0Rep.getPaymentDetails(accountNo);
 		List<DMD_TABLE> repaymentDetails = dMD_TABLE_REPO.gettranpopvaluesdatas(accountNo);
 
-		String accountname = repaymentDetails.get(0).getAcct_name();
+		String accountname = loandetails.getCustomer_name();
 		BigDecimal productAmt = loandetails.getLoan_sanctioned();
 		BigDecimal intRate = loandetails.getEffective_interest_rate();
 		Date creationDate = loandetails.getDate_of_loan();
