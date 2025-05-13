@@ -2754,7 +2754,32 @@ document.addEventListener("DOMContentLoaded", function() {
 																	maxlength="10" autocomplete="off" readonly />
 															</div>
 														</div>
+											<div class="row formline mt-2">
 
+															<div class="col-sm-2  ">
+																<label for="sche_code">Loan Account No</label>
+															</div>
+															<div class="col-sm-2">
+																<input type="text"
+																	class="form-control form-control-sm bg-white border border-dark"
+																	th:value="${loanDetails?.loan_accountno}" maxlength="10"
+																	id="loan_accountno" name="loan_accountno"  
+																	autocomplete="off" readonly="readonly" />
+															</div>
+															<div class="col-sm-1"></div>
+															<div class="col-sm-2 ">
+																<label for="sche_type">Date of Loan</label>
+															</div>
+															<div class="col-sm-2">
+																<input type="text"
+																	class="form-control form-control-sm bg-white border border-dark"
+																	maxlength="10" id="date_of_loan"
+																	th:value="${#dates.format(loanDetails?.date_of_loan, 'dd-MM-yyyy')}"
+																	name="date_of_loan" autocomplete="off"
+																	readonly />
+															</div>
+
+														</div>
 														<div class="row formline mt-2">
 
 															<div class="col-sm-2  ">
@@ -8451,14 +8476,15 @@ alert("aof")
         if (schemeType === "TD") {
             termDepositDiv.style.display = "block";
             leaseAccountDiv.style.display = "none";
-        } else if (schemeType === "LA") {
+        } else if (schemeType === "LA" || schemeType === "LAEMI") {
             leaseAccountDiv.style.display = "block";
             termDepositDiv.style.display = "none";
         } else {
-            // Hide both if scheme type is neither TD nor LA
+            // Hide both if scheme type is something else or empty
             termDepositDiv.style.display = "none";
             leaseAccountDiv.style.display = "none";
         }
+
     }
 
     // Call this function on page load to set the initial visibility

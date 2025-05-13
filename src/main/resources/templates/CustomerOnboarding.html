@@ -2057,11 +2057,14 @@ function AccountDetailNxt(a) {
             url: "./AccountDetailNxt?refnumber=" + refnumber,
             data: $("#parisone").serialize(),
             success: function (response) {
-                if ($("#schemetype").val() === "LA") {
-                    addRecords();
-                } else {
-                    depositadd();
-                }
+            	if ($("#schemetype").val() === "LA") {
+            	    addRecords();
+            	} else if ($("#schemetype").val() === "LAEMI") {
+            	    addRecords();
+            	} else {
+            	    depositadd();
+            	}
+
 
                 // Insert the response into the modal-body
                 $("#mypopup1_alertmsg").html(response);
@@ -2544,75 +2547,68 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		
 	</script>
 <script type="text/javascript">
-	function Onschemetype1(){
-		   var schemetype = document.getElementById("schemetype").value; 
-		  console.log(schemetype);
-		  var scheme;
-		  if(schemetype === 'LA'){
-			  scheme = 'LSRET';
-		  }else{
-			  scheme = 'TDFIXED';
-		  }
-		  console.log(scheme);
-			$.ajax({
-				url : 'Onschemetype1document',
-				type : 'GET',
-				dataType : 'json',
-				data : {
-					schemetype : scheme
-				}, // Pass the selected value as data
-					success : function(response) {
-					console.log(response);
-						$("#schemetype").val(response.schemetype);
-						$("#schmcode").val(response.schmcode);
-						//var SchemeCode=response.schmcode;
-						 var schemeDescription = "";
-						 switch(response.schemetype) {
-			                case 'TD':
-			                	schemeDescription = "TERM DEPOSIT GENERAL";
-			                    break;
-			               
-			                case 'LA':
-			                    schemeDescription = "LOAN ACCOUNT GENERAL";
-			                    break;
-			               
-			                default:
-			                    schemeDescription = "UNKNOWN SCHEME";
-			            }
-						 // Hide both divs initially
-				            document.getElementById("Acc_TermDeposit").style.display = "none";
-				            document.getElementById("Acc_LeaseAccount").style.display = "none";
+function Onschemetype1() {
+    var schemetype = document.getElementById("schemetype").value;
+    console.log("Selected schemetype:", schemetype);
+    
+    var scheme;
+    if (schemetype === 'LA') {
+        scheme = 'LSRET';
+    } else if (schemetype === 'LAEMI') {
+        scheme = 'LAEMI';
+    } else {
+        scheme = 'TDFIXED';
+    }
+    console.log("Mapped scheme to send:", scheme);
 
-				            // Show the respective div based on the SchemeCode
-				            if (response.schemetype === 'TD') {
-				                document.getElementById("Acc_TermDeposit").style.display = "block";
-				            } else if (response.schemetype === 'LA') {
-				                document.getElementById("Acc_LeaseAccount").style.display = "block";
-				            }
+    $.ajax({
+        url: 'Onschemetype1document',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+            schemetype: scheme
+        },
+        success: function(response) {
+            console.log("Response from server:", response);
 
-				            else if (SchemeCode === 'TDREINVEST') {
-				                document.getElementById("Acc_TermDeposit").style.display = "block";
-				            }
+            $("#schemetype").val(response.schemetype);
+            $("#schmcode").val(response.schmcode);
 
-					// Set the formatted date to the input field
-				
-					$("#ca_glcode").val(response.gl_code);
-					$("#ca_glcode").val(response.gl_code);
-					$("#glshdesc").val(schemeDescription);
-					$("#ca_glcode").val(response.gl_code);
-					/* $("#docType0").val(response.documents_type1);
-					$("#docCode0").val(response.documents_code1);
-					$("#docDesc0").val(response.documents_desc1);
-					$("#docType1").val(response.documents_type2);
-					$("#docCode1").val(response.documents_code2);
-					$("#docDesc1").val(response.documents_desc2); */
-				
-				},
-				error : function(xhr, status, error) {
-					// Handle error here
-				}
-			});
-	}
+            var schemeDescription = "";
+            switch (response.schemetype) {
+                case 'TD':
+                    schemeDescription = "TERM DEPOSIT GENERAL";
+                    break;
+                case 'LA':
+                    schemeDescription = "LOAN ACCOUNT GENERAL";
+                    break;
+                case 'LAEMI':
+                    schemeDescription = "Equated Monthly Installment";
+                    break;
+                default:
+                    schemeDescription = "UNKNOWN SCHEME";
+            }
+
+            // Hide all divs initially
+            document.getElementById("Acc_TermDeposit").style.display = "none";
+            document.getElementById("Acc_LeaseAccount").style.display = "none";
+
+            // Show based on the response.schemetype
+            if (response.schemetype === 'TD') {
+                document.getElementById("Acc_TermDeposit").style.display = "block";
+            } else if (response.schemetype === 'LA' || response.schemetype === 'LAEMI') {
+                document.getElementById("Acc_LeaseAccount").style.display = "block";
+            }
+
+            $("#ca_glcode").val(response.gl_code);
+            $("#glshdesc").val(schemeDescription);
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX error:", error);
+        }
+    });
+}
+
 	</script>
 <script>
 	function SmsFunction(){
@@ -4518,15 +4514,16 @@ function SmsFunction() {
 														style="color: red; font-size: 20px;"> *</span></label>
 												</div>
 												<div class="col-sm-2">
-													<select name="ca_schemetype" id="schemetype"
-														onchange="Onschemetype1()"
-														class="form-control form-control-sm bg-white border border-dark">
-														<option value="">SELECT</option>
-														<option value="LA">LOAN ACCOUNT</option>
-														<option value="TD">DEPOSIT ACCOUT</option>
-													</select>
+  <select name="ca_schemetype" id="schemetype"
+    onchange="Onschemetype1()"
+    class="form-control form-control-sm bg-white border border-dark">
+    <option value="">SELECT</option>
+    <option value="LA">LOAN ACCOUNT</option>
+    <option value="LAEMI">EMI</option>
+    <option value="TD">DEPOSIT ACCOUNT</option>
+  </select>
+</div>
 
-												</div>
 												<div class="col-sm-1"></div>
 												<div class="col-sm-2">
 													<label for="sche_code">Scheme Code </label>
