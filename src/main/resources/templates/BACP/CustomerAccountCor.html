@@ -1140,7 +1140,8 @@ function calculatePercentage(a) {
 			var principleAmount = document.getElementById("loan_sanctioned").value.replace(/,/g, '');
 			var santionedDate = document.getElementById("date_of_loan").value;
 			var interestRate = document.getElementById("effective_interest_rate").value.replace(/,/g, '');
-
+			var SchmeType = document.getElementById("schemetype").value.replace(/,/g, '');
+alert(SchmeType);
 			var installID = $("#inst_id").val();
 			var installStartDate = changeDateFormat(document.getElementById("inst_start_dt").value);
 			var pricipleFreq = document.getElementById("inst_freq").value;
@@ -1157,7 +1158,7 @@ function calculatePercentage(a) {
 						+ "&start_date=" + installStartDate + "&Product_value=" + principleAmount
 						+ "&principle_frequency=" + pricipleFreq + "&int_rate=" + interestRate
 						+ "&no_of_inst=" + noOfInstallment + "&int_amt="
-						+ installAmount + "&interestFrequency=" + interestFreq,
+						+ installAmount + "&interestFrequency=" + interestFreq + "&SchmeType=" + SchmeType,
 					success: function (data) {
 						console.log(data);
 						var trHTML = '';
