@@ -2583,7 +2583,7 @@ function Onschemetype1() {
                     schemeDescription = "LOAN ACCOUNT GENERAL";
                     break;
                 case 'LAEMI':
-                    schemeDescription = "Equated Monthly Installment";
+                    schemeDescription = "EQUATED MONTHLY INSTALLMENT";
                     break;
                 default:
                     schemeDescription = "UNKNOWN SCHEME";
@@ -2900,7 +2900,7 @@ function SmsFunction() {
 
 					</div>
 				</div>
-				<div th:if="${formmode}=='add'"  >
+				<div th:if="${formmode}=='add'">
 					<div class="row">
 						<!-- <div class="col-lg-10" style="margin-left: 300px;"> -->
 						<div class="col-sm-12 card" style="margin-right: auto;">
@@ -3053,7 +3053,7 @@ function SmsFunction() {
 															<label for="sche_type">Branch Name </label>
 														</div>
 														<div class="col-sm-2">
-															<input type="text" 
+															<input type="text"
 																onkeyup="this.value = this.value.toUpperCase();handleIn(this)"
 																class="form-control form-control-sm bg-white border border-dark"
 																th:value="${sess_branch_desc}" maxlength="13"
@@ -3627,7 +3627,7 @@ function SmsFunction() {
 
 												<div class="float-left;">
 													<h6
-														style="text-align: center; font-size: 16	px; margin-left: -8px;">
+														style="text-align: center; font-size: 16 px; margin-left: -8px;">
 														<b>Customer Check</b>
 													</h6>
 												</div>
@@ -3831,7 +3831,7 @@ function SmsFunction() {
 								<!-- <div class=" d-flex justify-content-between" 
 						style="background-color: rgb(187, 195, 203);"> -->
 								<div class=" d-flex justify-content-between"
-									style="margin-top: 0px; margin-left: 0px; background-color:#e9ecef;">
+									style="margin-top: 0px; margin-left: 0px; background-color: #e9ecef;">
 									<div class="float-left ml-3">
 										<h6
 											style="margin-top: 10px; margin-bottom: 10px; font-size: 20px; padding: 10px;">
@@ -4514,15 +4514,15 @@ function SmsFunction() {
 														style="color: red; font-size: 20px;"> *</span></label>
 												</div>
 												<div class="col-sm-2">
-  <select name="ca_schemetype" id="schemetype"
-    onchange="Onschemetype1()"
-    class="form-control form-control-sm bg-white border border-dark">
-    <option value="">SELECT</option>
-    <option value="LA">LOAN ACCOUNT</option>
-    <option value="LAEMI">EMI</option>
-    <option value="TD">DEPOSIT ACCOUNT</option>
-  </select>
-</div>
+													<select name="ca_schemetype" id="schemetype"
+														onchange="Onschemetype1()"
+														class="form-control form-control-sm bg-white border border-dark">
+														<option value="">SELECT</option>
+														<option value="LA">LOAN ACCOUNT</option>
+														<option value="LAEMI">EMI</option>
+														<option value="TD">DEPOSIT ACCOUNT</option>
+													</select>
+												</div>
 
 												<div class="col-sm-1"></div>
 												<div class="col-sm-2">
@@ -4865,8 +4865,8 @@ function SmsFunction() {
 														<input type="text"
 															class="form-control form-control-sm bg-white border border-dark"
 															maxlength="10" id="loan_currency" name="loan_currency"
-															value="BTN" title="Bhutanese Ngultrum " autocomplete="off"
-															readonly="readonly" />
+															value="BTN" title="Bhutanese Ngultrum "
+															autocomplete="off" readonly="readonly" />
 													</div>
 													<div class="col-sm-1"></div>
 													<div class="col-sm-2 ">
@@ -4907,13 +4907,12 @@ function SmsFunction() {
 															<!-- day Field -->
 															<input type="text" name="loan_period" id="loan_period"
 																class="form-control form-control-sm bg-white border border-dark text-center"
-																placeholder="mm" />
-															 <input type="text" name=" " id=" "
+																placeholder="mm" /> <input type="text" name=" " id=" "
 																class="form-control form-control-sm bg-white border border-dark text-center"
 																placeholder="Months" readonly />
-																
+
 															<!-- Month Field -->
-														
+
 															<!-- year Field -->
 															<!-- <input type="text" name="loan_period3" id="loan_period3"
 																class="form-control form-control-sm bg-white border border-dark text-center"
@@ -5313,7 +5312,7 @@ function SmsFunction() {
 										style="overflow: auto; white-space: nowrap; margin-left: 15px">
 										<table border="1" id="dynamicTable"
 											class="table table-bordered"
-											style="text-align: center; vertical-align: 22px; margin-top: 10px;  font-size: 15px;">
+											style="text-align: center; vertical-align: 22px; margin-top: 10px; font-size: 15px;">
 											<thead>
 												<tr>
 
@@ -6728,27 +6727,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
 </div>
 <!--  -->
 <div class="modal fade" data-backdrop="false" data-keyboard="false"
-	tabindex="-1" role="dialog" aria-hidden="true"
-	 id="SmsPopUpMsg">
+	tabindex="-1" role="dialog" aria-hidden="true" id="SmsPopUpMsg">
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
 		style="height: 20%">
 		<div class="modal-content">
 			<div class="modal-body" style="text-align: center">
-					<div class="row formline" style="font-weight: 500; margin-top: 5px">
-				<label class="col-form-label ml-3 p-2" style="font-size: 14px;">
-					Primary Contact No </label>
-				<!-- Adjusted label to align -->
-				<div class="col-sm-6 mb-2">
-					<!-- Increased input width for better alignment -->
-					<input type="text" id="mobile_no_sms" style="font-weight: 500"
-						class="form-control form-control-sm bg-white border border-dark"
-						autocomplete="off" />
+				<div class="row formline" style="font-weight: 500; margin-top: 5px">
+					<label class="col-form-label ml-3 p-2" style="font-size: 14px;">
+						Primary Contact No </label>
+					<!-- Adjusted label to align -->
+					<div class="col-sm-6 mb-2">
+						<!-- Increased input width for better alignment -->
+						<input type="text" id="mobile_no_sms" style="font-weight: 500"
+							class="form-control form-control-sm bg-white border border-dark"
+							autocomplete="off" />
+					</div>
 				</div>
-			</div>
-			    <button type="button" class="btn btn-primary mt-2" data-dismiss="modal"
-					onclick="goBackSms();">Send</button>
-				<button type="button" class="btn btn-primary mt-2" data-dismiss="modal"
-					onclick="goBackSms();">Close</button>
+				<button type="button" class="btn btn-primary mt-2"
+					data-dismiss="modal" onclick="goBackSms();">Send</button>
+				<button type="button" class="btn btn-primary mt-2"
+					data-dismiss="modal" onclick="goBackSms();">Close</button>
 			</div>
 		</div>
 	</div>

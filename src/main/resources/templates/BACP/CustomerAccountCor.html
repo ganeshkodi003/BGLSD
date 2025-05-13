@@ -935,12 +935,14 @@ function showError(element, message) {
 	          type: "POST",
 	          url: "./AccountDetailNxt?refnumber=" + refnumber,
 	          data: $("#parisone").serialize(),
-	          success: function (response) {
-	        	  if($("#schemetype").val()==="LA"){
+	          success: function (response) {  
+	        	  if ($("#schemetype").val() === "LA") {
 	        		  addRecords1();
-	          	}else{
-	          		depositadd1();
-	          	}
+	            	} else if ($("#schemetype").val() === "LAEMI") {
+	            		addRecords1();
+	            	} else {
+	            		depositadd1();
+	            	}
 
 	              $("#mypopupAccount_alertmsg").html(response); 
 	              $('#mypopupAccount').modal('show');
@@ -1240,15 +1242,17 @@ function calculatePercentage(a) {
 	</script>
 
 <script type="text/javascript">
-	function Onschemetypecor(){
+	function Onschemetypecor(){ 
 		   var schemetype = document.getElementById("schemetype").value; 
-		   console.log(schemetype);
+		    console.log("Selected schemetype:", schemetype);
 			  var scheme;
-			  if(schemetype === 'LA'){
-				  scheme = 'LSRET';
-			  }else{
-				  scheme = 'TDFIXED';
-			  }
+			  if (schemetype === 'LA') {
+			        scheme = 'LSRET';
+			    } else if (schemetype === 'LAEMI') {
+			        scheme = 'LAEMI';
+			    } else {
+			        scheme = 'TDFIXED';
+			    }
 			  console.log(scheme);
 			$.ajax({
 				url : 'Onschemetype1cordocument',
@@ -1263,14 +1267,16 @@ function calculatePercentage(a) {
 						$("#schmcode").val(response.schmcode);
 						//var SchemeCode=response.schmcode;
 						 var schemeDescription = "";
-						 switch(response.schemetype) {
+						 switch (response.schemetype) {
 			                case 'TD':
-			                	schemeDescription = "TERM DEPOSIT GENERAL";
-			                    break; 
+			                    schemeDescription = "TERM DEPOSIT GENERAL";
+			                    break;
 			                case 'LA':
 			                    schemeDescription = "LOAN ACCOUNT GENERAL";
 			                    break;
-			               
+			                case 'LAEMI':
+			                    schemeDescription = "EQUATED MONTHLY INSTALLMENT";
+			                    break;
 			                default:
 			                    schemeDescription = "UNKNOWN SCHEME";
 			            }
@@ -1281,7 +1287,7 @@ function calculatePercentage(a) {
 				            // Show the respective div based on the SchemeCode
 				            if (response.schemetype === 'TD') {
 				                document.getElementById("Acc_TermDeposit").style.display = "block";
-				            } else if (response.schemetype === 'LA') {
+				            } else if (response.schemetype === 'LA' || response.schemetype === 'LAEMI') {
 				                document.getElementById("Acc_LeaseAccount").style.display = "block";
 				            }
 
@@ -5759,6 +5765,7 @@ function calculatePercentage(a) {
 												class="form-control form-control-sm bg-white border border-dark">
 												<option value="">SELECT</option>
 												<option value="LA">LEASE ACCOUNT</option>
+												<option value="LAEMI">EMI</option>
 												<option value="TD">DEPOSIT ACCOUT</option>
 											</select>
 
