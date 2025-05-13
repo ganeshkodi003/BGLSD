@@ -129,7 +129,187 @@ public class ParametersDetails implements Serializable {
 	private BigDecimal	account_place_holder_deposit;
 	private BigDecimal	interest_booking_loan;
 	private BigDecimal	interest_application_loan;
-	private BigDecimal	account_place_holder_loan;
+	private BigDecimal account_place_holder_loan;
+	private String cus_group;
+
+
+
+
+	
+	@Override
+	public String toString() {
+		return "ParametersDetails [sol_id=" + sol_id + ", schemetype=" + schemetype + ", schmcode=" + schmcode
+				+ ", schmdesc=" + schmdesc + ", td_type=" + td_type + ", schm_group=" + schm_group + ", work_flow=" + work_flow
+				+ ", approval_flg=" + approval_flg + ", documents_flg=" + documents_flg + ", alert_flg=" + alert_flg
+				+ ", apr_user1=" + apr_user1 + ", apr_user2=" + apr_user2 + ", apr_user3=" + apr_user3 + ", apr_email_1="
+				+ apr_email_1 + ", apr_email_2=" + apr_email_2 + ", apr_email_3=" + apr_email_3 + ", apr_sms_1=" + apr_sms_1
+				+ ", apr_sms_2=" + apr_sms_2 + ", apr_sms_3=" + apr_sms_3 + ", approval1=" + approval1 + ", approval2="
+				+ approval2 + ", approval3=" + approval3 + ", documents_type1=" + documents_type1 + ", documents_code1="
+				+ documents_code1 + ", documents_desc1=" + documents_desc1 + ", documents_type2=" + documents_type2
+				+ ", documents_code2=" + documents_code2 + ", documents_desc2=" + documents_desc2 + ", documents_type3="
+				+ documents_type3 + ", documents_code3=" + documents_code3 + ", documents_desc3=" + documents_desc3
+				+ ", alr_user1=" + alr_user1 + ", alr_user2=" + alr_user2 + ", alr_user3=" + alr_user3 + ", alr_email_1="
+				+ alr_email_1 + ", alr_email_2=" + alr_email_2 + ", alr_email_3=" + alr_email_3 + ", alr_sms_1=" + alr_sms_1
+				+ ", alr_sms_2=" + alr_sms_2 + ", alr_sms_3=" + alr_sms_3 + ", alert1=" + alert1 + ", alert2=" + alert2
+				+ ", alert3=" + alert3 + ", entry_user=" + entry_user + ", modify_user=" + modify_user + ", verify_user="
+				+ verify_user + ", entry_time=" + entry_time + ", modify_time=" + modify_time + ", verify_time=" + verify_time
+				+ ", del_flg=" + del_flg + ", entity_cre_flg=" + entity_cre_flg + ", modify_flg=" + modify_flg
+				+ ", expiry_date=" + expiry_date + ", eff_date=" + eff_date + ", aof=" + aof + ", refnumber=" + refnumber
+				+ ", cus_temp=" + cus_temp + ", acc_temp=" + acc_temp + ", check_list=" + check_list + ", gl_code=" + gl_code
+				+ ", glsh=" + glsh + ", home_curr=" + home_curr + ", multi_curr=" + multi_curr + ", apr_user_name1="
+				+ apr_user_name1 + ", apr_user_name2=" + apr_user_name2 + ", apr_user_name3=" + apr_user_name3
+				+ ", apr_sol_id1=" + apr_sol_id1 + ", apr_sol_id2=" + apr_sol_id2 + ", apr_sol_id3=" + apr_sol_id3
+				+ ", alr_user_name1=" + alr_user_name1 + ", alr_user_name2=" + alr_user_name2 + ", alr_user_name3="
+				+ alr_user_name3 + ", alrsol_id1=" + alrsol_id1 + ", alrsol_id2=" + alrsol_id2 + ", alrsol_id3=" + alrsol_id3
+				+ ", verify_flg=" + verify_flg + ", branchdesc=" + branchdesc + ", deposit_scheme=" + deposit_scheme
+				+ ", deposit_type=" + deposit_type + ", deposit_amount=" + deposit_amount + ", deposit_period=" + deposit_period
+				+ ", interest_rate_deposit=" + interest_rate_deposit + ", interest_compund_frequency="
+				+ interest_compund_frequency + ", auto_renewal_flag=" + auto_renewal_flag + ", loan_facility=" + loan_facility
+				+ ", overdue_gl_sub_head_code=" + overdue_gl_sub_head_code + ", loan_scheme=" + loan_scheme + ", loan_amount="
+				+ loan_amount + ", loan_period=" + loan_period + ", repayment_period=" + repayment_period
+				+ ", repayment_method=" + repayment_method + ", interest_rate_loan=" + interest_rate_loan
+				+ ", interest_compounding_frequency=" + interest_compounding_frequency + ", collateral_flag=" + collateral_flag
+				+ ", collateral_margin=" + collateral_margin + ", recovery_method=" + recovery_method + ", npa_norms="
+				+ npa_norms + ", interest_booking_deposit=" + interest_booking_deposit + ", interest_application_deposit="
+				+ interest_application_deposit + ", account_place_holder_deposit=" + account_place_holder_deposit
+				+ ", interest_booking_loan=" + interest_booking_loan + ", interest_application_loan="
+				+ interest_application_loan + ", account_place_holder_loan=" + account_place_holder_loan + ", cus_group="
+				+ cus_group + "]";
+	}
+	public ParametersDetails() {
+	}
+	public ParametersDetails(String sol_id, String schemetype, String schmcode, String schmdesc, String td_type,
+			String schm_group, String work_flow, String approval_flg, String documents_flg, String alert_flg,
+			String apr_user1, String apr_user2, String apr_user3, String apr_email_1, String apr_email_2, String apr_email_3,
+			String apr_sms_1, String apr_sms_2, String apr_sms_3, String approval1, String approval2, String approval3,
+			String documents_type1, String documents_code1, String documents_desc1, String documents_type2,
+			String documents_code2, String documents_desc2, String documents_type3, String documents_code3,
+			String documents_desc3, String alr_user1, String alr_user2, String alr_user3, String alr_email_1,
+			String alr_email_2, String alr_email_3, String alr_sms_1, String alr_sms_2, String alr_sms_3, String alert1,
+			String alert2, String alert3, String entry_user, String modify_user, String verify_user, String entry_time,
+			String modify_time, String verify_time, String del_flg, String entity_cre_flg, String modify_flg,
+			Date expiry_date, Date eff_date, String aof, String refnumber, String cus_temp, String acc_temp,
+			String check_list, String gl_code, String glsh, String home_curr, String multi_curr, String apr_user_name1,
+			String apr_user_name2, String apr_user_name3, String apr_sol_id1, String apr_sol_id2, String apr_sol_id3,
+			String alr_user_name1, String alr_user_name2, String alr_user_name3, String alrsol_id1, String alrsol_id2,
+			String alrsol_id3, String verify_flg, String branchdesc, String deposit_scheme, String deposit_type,
+			BigDecimal deposit_amount, BigDecimal deposit_period, BigDecimal interest_rate_deposit,
+			BigDecimal interest_compund_frequency, String auto_renewal_flag, String loan_facility,
+			String overdue_gl_sub_head_code, String loan_scheme, BigDecimal loan_amount, BigDecimal loan_period,
+			BigDecimal repayment_period, String repayment_method, BigDecimal interest_rate_loan,
+			BigDecimal interest_compounding_frequency, String collateral_flag, String collateral_margin,
+			String recovery_method, String npa_norms, BigDecimal interest_booking_deposit,
+			BigDecimal interest_application_deposit, BigDecimal account_place_holder_deposit,
+			BigDecimal interest_booking_loan, BigDecimal interest_application_loan, BigDecimal account_place_holder_loan,
+			String cus_group) {
+		this.sol_id = sol_id;
+		this.schemetype = schemetype;
+		this.schmcode = schmcode;
+		this.schmdesc = schmdesc;
+		this.td_type = td_type;
+		this.schm_group = schm_group;
+		this.work_flow = work_flow;
+		this.approval_flg = approval_flg;
+		this.documents_flg = documents_flg;
+		this.alert_flg = alert_flg;
+		this.apr_user1 = apr_user1;
+		this.apr_user2 = apr_user2;
+		this.apr_user3 = apr_user3;
+		this.apr_email_1 = apr_email_1;
+		this.apr_email_2 = apr_email_2;
+		this.apr_email_3 = apr_email_3;
+		this.apr_sms_1 = apr_sms_1;
+		this.apr_sms_2 = apr_sms_2;
+		this.apr_sms_3 = apr_sms_3;
+		this.approval1 = approval1;
+		this.approval2 = approval2;
+		this.approval3 = approval3;
+		this.documents_type1 = documents_type1;
+		this.documents_code1 = documents_code1;
+		this.documents_desc1 = documents_desc1;
+		this.documents_type2 = documents_type2;
+		this.documents_code2 = documents_code2;
+		this.documents_desc2 = documents_desc2;
+		this.documents_type3 = documents_type3;
+		this.documents_code3 = documents_code3;
+		this.documents_desc3 = documents_desc3;
+		this.alr_user1 = alr_user1;
+		this.alr_user2 = alr_user2;
+		this.alr_user3 = alr_user3;
+		this.alr_email_1 = alr_email_1;
+		this.alr_email_2 = alr_email_2;
+		this.alr_email_3 = alr_email_3;
+		this.alr_sms_1 = alr_sms_1;
+		this.alr_sms_2 = alr_sms_2;
+		this.alr_sms_3 = alr_sms_3;
+		this.alert1 = alert1;
+		this.alert2 = alert2;
+		this.alert3 = alert3;
+		this.entry_user = entry_user;
+		this.modify_user = modify_user;
+		this.verify_user = verify_user;
+		this.entry_time = entry_time;
+		this.modify_time = modify_time;
+		this.verify_time = verify_time;
+		this.del_flg = del_flg;
+		this.entity_cre_flg = entity_cre_flg;
+		this.modify_flg = modify_flg;
+		this.expiry_date = expiry_date;
+		this.eff_date = eff_date;
+		this.aof = aof;
+		this.refnumber = refnumber;
+		this.cus_temp = cus_temp;
+		this.acc_temp = acc_temp;
+		this.check_list = check_list;
+		this.gl_code = gl_code;
+		this.glsh = glsh;
+		this.home_curr = home_curr;
+		this.multi_curr = multi_curr;
+		this.apr_user_name1 = apr_user_name1;
+		this.apr_user_name2 = apr_user_name2;
+		this.apr_user_name3 = apr_user_name3;
+		this.apr_sol_id1 = apr_sol_id1;
+		this.apr_sol_id2 = apr_sol_id2;
+		this.apr_sol_id3 = apr_sol_id3;
+		this.alr_user_name1 = alr_user_name1;
+		this.alr_user_name2 = alr_user_name2;
+		this.alr_user_name3 = alr_user_name3;
+		this.alrsol_id1 = alrsol_id1;
+		this.alrsol_id2 = alrsol_id2;
+		this.alrsol_id3 = alrsol_id3;
+		this.verify_flg = verify_flg;
+		this.branchdesc = branchdesc;
+		this.deposit_scheme = deposit_scheme;
+		this.deposit_type = deposit_type;
+		this.deposit_amount = deposit_amount;
+		this.deposit_period = deposit_period;
+		this.interest_rate_deposit = interest_rate_deposit;
+		this.interest_compund_frequency = interest_compund_frequency;
+		this.auto_renewal_flag = auto_renewal_flag;
+		this.loan_facility = loan_facility;
+		this.overdue_gl_sub_head_code = overdue_gl_sub_head_code;
+		this.loan_scheme = loan_scheme;
+		this.loan_amount = loan_amount;
+		this.loan_period = loan_period;
+		this.repayment_period = repayment_period;
+		this.repayment_method = repayment_method;
+		this.interest_rate_loan = interest_rate_loan;
+		this.interest_compounding_frequency = interest_compounding_frequency;
+		this.collateral_flag = collateral_flag;
+		this.collateral_margin = collateral_margin;
+		this.recovery_method = recovery_method;
+		this.npa_norms = npa_norms;
+		this.interest_booking_deposit = interest_booking_deposit;
+		this.interest_application_deposit = interest_application_deposit;
+		this.account_place_holder_deposit = account_place_holder_deposit;
+		this.interest_booking_loan = interest_booking_loan;
+		this.interest_application_loan = interest_application_loan;
+		this.account_place_holder_loan = account_place_holder_loan;
+		this.cus_group = cus_group;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 	public String getSol_id() {
 		return sol_id;
 	}
@@ -748,142 +928,14 @@ public class ParametersDetails implements Serializable {
 	public void setAccount_place_holder_loan(BigDecimal account_place_holder_loan) {
 		this.account_place_holder_loan = account_place_holder_loan;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public String getCus_group() {
+		return cus_group;
 	}
-	public ParametersDetails(String sol_id, String schemetype, String schmcode, String schmdesc, String td_type,
-			String schm_group, String work_flow, String approval_flg, String documents_flg, String alert_flg,
-			String apr_user1, String apr_user2, String apr_user3, String apr_email_1, String apr_email_2,
-			String apr_email_3, String apr_sms_1, String apr_sms_2, String apr_sms_3, String approval1,
-			String approval2, String approval3, String documents_type1, String documents_code1, String documents_desc1,
-			String documents_type2, String documents_code2, String documents_desc2, String documents_type3,
-			String documents_code3, String documents_desc3, String alr_user1, String alr_user2, String alr_user3,
-			String alr_email_1, String alr_email_2, String alr_email_3, String alr_sms_1, String alr_sms_2,
-			String alr_sms_3, String alert1, String alert2, String alert3, String entry_user, String modify_user,
-			String verify_user, String entry_time, String modify_time, String verify_time, String del_flg,
-			String entity_cre_flg, String modify_flg, Date expiry_date, Date eff_date, String aof, String refnumber,
-			String cus_temp, String acc_temp, String check_list, String gl_code, String glsh, String home_curr,
-			String multi_curr, String apr_user_name1, String apr_user_name2, String apr_user_name3, String apr_sol_id1,
-			String apr_sol_id2, String apr_sol_id3, String alr_user_name1, String alr_user_name2, String alr_user_name3,
-			String alrsol_id1, String alrsol_id2, String alrsol_id3, String verify_flg, String branchdesc,
-			String deposit_scheme, String deposit_type, BigDecimal deposit_amount, BigDecimal deposit_period,
-			BigDecimal interest_rate_deposit, BigDecimal interest_compund_frequency, String auto_renewal_flag,
-			String loan_facility, String overdue_gl_sub_head_code, String loan_scheme, BigDecimal loan_amount,
-			BigDecimal loan_period, BigDecimal repayment_period, String repayment_method, BigDecimal interest_rate_loan,
-			BigDecimal interest_compounding_frequency, String collateral_flag, String collateral_margin,
-			String recovery_method, String npa_norms, BigDecimal interest_booking_deposit,
-			BigDecimal interest_application_deposit, BigDecimal account_place_holder_deposit,
-			BigDecimal interest_booking_loan, BigDecimal interest_application_loan,
-			BigDecimal account_place_holder_loan) {
-		super();
-		this.sol_id = sol_id;
-		this.schemetype = schemetype;
-		this.schmcode = schmcode;
-		this.schmdesc = schmdesc;
-		this.td_type = td_type;
-		this.schm_group = schm_group;
-		this.work_flow = work_flow;
-		this.approval_flg = approval_flg;
-		this.documents_flg = documents_flg;
-		this.alert_flg = alert_flg;
-		this.apr_user1 = apr_user1;
-		this.apr_user2 = apr_user2;
-		this.apr_user3 = apr_user3;
-		this.apr_email_1 = apr_email_1;
-		this.apr_email_2 = apr_email_2;
-		this.apr_email_3 = apr_email_3;
-		this.apr_sms_1 = apr_sms_1;
-		this.apr_sms_2 = apr_sms_2;
-		this.apr_sms_3 = apr_sms_3;
-		this.approval1 = approval1;
-		this.approval2 = approval2;
-		this.approval3 = approval3;
-		this.documents_type1 = documents_type1;
-		this.documents_code1 = documents_code1;
-		this.documents_desc1 = documents_desc1;
-		this.documents_type2 = documents_type2;
-		this.documents_code2 = documents_code2;
-		this.documents_desc2 = documents_desc2;
-		this.documents_type3 = documents_type3;
-		this.documents_code3 = documents_code3;
-		this.documents_desc3 = documents_desc3;
-		this.alr_user1 = alr_user1;
-		this.alr_user2 = alr_user2;
-		this.alr_user3 = alr_user3;
-		this.alr_email_1 = alr_email_1;
-		this.alr_email_2 = alr_email_2;
-		this.alr_email_3 = alr_email_3;
-		this.alr_sms_1 = alr_sms_1;
-		this.alr_sms_2 = alr_sms_2;
-		this.alr_sms_3 = alr_sms_3;
-		this.alert1 = alert1;
-		this.alert2 = alert2;
-		this.alert3 = alert3;
-		this.entry_user = entry_user;
-		this.modify_user = modify_user;
-		this.verify_user = verify_user;
-		this.entry_time = entry_time;
-		this.modify_time = modify_time;
-		this.verify_time = verify_time;
-		this.del_flg = del_flg;
-		this.entity_cre_flg = entity_cre_flg;
-		this.modify_flg = modify_flg;
-		this.expiry_date = expiry_date;
-		this.eff_date = eff_date;
-		this.aof = aof;
-		this.refnumber = refnumber;
-		this.cus_temp = cus_temp;
-		this.acc_temp = acc_temp;
-		this.check_list = check_list;
-		this.gl_code = gl_code;
-		this.glsh = glsh;
-		this.home_curr = home_curr;
-		this.multi_curr = multi_curr;
-		this.apr_user_name1 = apr_user_name1;
-		this.apr_user_name2 = apr_user_name2;
-		this.apr_user_name3 = apr_user_name3;
-		this.apr_sol_id1 = apr_sol_id1;
-		this.apr_sol_id2 = apr_sol_id2;
-		this.apr_sol_id3 = apr_sol_id3;
-		this.alr_user_name1 = alr_user_name1;
-		this.alr_user_name2 = alr_user_name2;
-		this.alr_user_name3 = alr_user_name3;
-		this.alrsol_id1 = alrsol_id1;
-		this.alrsol_id2 = alrsol_id2;
-		this.alrsol_id3 = alrsol_id3;
-		this.verify_flg = verify_flg;
-		this.branchdesc = branchdesc;
-		this.deposit_scheme = deposit_scheme;
-		this.deposit_type = deposit_type;
-		this.deposit_amount = deposit_amount;
-		this.deposit_period = deposit_period;
-		this.interest_rate_deposit = interest_rate_deposit;
-		this.interest_compund_frequency = interest_compund_frequency;
-		this.auto_renewal_flag = auto_renewal_flag;
-		this.loan_facility = loan_facility;
-		this.overdue_gl_sub_head_code = overdue_gl_sub_head_code;
-		this.loan_scheme = loan_scheme;
-		this.loan_amount = loan_amount;
-		this.loan_period = loan_period;
-		this.repayment_period = repayment_period;
-		this.repayment_method = repayment_method;
-		this.interest_rate_loan = interest_rate_loan;
-		this.interest_compounding_frequency = interest_compounding_frequency;
-		this.collateral_flag = collateral_flag;
-		this.collateral_margin = collateral_margin;
-		this.recovery_method = recovery_method;
-		this.npa_norms = npa_norms;
-		this.interest_booking_deposit = interest_booking_deposit;
-		this.interest_application_deposit = interest_application_deposit;
-		this.account_place_holder_deposit = account_place_holder_deposit;
-		this.interest_booking_loan = interest_booking_loan;
-		this.interest_application_loan = interest_application_loan;
-		this.account_place_holder_loan = account_place_holder_loan;
+	public void setCus_group(String cus_group) {
+		this.cus_group = cus_group;
 	}
-	public ParametersDetails() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+
+	
 
 	
 

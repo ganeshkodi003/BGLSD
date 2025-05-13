@@ -278,7 +278,8 @@ input:hover+.password-info {
 	margin: 15% auto;
 	padding: 20px;
 	border: 1px solid #888;
-	width: 80%;
+	width: max-content;
+	height: fit-content;
 }
  
 .close {
@@ -3250,14 +3251,15 @@ function nextdeposit() { // Use this to go to the previous page in browser
 										<div class="col-sm-1"></div>
 										<label class="col-sm-2 d-flex align-items-center"
 											style="font-size: 15px; font-weight: 500;">Loan Min
-											Amount </label> <input type="text"
+											Amount </label> <input
 											class="col-sm-2 d-flex align-items-center"
+											type="number"
 											name="loanMinAmount" id="loanMinAmount" />
 										<div class="col-sm-1"></div>
 
 										<label class="col-sm-2 d-flex align-items-center "
 											style="font-size: 15px; font-weight: 500;">Loan Max
-											Amount </label><input type="text"
+											Amount </label><input type="number"	
 											class="col-sm-2 d-flex align-items-center"
 											name="loanMaxAmount" id="loanMaxAmount" />
 									</div>
@@ -3267,7 +3269,8 @@ function nextdeposit() { // Use this to go to the previous page in browser
 										<div class="col-sm-1"></div>
 										<label class="col-sm-2 d-flex align-items-center "
 											style="font-size: 15px; font-weight: 500;">Loan Min
-											Period </label><input type="text"
+											Period </label><input type="number"
+
 											class="col-sm-2 d-flex align-items-center"
 											name="loanMinPeriod" id="loanMinPeriod" />
 										<div class="  col-sm-1 "></div>
@@ -3288,14 +3291,15 @@ function nextdeposit() { // Use this to go to the previous page in browser
 										<div class="col-sm-1"></div>
 										<label class="col-sm-2 d-flex align-items-center"
 											style="font-size: 15px; font-weight: 500;">Interest
-											Rate </label> <input type="text"
+											Rate </label> <input type="number"
 											class="col-sm-2 d-flex align-items-center"
+										
 											name="interestRate" id="interestRate" />
 
 										<div class="  col-sm-1 "></div>
 										<label class="col-sm-2 d-flex align-items-center"
 											style="font-size: 15px; font-weight: 500;">Preferential
-											Rate </label> <input type="text"
+											Rate </label> <input type="number"
 											class="col-sm-2 d-flex align-items-center"
 											name="preferentialRate" id="preferentialRate" />
 										<div class="col-sm-2" id="glshdesc" style="margin-top: 10px"></div>
@@ -3366,7 +3370,7 @@ function nextdeposit() { // Use this to go to the previous page in browser
 										<div class="col-sm-1"></div>
 										<label class="col-sm-2 d-flex align-items-center"
 											style="font-size: 15px; font-weight: 500;">Collateral
-											Margin </label> <input id="collateralMargin"
+											Margin </label> <input id="collateralMargin" type="number"
 											name="collateralMargin"
 											class="col-sm-2 d-flex align-items-center" required>
 									</div>
@@ -3686,9 +3690,9 @@ function nextdeposit() { // Use this to go to the previous page in browser
 										<label class="col-sm-2 d-flex align-items-center"
 											style="font-size: 15px; font-weight: 500;">Customer
 											Group</label>  
-										<input type="text" th:value="${OtherServicess?.cus_group}"
-											class="col-sm-2 form-control form-control-sm bg-white border border-dark"
-											name="schmcode" id="schmcode" readonly />
+										<input type="text" 
+											class="col-sm-2 form-control form-control-sm bg-white border border-dark" th:value="${OtherServicess?.cus_group	}"
+											name="cus_group" id="cus_group" readonly />
 										<div class="col-sm-1"></div>
 
 										<label class="col-sm-2 d-flex align-items-center "
@@ -4607,13 +4611,14 @@ function nextdeposit() { // Use this to go to the previous page in browser
 										style="width: 112px; border: none; outline: none; background-color: transparent; font-size: 12px;"
 										disabled></td>
 								</tr>
+								<!-- th:value="${(OtherServicess?.entry_time)}"		 -->
 
 								<tr>
 									<td style="text-align: center;"><font size="2"><B>Entry
 												Time :</B></font></td>
 									<td style="width: 112px"><input type="text"
-										name="entry_time" id="entry_time"								 
-										th:value="${#dates.format(OtherServicess?.entry_time, 'dd-MM-yyyy')}"
+										name="entry_time" id="entry_time"				
+												 
 										style="width: 112px; border: none; outline: none; background-color: transparent; font-size: 12px;"
 										disabled></td>
 										<td style="text-align: center; font-size: 15px;"><font
