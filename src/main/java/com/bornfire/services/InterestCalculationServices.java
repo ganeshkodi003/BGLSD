@@ -27,11 +27,12 @@ public class InterestCalculationServices {
 
 	public List<TestPrincipalCalculation> calculatePrincialPaymentNotice(Date creationDate, Date installmentEndDate,
 			BigDecimal productValue, BigDecimal product, String installmentFrequency, BigDecimal interestPercentage,
-			int numberOfInstallments, BigDecimal installmentAmount, String interestFrequency) {
+			int numberOfInstallments, BigDecimal installmentAmount, String interestFrequency, String SchmeType) {
 
 		String rateCode = "LIN5%";
 		String interestDemand = "Interest Demand";
 		String regular = "Regular Installment";
+		SchmeType = "LAEMI";
 
 		List<TestPrincipalCalculation> principalTable = new ArrayList<>();
 		BigDecimal product1 = product;
@@ -83,207 +84,104 @@ public class InterestCalculationServices {
 		System.out.println("Installment End Date       : " + endDate);
 		System.out.println("Total Months Between       : " + noOfMonths);
 		System.out.println("======================================");
+		TestPrincipalCalculation installment1 = new TestPrincipalCalculation();
+		if ("LA".equalsIgnoreCase(SchmeType)) {
+			for (int i = 1; i <= noOfMonths; i++) {
 
-		for (int i = 1; i <= noOfMonths; i++) {
+				if ("Monthly".equalsIgnoreCase(installmentFrequency)) {
 
-			TestPrincipalCalculation installment1 = new TestPrincipalCalculation();
+					System.out.println("-------- Monthly Calculation --------");
+					System.out.println("Installment Index (i): " + i);
+					System.out.println("Product (original loan amount): " + product);
+					System.out.println("Product Value: " + productValue);
+					System.out.println("Installment Frequency: " + installmentFrequency);
+					System.out.println("Interest Percentage: " + interestPercentage);
+					System.out.println("Rate Code: " + rateCode);
+					System.out.println("Installment Amount: " + installmentAmount);
+					System.out.println("Start Calendar Date: " + calendar.getTime());
 
-			if ("Monthly".equalsIgnoreCase(installmentFrequency)) {
-
-				System.out.println("-------- Monthly Calculation --------");
-				System.out.println("Installment Index (i): " + i);
-				System.out.println("Product (original loan amount): " + product);
-				System.out.println("Product Value: " + productValue);
-				System.out.println("Installment Frequency: " + installmentFrequency);
-				System.out.println("Interest Percentage: " + interestPercentage);
-				System.out.println("Rate Code: " + rateCode);
-				System.out.println("Installment Amount: " + installmentAmount);
-				System.out.println("Start Calendar Date: " + calendar.getTime());
-
-				installment1.setProduct(product);
-				installment1.setProductValue(productValue);
-				installment1.setInstallmentFrequency(installmentFrequency);
-				installment1.setInterestPercentage(interestPercentage);
-				installment1.setRateCode(rateCode);
-				installment1.setPrincipalOverDue(BigDecimal.ZERO);
-				installment1.setInterestOverdue(BigDecimal.ZERO);
-				installment1.setInstallmentDescription(regular);
-
-				if (i == 1) {
-				    System.out.println(">>> Interest Calculation: First Month");
-
-				    principal = product1;
-				    System.out.println("Opening Principal (Before Deduction): " + principal);
-
-				    int daysInMonth = calendarFromDate.getActualMaximum(Calendar.DAY_OF_MONTH);
-				    System.out.println("Days in Month: " + daysInMonth);
-
-				    BigDecimal perDayInterest = principal.multiply(dailyInterestRate).setScale(6, RoundingMode.HALF_UP);
-				    System.out.println("Per Day Interest: " + perDayInterest);
-
-				    BigDecimal interestAmount = perDayInterest.multiply(BigDecimal.valueOf(daysInMonth))
-				                                              .setScale(0, RoundingMode.HALF_UP); // Rounded to nearest whole number
-				    System.out.println("Interest Amount (Per Day Calculation): " + interestAmount);
-
-				    installment1.setInterestAmount(interestAmount);
-
-				    principal = product1.subtract(installmentAmount);
-				    System.out.println("Principal After Payment: " + principal);
-
-				    installment1.setPrincipalAmount(installmentAmount);
-				    installment1.setPrincipalAmountOutstanding(principal);
-				    product1 = principal;
-
-				    installment1.setInstallmentFromDate(calendarFromDate.getTime());
-
-				    calendar.add(Calendar.MONTH, 1);
-				    installment1.setInstallmentDate(calendar.getTime());
-
-				    calendarFromDate.add(Calendar.MONTH, 1);
-
-				} else {
-				    System.out.println(">>> Interest Calculation: Month #" + i);
-
-				    principal = product1;
-				    System.out.println("Opening Principal (Before Deduction): " + principal);
-
-				    int daysInMonth = calendarFromDate.getActualMaximum(Calendar.DAY_OF_MONTH);
-				    System.out.println("Days in Month: " + daysInMonth);
-
-				    BigDecimal perDayInterest = principal.multiply(dailyInterestRate).setScale(6, RoundingMode.HALF_UP);
-				    System.out.println("Per Day Interest: " + perDayInterest);
-
-				    BigDecimal interestAmount = perDayInterest.multiply(BigDecimal.valueOf(daysInMonth))
-				                                              .setScale(0, RoundingMode.HALF_UP); // Rounded to nearest whole number
-				    System.out.println("Interest Amount (Per Day Calculation): " + interestAmount);
-
-				    installment1.setInterestAmount(interestAmount);
-
-				    principal = product1.subtract(installmentAmount);
-				    System.out.println("Principal After Payment: " + principal);
-
-				    installment1.setPrincipalAmount(installmentAmount);
-				    installment1.setPrincipalAmountOutstanding(principal);
-				    product1 = principal;
-
-				    installment1.setInstallmentFromDate(calendarFromDate.getTime());
-
-				    calendar.add(Calendar.MONTH, 1);
-				    installment1.setInstallmentDate(calendar.getTime());
-
-				    calendarFromDate.add(Calendar.MONTH, 1);
-				}
-
-				principalTable.add(installment1);
-				System.out.println("-------- End of Installment #" + i + " --------\n");
-
-			} else if ("Quarterly".equalsIgnoreCase(installmentFrequency)) {
-
-				/* principal - Quarterly and interest - monthly */
-
-				installment1.setProduct(product);
-				installment1.setProductValue(productValue);
-				installment1.setInstallmentFrequency(installmentFrequency);
-				installment1.setInterestPercentage(interestPercentage);
-
-				installment1.setRateCode(rateCode);
-				installment1.setPrincipalOverDue(BigDecimal.ZERO);
-				installment1.setInterestOverdue(BigDecimal.ZERO);
-
-				BigDecimal interest = BigDecimal.ZERO;
-				if (i == 0) {
-
-					/* First Month */
-					principal = product;
-
-					interest = dailyInterest;
-
-					installment1.setPrincipalAmount(BigDecimal.ZERO);
-					installment1.setPrincipalAmountOutstanding(principal);
-					installment1.setInstallmentDescription(interestDemand);
-
-					installment1.setInstallmentFromDate(calendarFromDate.getTime());
-					calendar.add(Calendar.MONTH, 1);
-					installment1.setInstallmentDate(calendar.getTime());
-
-					/* Interest Calculation */
-
-					LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
-					LocalDate toDate = convertToLocalDate(calendar.getTime());
-					long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
-
-					installment1.setInterestAmount(
-							interest.multiply(BigDecimal.valueOf(daysBetween)).setScale(2, RoundingMode.CEILING));
-
-					calendarFromDate.add(Calendar.MONTH, 1);
-
-				} else if (i % 3 == 0 && i != 0) {
-
-					/* At Quarterly Time */
-
-					principal = product;
-
-					interest = dailyInterest;
-
-					principal = product.subtract(installmentAmount);
-
-					installment1.setPrincipalAmount(installmentAmount);
-					installment1.setPrincipalAmountOutstanding(principal);
+					installment1.setProduct(product);
+					installment1.setProductValue(productValue);
+					installment1.setInstallmentFrequency(installmentFrequency);
+					installment1.setInterestPercentage(interestPercentage);
+					installment1.setRateCode(rateCode);
+					installment1.setPrincipalOverDue(BigDecimal.ZERO);
+					installment1.setInterestOverdue(BigDecimal.ZERO);
 					installment1.setInstallmentDescription(regular);
 
-					product = principal;
+					if (i == 1) {
+						System.out.println(">>> Interest Calculation: First Month");
 
-					installment1.setInstallmentFromDate(calendarFromDate.getTime());
-					calendar.add(Calendar.MONTH, 1);
-					installment1.setInstallmentDate(calendar.getTime());
+						principal = product1;
+						System.out.println("Opening Principal (Before Deduction): " + principal);
 
-					/* Interest Calculation */
+						int daysInMonth = calendarFromDate.getActualMaximum(Calendar.DAY_OF_MONTH);
+						System.out.println("Days in Month: " + daysInMonth);
 
-					LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
-					LocalDate toDate = convertToLocalDate(calendar.getTime());
-					long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+						BigDecimal perDayInterest = principal.multiply(dailyInterestRate).setScale(6,
+								RoundingMode.HALF_UP);
+						System.out.println("Per Day Interest: " + perDayInterest);
 
-					installment1.setInterestAmount(
-							interest.multiply(BigDecimal.valueOf(daysBetween)).setScale(2, RoundingMode.CEILING));
+						BigDecimal interestAmount = perDayInterest.multiply(BigDecimal.valueOf(daysInMonth)).setScale(0,
+								RoundingMode.HALF_UP); // Rounded to nearest whole number
+						System.out.println("Interest Amount (Per Day Calculation): " + interestAmount);
 
-					calendarFromDate.add(Calendar.MONTH, 1);
+						installment1.setInterestAmount(interestAmount);
 
-				} else {
+						principal = product1.subtract(installmentAmount);
+						System.out.println("Principal After Payment: " + principal);
 
-					/* All other Months */
+						installment1.setPrincipalAmount(installmentAmount);
+						installment1.setPrincipalAmountOutstanding(principal);
+						product1 = principal;
 
-					principal = product;
+						installment1.setInstallmentFromDate(calendarFromDate.getTime());
 
-					interest = dailyInterest;
+						calendar.add(Calendar.MONTH, 1);
+						installment1.setInstallmentDate(calendar.getTime());
 
-					installment1.setPrincipalAmount(BigDecimal.ZERO);
-					installment1.setPrincipalAmountOutstanding(principal);
-					installment1.setInstallmentDescription(interestDemand);
+						calendarFromDate.add(Calendar.MONTH, 1);
 
-					installment1.setInstallmentFromDate(calendarFromDate.getTime());
-					calendar.add(Calendar.MONTH, 1);
-					installment1.setInstallmentDate(calendar.getTime());
+					} else {
+						System.out.println(">>> Interest Calculation: Month #" + i);
 
-					/* Interest Calculation */
+						principal = product1;
+						System.out.println("Opening Principal (Before Deduction): " + principal);
 
-					LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
-					LocalDate toDate = convertToLocalDate(calendar.getTime());
-					long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+						int daysInMonth = calendarFromDate.getActualMaximum(Calendar.DAY_OF_MONTH);
+						System.out.println("Days in Month: " + daysInMonth);
 
-					installment1.setInterestAmount(
-							interest.multiply(BigDecimal.valueOf(daysBetween)).setScale(2, RoundingMode.CEILING));
+						BigDecimal perDayInterest = principal.multiply(dailyInterestRate).setScale(6,
+								RoundingMode.HALF_UP);
+						System.out.println("Per Day Interest: " + perDayInterest);
 
-					calendarFromDate.add(Calendar.MONTH, 1);
+						BigDecimal interestAmount = perDayInterest.multiply(BigDecimal.valueOf(daysInMonth)).setScale(0,
+								RoundingMode.HALF_UP); // Rounded to nearest whole number
+						System.out.println("Interest Amount (Per Day Calculation): " + interestAmount);
 
-				}
+						installment1.setInterestAmount(interestAmount);
 
-				principalTable.add(installment1);
+						principal = product1.subtract(installmentAmount);
+						System.out.println("Principal After Payment: " + principal);
 
-			} else if ("Halfyearly".equalsIgnoreCase(installmentFrequency)) {
+						installment1.setPrincipalAmount(installmentAmount);
+						installment1.setPrincipalAmountOutstanding(principal);
+						product1 = principal;
 
-				if ("Quarterly".equalsIgnoreCase(interestFrequency)) {
+						installment1.setInstallmentFromDate(calendarFromDate.getTime());
 
-					/* principal - Half yearly and interest - Quarterly */
+						calendar.add(Calendar.MONTH, 1);
+						installment1.setInstallmentDate(calendar.getTime());
+
+						calendarFromDate.add(Calendar.MONTH, 1);
+					}
+
+					principalTable.add(installment1);
+					System.out.println("-------- End of Installment #" + i + " --------\n");
+
+				} else if ("Quarterly".equalsIgnoreCase(installmentFrequency)) {
+
+					/* principal - Quarterly and interest - monthly */
 
 					installment1.setProduct(product);
 					installment1.setProductValue(productValue);
@@ -300,104 +198,6 @@ public class InterestCalculationServices {
 						/* First Month */
 						principal = product;
 
-						interest = principal.multiply(monthlyInterestRate);
-
-						installment1.setInterestAmount(interest);
-						installment1.setPrincipalAmount(BigDecimal.ZERO);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(interestDemand);
-
-					} else if (i % 3 == 0 && i != 0 && i % 6 != 0) {
-
-						/* Interest time */
-
-						principal = product;
-
-						interest = dailyInterest;
-
-						installment1.setPrincipalAmount(installmentAmount);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(interestDemand);
-						product = principal;
-
-						installment1.setInstallmentFromDate(calendarFromDate.getTime());
-						calendar.add(Calendar.MONTH, 3);
-						installment1.setInstallmentDate(calendar.getTime());
-
-						/* Interest Calculation */
-
-						LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
-						LocalDate toDate = convertToLocalDate(calendar.getTime());
-						long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
-
-						installment1.setInterestAmount(
-								interest.multiply(BigDecimal.valueOf(daysBetween)).setScale(2, RoundingMode.CEILING));
-
-						calendarFromDate.add(Calendar.MONTH, 3);
-						principalTable.add(installment1);
-
-					} else if (i % 6 == 0 && i != 0) {
-
-						/* Principal time */
-
-						principal = product;
-
-						interest = dailyInterest;
-
-						principal = product.subtract(installmentAmount);
-
-						installment1.setPrincipalAmount(installmentAmount);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(regular);
-						product = principal;
-
-						installment1.setInstallmentFromDate(calendarFromDate.getTime());
-						calendar.add(Calendar.MONTH, 3);
-						installment1.setInstallmentDate(calendar.getTime());
-
-						/* Interest Calculation */
-
-						LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
-						LocalDate toDate = convertToLocalDate(calendar.getTime());
-						long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
-
-						installment1.setInterestAmount(
-								interest.multiply(BigDecimal.valueOf(daysBetween)).setScale(2, RoundingMode.CEILING));
-
-						calendarFromDate.add(Calendar.MONTH, 3);
-						principalTable.add(installment1);
-
-					} else {
-
-						principal = product;
-
-						interest = principal.multiply(monthlyInterestRate);
-						installment1.setInterestAmount(interest.setScale(2, RoundingMode.CEILING));
-
-						installment1.setPrincipalAmount(BigDecimal.ZERO);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(interestDemand);
-
-					}
-
-				} else {
-
-					/* principal - Half yearly and interest - monthly */
-
-					installment1.setProduct(product);
-					installment1.setProductValue(productValue);
-					installment1.setInstallmentFrequency(installmentFrequency);
-					installment1.setInterestPercentage(interestPercentage);
-					installment1.setRateCode(rateCode);
-					installment1.setPrincipalOverDue(BigDecimal.ZERO);
-					installment1.setInterestOverdue(BigDecimal.ZERO);
-
-					BigDecimal interest = BigDecimal.ZERO;
-					if (i == 0) {
-
-						/* First month */
-						principal = product;
-
 						interest = dailyInterest;
 
 						installment1.setPrincipalAmount(BigDecimal.ZERO);
@@ -419,9 +219,9 @@ public class InterestCalculationServices {
 
 						calendarFromDate.add(Calendar.MONTH, 1);
 
-					} else if (i % 6 == 0 && i != 0) {
+					} else if (i % 3 == 0 && i != 0) {
 
-						/* principal time */
+						/* At Quarterly Time */
 
 						principal = product;
 
@@ -432,6 +232,7 @@ public class InterestCalculationServices {
 						installment1.setPrincipalAmount(installmentAmount);
 						installment1.setPrincipalAmountOutstanding(principal);
 						installment1.setInstallmentDescription(regular);
+
 						product = principal;
 
 						installment1.setInstallmentFromDate(calendarFromDate.getTime());
@@ -450,6 +251,8 @@ public class InterestCalculationServices {
 						calendarFromDate.add(Calendar.MONTH, 1);
 
 					} else {
+
+						/* All other Months */
 
 						principal = product;
 
@@ -477,305 +280,576 @@ public class InterestCalculationServices {
 					}
 
 					principalTable.add(installment1);
-				}
 
-			} else {
-				if ("Quarterly".equalsIgnoreCase(interestFrequency)) {
+				} else if ("Halfyearly".equalsIgnoreCase(installmentFrequency)) {
 
-					/* principal - Yearly and interest - Quarterly */
+					if ("Quarterly".equalsIgnoreCase(interestFrequency)) {
 
-					installment1.setProduct(product);
-					installment1.setProductValue(productValue);
-					installment1.setInstallmentFrequency(installmentFrequency);
-					installment1.setInterestPercentage(interestPercentage);
+						/* principal - Half yearly and interest - Quarterly */
 
-					installment1.setRateCode(rateCode);
-					installment1.setPrincipalOverDue(BigDecimal.ZERO);
-					installment1.setInterestOverdue(BigDecimal.ZERO);
+						installment1.setProduct(product);
+						installment1.setProductValue(productValue);
+						installment1.setInstallmentFrequency(installmentFrequency);
+						installment1.setInterestPercentage(interestPercentage);
 
-					BigDecimal interest = BigDecimal.ZERO;
-					if (i == 0) {
+						installment1.setRateCode(rateCode);
+						installment1.setPrincipalOverDue(BigDecimal.ZERO);
+						installment1.setInterestOverdue(BigDecimal.ZERO);
 
-						principal = product;
+						BigDecimal interest = BigDecimal.ZERO;
+						if (i == 0) {
 
-						interest = principal.multiply(monthlyInterestRate);
+							/* First Month */
+							principal = product;
 
-						installment1.setInterestAmount(interest);
-						installment1.setPrincipalAmount(BigDecimal.ZERO);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(interestDemand);
+							interest = principal.multiply(monthlyInterestRate);
 
-					} else if (i % 3 == 0 && i != 0 && i % 12 != 0) {
+							installment1.setInterestAmount(interest);
+							installment1.setPrincipalAmount(BigDecimal.ZERO);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
 
-						/* Interest time */
+						} else if (i % 3 == 0 && i != 0 && i % 6 != 0) {
 
-						principal = product;
+							/* Interest time */
 
-						interest = dailyInterest;
+							principal = product;
 
-						installment1.setPrincipalAmount(installmentAmount);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(interestDemand);
-						product = principal;
+							interest = dailyInterest;
 
-						installment1.setInstallmentFromDate(calendarFromDate.getTime());
-						calendar.add(Calendar.MONTH, 3);
-						installment1.setInstallmentDate(calendar.getTime());
+							installment1.setPrincipalAmount(installmentAmount);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
+							product = principal;
 
-						/* Interest Calculation */
+							installment1.setInstallmentFromDate(calendarFromDate.getTime());
+							calendar.add(Calendar.MONTH, 3);
+							installment1.setInstallmentDate(calendar.getTime());
 
-						LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
-						LocalDate toDate = convertToLocalDate(calendar.getTime());
-						long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+							/* Interest Calculation */
 
-						installment1.setInterestAmount(
-								interest.multiply(BigDecimal.valueOf(daysBetween)).setScale(2, RoundingMode.CEILING));
+							LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
+							LocalDate toDate = convertToLocalDate(calendar.getTime());
+							long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
 
-						calendarFromDate.add(Calendar.MONTH, 3);
-						principalTable.add(installment1);
+							installment1.setInterestAmount(interest.multiply(BigDecimal.valueOf(daysBetween))
+									.setScale(2, RoundingMode.CEILING));
 
-					} else if (i % 12 == 0 && i != 0) {
+							calendarFromDate.add(Calendar.MONTH, 3);
+							principalTable.add(installment1);
 
-						/* principal time */
+						} else if (i % 6 == 0 && i != 0) {
 
-						principal = product;
+							/* Principal time */
 
-						interest = dailyInterest;
+							principal = product;
 
-						principal = product.subtract(installmentAmount);
+							interest = dailyInterest;
 
-						installment1.setPrincipalAmount(installmentAmount);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(regular);
+							principal = product.subtract(installmentAmount);
 
-						product = principal;
+							installment1.setPrincipalAmount(installmentAmount);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(regular);
+							product = principal;
 
-						installment1.setInstallmentFromDate(calendarFromDate.getTime());
-						calendar.add(Calendar.MONTH, 3);
-						installment1.setInstallmentDate(calendar.getTime());
+							installment1.setInstallmentFromDate(calendarFromDate.getTime());
+							calendar.add(Calendar.MONTH, 3);
+							installment1.setInstallmentDate(calendar.getTime());
 
-						/* Interest Calculation */
+							/* Interest Calculation */
 
-						LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
-						LocalDate toDate = convertToLocalDate(calendar.getTime());
-						long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+							LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
+							LocalDate toDate = convertToLocalDate(calendar.getTime());
+							long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
 
-						installment1.setInterestAmount(
-								interest.multiply(BigDecimal.valueOf(daysBetween)).setScale(2, RoundingMode.CEILING));
+							installment1.setInterestAmount(interest.multiply(BigDecimal.valueOf(daysBetween))
+									.setScale(2, RoundingMode.CEILING));
 
-						calendarFromDate.add(Calendar.MONTH, 3);
-						principalTable.add(installment1);
+							calendarFromDate.add(Calendar.MONTH, 3);
+							principalTable.add(installment1);
+
+						} else {
+
+							principal = product;
+
+							interest = principal.multiply(monthlyInterestRate);
+							installment1.setInterestAmount(interest.setScale(2, RoundingMode.CEILING));
+
+							installment1.setPrincipalAmount(BigDecimal.ZERO);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
+
+						}
 
 					} else {
 
-						principal = product;
+						/* principal - Half yearly and interest - monthly */
 
-						interest = principal.multiply(monthlyInterestRate);
-						installment1.setInterestAmount(interest.setScale(2, RoundingMode.CEILING));
+						installment1.setProduct(product);
+						installment1.setProductValue(productValue);
+						installment1.setInstallmentFrequency(installmentFrequency);
+						installment1.setInterestPercentage(interestPercentage);
+						installment1.setRateCode(rateCode);
+						installment1.setPrincipalOverDue(BigDecimal.ZERO);
+						installment1.setInterestOverdue(BigDecimal.ZERO);
 
-						installment1.setPrincipalAmount(BigDecimal.ZERO);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(interestDemand);
+						BigDecimal interest = BigDecimal.ZERO;
+						if (i == 0) {
 
-					}
+							/* First month */
+							principal = product;
 
-				} else if ("Halfyearly".equalsIgnoreCase(interestFrequency)) {
+							interest = dailyInterest;
 
-					/* principal - Yearly and interest - Half yearly */
+							installment1.setPrincipalAmount(BigDecimal.ZERO);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
 
-					installment1.setProduct(product);
-					installment1.setProductValue(productValue);
-					installment1.setInstallmentFrequency(installmentFrequency);
-					installment1.setInterestPercentage(interestPercentage);
+							installment1.setInstallmentFromDate(calendarFromDate.getTime());
+							calendar.add(Calendar.MONTH, 1);
+							installment1.setInstallmentDate(calendar.getTime());
 
-					installment1.setRateCode(rateCode);
-					installment1.setPrincipalOverDue(BigDecimal.ZERO);
-					installment1.setInterestOverdue(BigDecimal.ZERO);
+							/* Interest Calculation */
 
-					BigDecimal interest = BigDecimal.ZERO;
-					if (i == 0) {
+							LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
+							LocalDate toDate = convertToLocalDate(calendar.getTime());
+							long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
 
-						principal = product;
+							installment1.setInterestAmount(interest.multiply(BigDecimal.valueOf(daysBetween))
+									.setScale(2, RoundingMode.CEILING));
 
-						interest = principal.multiply(monthlyInterestRate);
+							calendarFromDate.add(Calendar.MONTH, 1);
 
-						installment1.setInterestAmount(interest);
-						installment1.setPrincipalAmount(BigDecimal.ZERO);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(interestDemand);
+						} else if (i % 6 == 0 && i != 0) {
 
-					} else if (i % 6 == 0 && i != 0 && i % 12 != 0) {
+							/* principal time */
 
-						/* Interest time */
+							principal = product;
 
-						principal = product;
+							interest = dailyInterest;
 
-						interest = dailyInterest;
+							principal = product.subtract(installmentAmount);
 
-						installment1.setPrincipalAmount(installmentAmount);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(interestDemand);
-						product = principal;
+							installment1.setPrincipalAmount(installmentAmount);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(regular);
+							product = principal;
 
-						installment1.setInstallmentFromDate(calendarFromDate.getTime());
-						calendar.add(Calendar.MONTH, 6);
-						installment1.setInstallmentDate(calendar.getTime());
+							installment1.setInstallmentFromDate(calendarFromDate.getTime());
+							calendar.add(Calendar.MONTH, 1);
+							installment1.setInstallmentDate(calendar.getTime());
 
-						/* Interest Calculation */
+							/* Interest Calculation */
 
-						LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
-						LocalDate toDate = convertToLocalDate(calendar.getTime());
-						long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+							LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
+							LocalDate toDate = convertToLocalDate(calendar.getTime());
+							long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
 
-						installment1.setInterestAmount(
-								interest.multiply(BigDecimal.valueOf(daysBetween)).setScale(2, RoundingMode.CEILING));
+							installment1.setInterestAmount(interest.multiply(BigDecimal.valueOf(daysBetween))
+									.setScale(2, RoundingMode.CEILING));
 
-						calendarFromDate.add(Calendar.MONTH, 6);
+							calendarFromDate.add(Calendar.MONTH, 1);
+
+						} else {
+
+							principal = product;
+
+							interest = dailyInterest;
+
+							installment1.setPrincipalAmount(BigDecimal.ZERO);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
+
+							installment1.setInstallmentFromDate(calendarFromDate.getTime());
+							calendar.add(Calendar.MONTH, 1);
+							installment1.setInstallmentDate(calendar.getTime());
+
+							/* Interest Calculation */
+
+							LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
+							LocalDate toDate = convertToLocalDate(calendar.getTime());
+							long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+
+							installment1.setInterestAmount(interest.multiply(BigDecimal.valueOf(daysBetween))
+									.setScale(2, RoundingMode.CEILING));
+
+							calendarFromDate.add(Calendar.MONTH, 1);
+
+						}
+
 						principalTable.add(installment1);
-
-					} else if (i % 12 == 0 && i != 0) {
-
-						/* principal time */
-
-						principal = product;
-
-						interest = dailyInterest;
-
-						principal = product.subtract(installmentAmount);
-
-						installment1.setPrincipalAmount(installmentAmount);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(regular);
-
-						product = principal;
-
-						installment1.setInstallmentFromDate(calendarFromDate.getTime());
-						calendar.add(Calendar.MONTH, 6);
-						installment1.setInstallmentDate(calendar.getTime());
-
-						/* Interest Calculation */
-
-						LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
-						LocalDate toDate = convertToLocalDate(calendar.getTime());
-						long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
-
-						installment1.setInterestAmount(
-								interest.multiply(BigDecimal.valueOf(daysBetween)).setScale(2, RoundingMode.CEILING));
-
-						calendarFromDate.add(Calendar.MONTH, 6);
-						principalTable.add(installment1);
-
-					} else {
-
-						principal = product;
-
-						interest = principal.multiply(monthlyInterestRate);
-						installment1.setInterestAmount(interest.setScale(2, RoundingMode.CEILING));
-
-						installment1.setPrincipalAmount(BigDecimal.ZERO);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(interestDemand);
-
 					}
 
 				} else {
+					if ("Quarterly".equalsIgnoreCase(interestFrequency)) {
 
-					/* principal - Yearly and interest - monthly */
+						/* principal - Yearly and interest - Quarterly */
 
-					installment1.setProduct(product);
-					installment1.setProductValue(productValue);
-					installment1.setInstallmentFrequency(installmentFrequency);
-					installment1.setInterestPercentage(interestPercentage);
+						installment1.setProduct(product);
+						installment1.setProductValue(productValue);
+						installment1.setInstallmentFrequency(installmentFrequency);
+						installment1.setInterestPercentage(interestPercentage);
 
-					installment1.setRateCode(rateCode);
-					installment1.setPrincipalOverDue(BigDecimal.ZERO);
-					installment1.setInterestOverdue(BigDecimal.ZERO);
+						installment1.setRateCode(rateCode);
+						installment1.setPrincipalOverDue(BigDecimal.ZERO);
+						installment1.setInterestOverdue(BigDecimal.ZERO);
 
-					BigDecimal interest = BigDecimal.ZERO;
-					if (i == 0) {
-						principal = product;
+						BigDecimal interest = BigDecimal.ZERO;
+						if (i == 0) {
 
-						interest = dailyInterest;
+							principal = product;
 
-						installment1.setPrincipalAmount(BigDecimal.ZERO);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(interestDemand);
+							interest = principal.multiply(monthlyInterestRate);
 
-						installment1.setInstallmentFromDate(calendarFromDate.getTime());
-						calendar.add(Calendar.MONTH, 1);
-						installment1.setInstallmentDate(calendar.getTime());
+							installment1.setInterestAmount(interest);
+							installment1.setPrincipalAmount(BigDecimal.ZERO);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
 
-						/* Interest Calculation */
+						} else if (i % 3 == 0 && i != 0 && i % 12 != 0) {
 
-						LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
-						LocalDate toDate = convertToLocalDate(calendar.getTime());
-						long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+							/* Interest time */
 
-						installment1.setInterestAmount(
-								interest.multiply(BigDecimal.valueOf(daysBetween)).setScale(2, RoundingMode.CEILING));
+							principal = product;
 
-						calendarFromDate.add(Calendar.MONTH, 1);
+							interest = dailyInterest;
 
-					} else if (i % 6 == 0 && i != 0) {
-						principal = product;
+							installment1.setPrincipalAmount(installmentAmount);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
+							product = principal;
 
-						interest = dailyInterest;
+							installment1.setInstallmentFromDate(calendarFromDate.getTime());
+							calendar.add(Calendar.MONTH, 3);
+							installment1.setInstallmentDate(calendar.getTime());
 
-						principal = product.subtract(installmentAmount);
+							/* Interest Calculation */
 
-						installment1.setPrincipalAmount(installmentAmount);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(regular);
-						product = principal;
+							LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
+							LocalDate toDate = convertToLocalDate(calendar.getTime());
+							long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
 
-						installment1.setInstallmentFromDate(calendarFromDate.getTime());
-						calendar.add(Calendar.MONTH, 1);
-						installment1.setInstallmentDate(calendar.getTime());
+							installment1.setInterestAmount(interest.multiply(BigDecimal.valueOf(daysBetween))
+									.setScale(2, RoundingMode.CEILING));
 
-						/* Interest Calculation */
+							calendarFromDate.add(Calendar.MONTH, 3);
+							principalTable.add(installment1);
 
-						LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
-						LocalDate toDate = convertToLocalDate(calendar.getTime());
-						long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+						} else if (i % 12 == 0 && i != 0) {
 
-						installment1.setInterestAmount(
-								interest.multiply(BigDecimal.valueOf(daysBetween)).setScale(2, RoundingMode.CEILING));
+							/* principal time */
 
-						calendarFromDate.add(Calendar.MONTH, 1);
+							principal = product;
+
+							interest = dailyInterest;
+
+							principal = product.subtract(installmentAmount);
+
+							installment1.setPrincipalAmount(installmentAmount);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(regular);
+
+							product = principal;
+
+							installment1.setInstallmentFromDate(calendarFromDate.getTime());
+							calendar.add(Calendar.MONTH, 3);
+							installment1.setInstallmentDate(calendar.getTime());
+
+							/* Interest Calculation */
+
+							LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
+							LocalDate toDate = convertToLocalDate(calendar.getTime());
+							long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+
+							installment1.setInterestAmount(interest.multiply(BigDecimal.valueOf(daysBetween))
+									.setScale(2, RoundingMode.CEILING));
+
+							calendarFromDate.add(Calendar.MONTH, 3);
+							principalTable.add(installment1);
+
+						} else {
+
+							principal = product;
+
+							interest = principal.multiply(monthlyInterestRate);
+							installment1.setInterestAmount(interest.setScale(2, RoundingMode.CEILING));
+
+							installment1.setPrincipalAmount(BigDecimal.ZERO);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
+
+						}
+
+					} else if ("Halfyearly".equalsIgnoreCase(interestFrequency)) {
+
+						/* principal - Yearly and interest - Half yearly */
+
+						installment1.setProduct(product);
+						installment1.setProductValue(productValue);
+						installment1.setInstallmentFrequency(installmentFrequency);
+						installment1.setInterestPercentage(interestPercentage);
+
+						installment1.setRateCode(rateCode);
+						installment1.setPrincipalOverDue(BigDecimal.ZERO);
+						installment1.setInterestOverdue(BigDecimal.ZERO);
+
+						BigDecimal interest = BigDecimal.ZERO;
+						if (i == 0) {
+
+							principal = product;
+
+							interest = principal.multiply(monthlyInterestRate);
+
+							installment1.setInterestAmount(interest);
+							installment1.setPrincipalAmount(BigDecimal.ZERO);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
+
+						} else if (i % 6 == 0 && i != 0 && i % 12 != 0) {
+
+							/* Interest time */
+
+							principal = product;
+
+							interest = dailyInterest;
+
+							installment1.setPrincipalAmount(installmentAmount);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
+							product = principal;
+
+							installment1.setInstallmentFromDate(calendarFromDate.getTime());
+							calendar.add(Calendar.MONTH, 6);
+							installment1.setInstallmentDate(calendar.getTime());
+
+							/* Interest Calculation */
+
+							LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
+							LocalDate toDate = convertToLocalDate(calendar.getTime());
+							long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+
+							installment1.setInterestAmount(interest.multiply(BigDecimal.valueOf(daysBetween))
+									.setScale(2, RoundingMode.CEILING));
+
+							calendarFromDate.add(Calendar.MONTH, 6);
+							principalTable.add(installment1);
+
+						} else if (i % 12 == 0 && i != 0) {
+
+							/* principal time */
+
+							principal = product;
+
+							interest = dailyInterest;
+
+							principal = product.subtract(installmentAmount);
+
+							installment1.setPrincipalAmount(installmentAmount);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(regular);
+
+							product = principal;
+
+							installment1.setInstallmentFromDate(calendarFromDate.getTime());
+							calendar.add(Calendar.MONTH, 6);
+							installment1.setInstallmentDate(calendar.getTime());
+
+							/* Interest Calculation */
+
+							LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
+							LocalDate toDate = convertToLocalDate(calendar.getTime());
+							long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+
+							installment1.setInterestAmount(interest.multiply(BigDecimal.valueOf(daysBetween))
+									.setScale(2, RoundingMode.CEILING));
+
+							calendarFromDate.add(Calendar.MONTH, 6);
+							principalTable.add(installment1);
+
+						} else {
+
+							principal = product;
+
+							interest = principal.multiply(monthlyInterestRate);
+							installment1.setInterestAmount(interest.setScale(2, RoundingMode.CEILING));
+
+							installment1.setPrincipalAmount(BigDecimal.ZERO);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
+
+						}
 
 					} else {
 
-						principal = product;
+						/* principal - Yearly and interest - monthly */
 
-						interest = dailyInterest;
+						installment1.setProduct(product);
+						installment1.setProductValue(productValue);
+						installment1.setInstallmentFrequency(installmentFrequency);
+						installment1.setInterestPercentage(interestPercentage);
 
-						installment1.setPrincipalAmount(BigDecimal.ZERO);
-						installment1.setPrincipalAmountOutstanding(principal);
-						installment1.setInstallmentDescription(interestDemand);
+						installment1.setRateCode(rateCode);
+						installment1.setPrincipalOverDue(BigDecimal.ZERO);
+						installment1.setInterestOverdue(BigDecimal.ZERO);
 
-						installment1.setInstallmentFromDate(calendarFromDate.getTime());
-						calendar.add(Calendar.MONTH, 1);
-						installment1.setInstallmentDate(calendar.getTime());
+						BigDecimal interest = BigDecimal.ZERO;
+						if (i == 0) {
+							principal = product;
 
-						/* Interest Calculation */
+							interest = dailyInterest;
 
-						LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
-						LocalDate toDate = convertToLocalDate(calendar.getTime());
-						long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+							installment1.setPrincipalAmount(BigDecimal.ZERO);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
 
-						installment1.setInterestAmount(
-								interest.multiply(BigDecimal.valueOf(daysBetween)).setScale(2, RoundingMode.CEILING));
+							installment1.setInstallmentFromDate(calendarFromDate.getTime());
+							calendar.add(Calendar.MONTH, 1);
+							installment1.setInstallmentDate(calendar.getTime());
 
-						calendarFromDate.add(Calendar.MONTH, 1);
+							/* Interest Calculation */
 
+							LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
+							LocalDate toDate = convertToLocalDate(calendar.getTime());
+							long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+
+							installment1.setInterestAmount(interest.multiply(BigDecimal.valueOf(daysBetween))
+									.setScale(2, RoundingMode.CEILING));
+
+							calendarFromDate.add(Calendar.MONTH, 1);
+
+						} else if (i % 6 == 0 && i != 0) {
+							principal = product;
+
+							interest = dailyInterest;
+
+							principal = product.subtract(installmentAmount);
+
+							installment1.setPrincipalAmount(installmentAmount);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(regular);
+							product = principal;
+
+							installment1.setInstallmentFromDate(calendarFromDate.getTime());
+							calendar.add(Calendar.MONTH, 1);
+							installment1.setInstallmentDate(calendar.getTime());
+
+							/* Interest Calculation */
+
+							LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
+							LocalDate toDate = convertToLocalDate(calendar.getTime());
+							long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+
+							installment1.setInterestAmount(interest.multiply(BigDecimal.valueOf(daysBetween))
+									.setScale(2, RoundingMode.CEILING));
+
+							calendarFromDate.add(Calendar.MONTH, 1);
+
+						} else {
+
+							principal = product;
+
+							interest = dailyInterest;
+
+							installment1.setPrincipalAmount(BigDecimal.ZERO);
+							installment1.setPrincipalAmountOutstanding(principal);
+							installment1.setInstallmentDescription(interestDemand);
+
+							installment1.setInstallmentFromDate(calendarFromDate.getTime());
+							calendar.add(Calendar.MONTH, 1);
+							installment1.setInstallmentDate(calendar.getTime());
+
+							/* Interest Calculation */
+
+							LocalDate fromDate = convertToLocalDate(calendarFromDate.getTime());
+							LocalDate toDate = convertToLocalDate(calendar.getTime());
+							long daysBetween = ChronoUnit.DAYS.between(fromDate, toDate);
+
+							installment1.setInterestAmount(interest.multiply(BigDecimal.valueOf(daysBetween))
+									.setScale(2, RoundingMode.CEILING));
+
+							calendarFromDate.add(Calendar.MONTH, 1);
+
+						}
+
+						principalTable.add(installment1);
 					}
 
-					principalTable.add(installment1);
 				}
 
 			}
-
 		}
+		//int termMonths = 12;
+		// BigDecimal loanAmount = product1;
+		if ("LAEMI".equalsIgnoreCase(SchmeType)) {
+
+		    int termMonths = 12;
+		    BigDecimal loanAmount = new BigDecimal("200000");
+		    BigDecimal annualRate = new BigDecimal("9");
+		    BigDecimal annualRateFraction = annualRate.divide((BigDecimal.valueOf(100)),2, RoundingMode.HALF_UP);
+		  
+	        BigDecimal loanterm = BigDecimal.valueOf(termMonths).divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+	       
+	        BigDecimal rateComponent = BigDecimal.ONE.add(loanterm.multiply(annualRateFraction));
+	       
+	        BigDecimal fullEMI = loanAmount.multiply(rateComponent)
+	                                       .divide(BigDecimal.valueOf(termMonths), 2, RoundingMode.HALF_UP);
+	        
+		    System.out.println("Monthly EMI (Rounded Down): ₹" + fullEMI);
+		    System.out.println("numberOfInstallments:" + numberOfInstallments);
+
+		    BigDecimal outstandingPrincipal = loanAmount;
+		    for (int month = 1; month <= termMonths; month++) {
+		      
+		    	// Compute full interest for the month
+		    	BigDecimal monthlyInterest1 = annualRateFraction.multiply(outstandingPrincipal)
+		    	    .divide((BigDecimal.valueOf(12)),2, RoundingMode.HALF_UP); // Division must still use rounding mode
+		    	//round in monthly
+		    	BigDecimal monthlyInterestRounded = monthlyInterest1.setScale(0, RoundingMode.HALF_UP);
+
+		    	// Principal = EMI - Interest
+		    	BigDecimal principal1 = fullEMI.subtract(monthlyInterestRounded);
+		    	BigDecimal principal1Rounded = principal1.setScale(0, RoundingMode.HALF_UP);
+		    	// For the last month, just subtract the remaining outstanding directly to clear the loan
+		    	if (month == termMonths) {
+		    		principal1Rounded = outstandingPrincipal;
+		    	    outstandingPrincipal = BigDecimal.ZERO;
+		    	} else {
+		    	    outstandingPrincipal = outstandingPrincipal.subtract(principal1Rounded);
+		    	}
+
+		    	// Print values rounded only for display (not calculation)
+		    	System.out.println("Month " + month +
+		    	    ": Interest = ₹" + monthlyInterestRounded  +
+		    	    ", Principal = ₹" + principal1Rounded  +
+		    	    ", Remaining = ₹" + outstandingPrincipal  +
+		    	    ", EMI = ₹" + fullEMI);
+
+		        TestPrincipalCalculation installment = new TestPrincipalCalculation();
+
+		        // STATIC
+		        installment.setProduct(product);
+		        installment.setProductValue(productValue);
+		        installment.setInstallmentFrequency(installmentFrequency);
+		        installment.setInterestPercentage(interestPercentage);
+		        installment.setRateCode(rateCode);
+		        installment.setPrincipalOverDue(BigDecimal.ZERO);
+		        installment.setInterestOverdue(BigDecimal.ZERO);
+		        installment.setInstallmentDescription(regular);
+
+		        // DYNAMIC
+		        installment.setInstallmentFromDate(calendarFromDate.getTime());
+		        calendar.add(Calendar.MONTH, 1);
+		        installment.setInstallmentDate(calendar.getTime());
+		        calendarFromDate.add(Calendar.MONTH, 1);
+		        installment.setPrincipalAmount(principal1Rounded);
+		        installment.setInterestAmount(monthlyInterestRounded);
+		        installment.setPrincipalAmountOutstanding(outstandingPrincipal);
+
+		        principalTable.add(installment);
+		    }
+		}
+
 		return principalTable;
 	}
 

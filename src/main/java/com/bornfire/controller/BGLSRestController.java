@@ -1889,8 +1889,10 @@ public class BGLSRestController {
 			@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date start_date,
 			@RequestParam(defaultValue = "0") double Product_value, @RequestParam String principle_frequency,
 			@RequestParam(defaultValue = "0") int int_rate, @RequestParam(defaultValue = "0") int no_of_inst,
-			@RequestParam(defaultValue = "0") double int_amt, @RequestParam String interestFrequency)
-			throws ParseException {
+	 		@RequestParam(defaultValue = "0") double int_amt, @RequestParam String interestFrequency,  
+	 		@RequestParam(required = false) String SchmeType)
+	     
+	 		throws ParseException {
 
 		System.out.println("======= Incoming Request Parameters =======");
 		System.out.println("Creation Date        : " + creation_Date);
@@ -1914,7 +1916,7 @@ public class BGLSRestController {
 
 		List<TestPrincipalCalculation> InterestAmount = interestCalculationServices.calculatePrincialPaymentNotice(
 				start_date, calculatedEndDate, product, productAmt, principle_frequency, intRate, no_of_inst,
-				instmentAmount, interestFrequency);
+				instmentAmount, interestFrequency,SchmeType);
 
 		int toltalInstallment = InterestAmount.size();
 
@@ -2301,14 +2303,15 @@ public class BGLSRestController {
 		LocalDate startDate = startDateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		LocalDate endDate = startDate.plus(noOfInst, ChronoUnit.MONTHS);
 		Date calculatedEndDate = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
+		String SchmeType = loandetails.getLoan_type();
 		BigDecimal installmentAmount = paymentDetails.getInst_amount();
 		String principleFrequency = paymentDetails.getInst_freq();
 		String interestFrequency = paymentDetails.getInterest_frequency();
+		
 
 		List<TestPrincipalCalculation> interestAmountList = interestCalculationServices.calculatePrincialPaymentNotice(
 				startDateRaw, calculatedEndDate, productAmt, productAmt, principleFrequency, intRate, noOfInst,
-				installmentAmount, interestFrequency);
+				installmentAmount, interestFrequency,SchmeType);
 
 		repaymentDetails = dMD_TABLE_REPO.gettranpopvaluesdatas(accountNo); // Refresh
 		List<DMD_TABLE> finalRepaymentDetails = new ArrayList<>(repaymentDetails);
@@ -2444,7 +2447,7 @@ public class BGLSRestController {
 		BigDecimal productAmt = loandetails.getLoan_sanctioned();
 		BigDecimal intRate = loandetails.getEffective_interest_rate();
 		Date creation_Date = loandetails.getDate_of_loan();
-
+		String SchmeType = loandetails.getLoan_type();
 		int no_of_inst = Integer.valueOf(paymentDetails.getNo_of_inst());
 		Date start_date = paymentDetails.getInst_start_dt();
 
@@ -2455,10 +2458,11 @@ public class BGLSRestController {
 		BigDecimal instmentAmount = paymentDetails.getInst_amount();
 		String principle_frequency = paymentDetails.getInst_freq();
 		String interestFrequency = paymentDetails.getInterest_frequency();
+		
 
 		List<TestPrincipalCalculation> InterestAmount = interestCalculationServices.calculatePrincialPaymentNotice(
 				start_date, calculatedEndDate, product, productAmt, principle_frequency, intRate, no_of_inst,
-				instmentAmount, interestFrequency);
+				instmentAmount, interestFrequency,SchmeType);
 
 		int toltalInstallment = InterestAmount.size();
 
@@ -3757,7 +3761,8 @@ public class BGLSRestController {
 			@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date start_date,
 			@RequestParam(defaultValue = "0") double Product_value, @RequestParam String principle_frequency,
 			@RequestParam(defaultValue = "0") int int_rate, @RequestParam(defaultValue = "0") int no_of_inst,
-			@RequestParam(defaultValue = "0") double int_amt, @RequestParam String interestFrequency)
+			@RequestParam(defaultValue = "0") double int_amt, @RequestParam String interestFrequency,
+			@RequestParam(required = false) String  SchmeType)
 			throws ParseException {
 
 		LocalDate startDate = start_date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -3771,7 +3776,7 @@ public class BGLSRestController {
 
 		List<TestPrincipalCalculation> InterestAmount = interestCalculationServices.calculatePrincialPaymentNotice(
 				start_date, calculatedEndDate, product, productAmt, principle_frequency, intRate, no_of_inst,
-				instmentAmount, interestFrequency);
+				instmentAmount, interestFrequency,SchmeType);
 
 		int toltalInstallment = InterestAmount.size();
 

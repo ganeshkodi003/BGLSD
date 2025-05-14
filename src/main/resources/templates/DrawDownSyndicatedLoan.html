@@ -1150,7 +1150,8 @@ function rowadddcorporate() {
 		
 
 		function formatNumber(number) {
-			return Number(number).toLocaleString('en-US', {
+			const num = Math.floor(Number(number) * 100) / 100; // Truncate to 2 decimal places
+			return num.toLocaleString('en-US', {
 				minimumFractionDigits: 2,
 				maximumFractionDigits: 2
 			});
@@ -1356,11 +1357,15 @@ function rowadddcorporate() {
                 var total_outstanding = raw_installment_amt - raw_paid_amount;
 
                 var installment_amt = formatNumber(raw_installment_amt);
+              
+                
                 var paidamount = formatNumber(raw_paid_amount);
                 var principal_amt = formatNumber(entity.principal_amt);
                 var interest_amt = formatNumber(entity.interest_amt);
                 var charges_amt = formatNumber(entity.charges_amt);
+             
                 var principal_outstanding = formatNumber(entity.principal_outstanding);
+                 
                 var outstanding_amt = formatNumber(total_outstanding);
 
                 trHTML += '<tr id="sechduleRow">'
@@ -3312,8 +3317,7 @@ function rowadddcorporate() {
 															style="text-align: right; width: 60px; white-space: nowrap;">Paid
 															Amount</th>
 														<th
-															style="text-align: right; width: 60px; white-space: nowrap;">Total
-															Outstanding</th>
+															style="text-align: right; width: 60px; white-space: nowrap;">Arrears</th>
 													</tr>
 												</thead>
 

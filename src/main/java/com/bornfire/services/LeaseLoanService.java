@@ -261,10 +261,11 @@ public class LeaseLoanService {
 		BigDecimal instmentAmount = paymentMaster.getInst_amount();
 		String principle_frequency = paymentMaster.getInst_freq();
 		String interestFrequency = paymentMaster.getInterest_frequency();
+		String SchmeType = master.getLoan_type();
 
 		List<TestPrincipalCalculation> InterestAmount = interestCalculationServices.calculatePrincialPaymentNotice(
 				start_date, calculatedEndDate, product, productAmt, principle_frequency, intRate, no_of_inst,
-				instmentAmount, interestFrequency);
+				instmentAmount, interestFrequency,SchmeType);
 
 		int toltalInstallment = InterestAmount.size();
 
