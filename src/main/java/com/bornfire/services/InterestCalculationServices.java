@@ -783,17 +783,17 @@ public class InterestCalculationServices {
 		// BigDecimal loanAmount = product1;
 		if ("LAEMI".equalsIgnoreCase(SchmeType)) {
 
-		    int termMonths = 12;
-		    BigDecimal loanAmount = new BigDecimal("200000");
-		    BigDecimal annualRate = new BigDecimal("9");
-		    BigDecimal annualRateFraction = annualRate.divide((BigDecimal.valueOf(100)),2, RoundingMode.HALF_UP);
-		  
-	        BigDecimal loanterm = BigDecimal.valueOf(termMonths).divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
-	       
+		    int termMonths = 5;
+		    BigDecimal loanAmount = new BigDecimal("400000");
+		    BigDecimal annualRate = new BigDecimal("6");
+		    BigDecimal annualRateFraction = annualRate.divide((BigDecimal.valueOf(100)),10, RoundingMode.HALF_UP);
+		    System.out.println("annualRateFraction ₹" + annualRateFraction);
+	        BigDecimal loanterm = BigDecimal.valueOf(termMonths).divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP);
+	        System.out.println("loanterm: ₹" + loanterm);
 	        BigDecimal rateComponent = BigDecimal.ONE.add(loanterm.multiply(annualRateFraction));
-	       
+	        System.out.println("rateComponent: ₹" + rateComponent);
 	        BigDecimal fullEMI = loanAmount.multiply(rateComponent)
-	                                       .divide(BigDecimal.valueOf(termMonths), 2, RoundingMode.HALF_UP);
+	                                       .divide(BigDecimal.valueOf(termMonths), 0, RoundingMode.HALF_UP);
 	        
 		    System.out.println("Monthly EMI (Rounded Down): ₹" + fullEMI);
 		    System.out.println("numberOfInstallments:" + numberOfInstallments);
