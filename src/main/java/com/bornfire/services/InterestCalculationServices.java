@@ -783,9 +783,9 @@ public class InterestCalculationServices {
 		// BigDecimal loanAmount = product1;
 		if ("LAEMI".equalsIgnoreCase(SchmeType)) {
 
-		    int termMonths = 24;
-		    BigDecimal loanAmount = new BigDecimal("700000");
-		    BigDecimal annualRate = new BigDecimal("15");
+		    int termMonths = 60;
+		    BigDecimal loanAmount = new BigDecimal("424914");
+		    BigDecimal annualRate = new BigDecimal("13.9");
 
 		    // Flat Interest Total
 		    BigDecimal annualRateFraction = annualRate.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
@@ -793,8 +793,12 @@ public class InterestCalculationServices {
 		    BigDecimal totalInterest = loanAmount.multiply(annualRateFraction).multiply(loanTermInYears);
 		    BigDecimal totalPayable = loanAmount.add(totalInterest);
 
+		    // Calculate EMI precisely once
 		    BigDecimal fullEMI = totalPayable.divide(BigDecimal.valueOf(termMonths), 10, RoundingMode.HALF_UP);
-		    System.out.println("Monthly EMI: ₹" + fullEMI);
+		    // Round EMI once and keep constant
+		    BigDecimal fixedEMI = fullEMI.setScale(0, RoundingMode.HALF_UP);
+
+		    System.out.println("Monthly EMI (fixed): ₹" + fixedEMI);
 
 		    // Sum of digits for Rule of 78
 		    int sumOfDigits = termMonths * (termMonths + 1) / 2;
@@ -808,22 +812,24 @@ public class InterestCalculationServices {
 		        // Interest using Rule of 78
 		        BigDecimal monthInterestPortion = totalInterest.multiply(BigDecimal.valueOf(remainingPeriods))
 		                                                       .divide(BigDecimal.valueOf(sumOfDigits), 10, RoundingMode.HALF_UP);
+		        BigDecimal roundedInterest = monthInterestPortion.setScale(0, RoundingMode.HALF_UP);
 
-		        // Principal = EMI - Interest
-		        BigDecimal principalPart = fullEMI.subtract(monthInterestPortion);
+		        // Principal = EMI - Interest (both rounded)
+		        BigDecimal principalPart = fixedEMI.subtract(roundedInterest);
 
-		        // Last month edge case: adjust principal to clear balance
+		        // Last month: adjust principal to clear remaining
 		        if (month == termMonths) {
-		            principalPart = remainingPrincipal;
+		            principalPart = remainingPrincipal.setScale(0, RoundingMode.HALF_UP);
 		        }
+		        BigDecimal roundedPrincipal = principalPart.setScale(0, RoundingMode.HALF_UP);
 
-		        BigDecimal currentOutstanding = remainingPrincipal.subtract(principalPart);
+		        BigDecimal currentOutstanding = remainingPrincipal.subtract(roundedPrincipal).setScale(0, RoundingMode.HALF_UP);
 
 		        System.out.println("Month " + month +
-		            ": Interest = ₹" + monthInterestPortion  +
-		            ", Principal = ₹" + principalPart +
-		            ", EMI = ₹" + fullEMI +
-		            ", Remaining = ₹" + currentOutstanding );
+		            ": Interest = ₹" + roundedInterest +
+		            ", Principal = ₹" + roundedPrincipal +
+		            ", EMI = ₹" + fixedEMI +
+		            ", Remaining = ₹" + currentOutstanding);
 
 		        // Create and store installment object
 		        TestPrincipalCalculation installment = new TestPrincipalCalculation();
@@ -841,8 +847,8 @@ public class InterestCalculationServices {
 		        installment.setInstallmentDate(calendar.getTime());
 		        calendarFromDate.add(Calendar.MONTH, 1);
 
-		        installment.setPrincipalAmount(principalPart);
-		        installment.setInterestAmount(monthInterestPortion );
+		        installment.setPrincipalAmount(roundedPrincipal);
+		        installment.setInterestAmount(roundedInterest);
 		        installment.setPrincipalAmountOutstanding(currentOutstanding);
 
 		        principalTable.add(installment);
@@ -850,10 +856,6 @@ public class InterestCalculationServices {
 		        remainingPrincipal = currentOutstanding;
 		    }
 		}
-
-		
-
-
 		return principalTable;
 	}
 
