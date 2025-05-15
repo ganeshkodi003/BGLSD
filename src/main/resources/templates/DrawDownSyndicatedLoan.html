@@ -1150,12 +1150,9 @@ function rowadddcorporate() {
 		
 
 		function formatNumber(number) {
-			const num = Math.floor(Number(number) * 100) / 100; // Truncate to 2 decimal places
-			return num.toLocaleString('en-US', {
-				minimumFractionDigits: 2,
-				maximumFractionDigits: 2
-			});
-		}
+			  const num = Math.floor(Number(number) * 100) / 100; // Truncate to 2 decimals
+			  return num.toFixed(2); // Converts to string with 2 decimals, no rounding
+			}
 
 		// filter
 
