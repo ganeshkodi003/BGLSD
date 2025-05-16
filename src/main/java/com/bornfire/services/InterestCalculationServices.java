@@ -32,7 +32,7 @@ public class InterestCalculationServices {
 		String rateCode = "LIN5%";
 		String interestDemand = "Interest Demand";
 		String regular = "Regular Installment";
-		SchmeType = "LAEMI";
+		 
 
 		List<TestPrincipalCalculation> principalTable = new ArrayList<>();
 		BigDecimal product1 = product;
@@ -783,9 +783,9 @@ public class InterestCalculationServices {
 		// BigDecimal loanAmount = product1;
 		if ("LAEMI".equalsIgnoreCase(SchmeType)) {
 
-		    int termMonths = 60;
-		    BigDecimal loanAmount = new BigDecimal("424914");
-		    BigDecimal annualRate = new BigDecimal("13.9");
+		    int termMonths = numberOfInstallments;
+		    BigDecimal loanAmount = product1;
+		    BigDecimal annualRate = interestPercentage;
 
 		    // Flat Interest Total
 		    BigDecimal annualRateFraction = annualRate.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);

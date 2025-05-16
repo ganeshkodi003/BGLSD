@@ -39,12 +39,15 @@ import com.bornfire.entities.BGLSBusinessTable_Rep;
 import com.bornfire.entities.Collection_Process_Entity;
 import com.bornfire.entities.Collection_Process_Repo;
 import com.bornfire.entities.CustomerRequest;
+import com.bornfire.entities.DMD_TABLE;
+import com.bornfire.entities.DMD_TABLE_REPO;
 import com.bornfire.entities.DepositRep;
 import com.bornfire.entities.EKYCMinimalData;
 import com.bornfire.entities.GeneralLedgerWork_Entity;
 import com.bornfire.entities.GeneralLedgerWork_Rep;
 import com.bornfire.entities.HolidayMaster_Entity;
 import com.bornfire.entities.HolidayMaster_Rep;
+import com.bornfire.entities.Lease_Loan_Master_Entity;
 import com.bornfire.entities.MinimalDataRepository;
 import com.bornfire.entities.Td_defn_Repo;
 import com.bornfire.entities.UserProfile;
@@ -75,6 +78,9 @@ public class CustomerRequestService {
 
 	@Autowired
 	BGLSBusinessTable_Rep bglsBusinessTable_Rep;
+	
+	@Autowired
+	DMD_TABLE_REPO dMD_TABLE_REPO;
 
 	private static final Logger logger = LoggerFactory.getLogger(LoginServices.class);
 
@@ -452,6 +458,40 @@ public class CustomerRequestService {
 			as.setPassport(customerreq.getCa_passport_number());
 			as.setIssue_date(customerreq.getCa_issue_date());
 			minimalDataRepository.save(as);
+			//CODE START DISBURSEMENT TO SAVE
+			DMD_TABLE demand = new DMD_TABLE();
+
+			BigDecimal srlNo = dMD_TABLE_REPO.getSrlNo();
+
+			demand.setLoan_acct_no(customerreq.getLa_loan_accountno());
+			demand.setLoan_acid(customerreq.getLa_loan_accountno());
+		
+				if ("CORPORATE".equals(customerreq.getCa_customer_type_1())) { // Avoid potential null pointer exception
+					demand.setAcct_name(customerreq.getCa_first_name_1());
+				} else if("INDIVIDUAL".equals(customerreq.getLa_customer_type())){
+					demand.setAcct_name(customerreq.getCa_preferred_name());
+				}else {
+					demand.setAcct_name(customerreq.getCa_first_name_1());
+				}
+			
+		 
+			demand.setFlow_id(BigDecimal.ONE);
+			demand.setFlow_code("DISBT");
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			Date flowDate = sdf.parse(customerreq.getLa_date_loan());
+			demand.setFlow_date(flowDate);
+			BigDecimal flowAmt = new BigDecimal(customerreq.getLa_loan_sanctioned());
+			demand.setFlow_amt(flowAmt);
+			demand.setFlow_crncy_code(customerreq.getCa_currency());
+			demand.setEntry_time(new Date());
+			demand.setEntry_user(customerreq.getEntry_user());
+			demand.setDel_flg("N");
+			demand.setSrl_no(srlNo);
+
+			dMD_TABLE_REPO.save(demand);
+			 
+			
+			
 			msg = "Account Detail Uploaded Successfully";
 
 		} catch (Exception e) {
@@ -460,7 +500,7 @@ public class CustomerRequestService {
 
 		return msg;
 	}
-
+ 
 	private boolean isRowEmpty(Row row) {
 		boolean isEmpty = true;
 		DataFormatter dataFormatter = new DataFormatter();
