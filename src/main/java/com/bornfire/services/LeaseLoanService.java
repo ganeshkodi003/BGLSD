@@ -203,9 +203,10 @@ public class LeaseLoanService {
 			lease_Loan_Master_Repo.save(masterLoan);
 			loan_Repayment_Master_Repo.save(masterPayment);
 
-			String demandFlow = disbursementDemand(masterLoan,entryUser);
-			System.out.println(demandFlow);
-
+			/*
+			 * String demandFlow = disbursementDemand(masterLoan,entryUser);
+			 * System.out.println(demandFlow);
+			 */
 			String principalFlow = principalAndInterestDemand(masterLoan, masterPayment,entryUser);
 			System.out.println(principalFlow);
 
