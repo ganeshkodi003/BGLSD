@@ -584,7 +584,7 @@ function sechduleView(a) {
 						data,
 						function (index, entity) {
 
-							var no_of_instalment = entity.no_of_instalment;
+							var no_of_instalment =  index+1;
 							var from_date = formatDate(entity.from_date);
 							var installment_date = formatDate(entity.installment_date);
 							var installment_description = entity.installment_description;

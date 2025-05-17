@@ -84,10 +84,10 @@ public class InterestCalculationServices {
 		System.out.println("Installment End Date       : " + endDate);
 		System.out.println("Total Months Between       : " + noOfMonths);
 		System.out.println("======================================");
-		TestPrincipalCalculation installment1 = new TestPrincipalCalculation();
+		
 		if ("LA".equalsIgnoreCase(SchmeType)) {
 			for (int i = 1; i <= noOfMonths; i++) {
-
+				TestPrincipalCalculation installment1 = new TestPrincipalCalculation();
 				if ("Monthly".equalsIgnoreCase(installmentFrequency)) {
 
 					System.out.println("-------- Monthly Calculation --------");
@@ -779,9 +779,7 @@ public class InterestCalculationServices {
 
 			}
 		}
-		//int termMonths = 12;
-		// BigDecimal loanAmount = product1;
-		if ("LAEMI".equalsIgnoreCase(SchmeType)) {
+		else if ("LAEMI".equalsIgnoreCase(SchmeType)) {
 
 		    int termMonths = numberOfInstallments;
 		    BigDecimal loanAmount = product1;

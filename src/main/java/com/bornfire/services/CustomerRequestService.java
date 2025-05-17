@@ -451,45 +451,14 @@ public class CustomerRequestService {
 			ll.setTd_glshdesc(customerreq.getTd_glshdesc());
 			System.out.println(customerreq.getCountry_of_operation()
 					+ "ll.setCountry_of_operation(customerreq.getCountry_of_operation())");
-			// bACP_CUS_PROFILE_REPO.save(ll);
+			bACP_CUS_PROFILE_REPO.save(ll);
 
 			EKYCMinimalData as = minimalDataRepository.findByapplref(ARNno);
 			as.setNational_id(customerreq.getCa_idenditification_number());
 			as.setPassport(customerreq.getCa_passport_number());
 			as.setIssue_date(customerreq.getCa_issue_date());
 			minimalDataRepository.save(as);
-			//CODE START DISBURSEMENT TO SAVE
-			DMD_TABLE demand = new DMD_TABLE();
-
-			BigDecimal srlNo = dMD_TABLE_REPO.getSrlNo();
-
-			demand.setLoan_acct_no(customerreq.getLa_loan_accountno());
-			demand.setLoan_acid(customerreq.getLa_loan_accountno());
-		
-				if ("CORPORATE".equals(customerreq.getCa_customer_type_1())) { // Avoid potential null pointer exception
-					demand.setAcct_name(customerreq.getCa_first_name_1());
-				} else if("INDIVIDUAL".equals(customerreq.getLa_customer_type())){
-					demand.setAcct_name(customerreq.getCa_preferred_name());
-				}else {
-					demand.setAcct_name(customerreq.getCa_first_name_1());
-				}
-			
-		 
-			demand.setFlow_id(BigDecimal.ONE);
-			demand.setFlow_code("DISBT");
-			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-			Date flowDate = sdf.parse(customerreq.getLa_date_loan());
-			demand.setFlow_date(flowDate);
-			BigDecimal flowAmt = new BigDecimal(customerreq.getLa_loan_sanctioned());
-			demand.setFlow_amt(flowAmt);
-			demand.setFlow_crncy_code(customerreq.getCa_currency());
-			demand.setEntry_time(new Date());
-			demand.setEntry_user(customerreq.getEntry_user());
-			demand.setDel_flg("N");
-			demand.setSrl_no(srlNo);
-
-			dMD_TABLE_REPO.save(demand);
-			 
+ 
 			
 			
 			msg = "Account Detail Uploaded Successfully";

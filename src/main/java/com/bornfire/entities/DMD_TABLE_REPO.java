@@ -200,4 +200,8 @@ public interface DMD_TABLE_REPO extends JpaRepository<DMD_TABLE, DMD_TABLE_IDcla
 	
 	@Query(value = "SELECT * FROM DEMAND_TBL aa WHERE aa.loan_acct_no = ?1 AND aa.flow_frq <> 'DISBT'", nativeQuery = true)
 	List<DMD_TABLE> gettranpopvalues111(String acct_num);
+	
+	
+	@Query(value = "SELECT * FROM DEMAND_TBL aa WHERE aa.loan_acct_no = ?1 AND aa.FLOW_CODE ='DISBT'", nativeQuery = true)
+	 DMD_TABLE getDisb(String acct_num);
 }

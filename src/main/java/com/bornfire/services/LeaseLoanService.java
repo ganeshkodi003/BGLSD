@@ -122,6 +122,9 @@ public class LeaseLoanService {
 			lease_Loan_Work_Repo.save(loandetails);
 			sb_AccountMasterEntityRepo.save(sbAcctDetails);
 			paymentWorkRepo.save(repaymentDetails);
+			String demandFlow = disbursementDemand(loandetails,entryUser);
+			System.out.println(demandFlow);
+			 
 			msg = "Loan Account Created Successfully";
 		} else {
 			msg = "Loan Account Created Failed";
@@ -221,7 +224,7 @@ public class LeaseLoanService {
 		return msg;
 	}
 
-	public String disbursementDemand(Lease_Loan_Master_Entity master,String user) {
+	public String disbursementDemand(Lease_Loan_Work_Entity master,String user) {
 
 		DMD_TABLE demand = new DMD_TABLE();
 

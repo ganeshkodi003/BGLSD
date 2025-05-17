@@ -2293,7 +2293,7 @@ public class BGLSRestController {
 		Lease_Loan_Work_Entity loandetails = lease_Loan_Work_Repo.getLeaseAccount(accountNo);
 		NoticeDetailsPayment0Entity paymentDetails = noticeDetailsPayment0Rep.getPaymentDetails(accountNo);
 		List<DMD_TABLE> repaymentDetails = dMD_TABLE_REPO.gettranpopvaluesdatas(accountNo);
-
+		DMD_TABLE DisbDetails = dMD_TABLE_REPO.getDisb(accountNo);
 		String accountname = loandetails.getCustomer_name();
 		BigDecimal productAmt = loandetails.getLoan_sanctioned();
 		BigDecimal intRate = loandetails.getEffective_interest_rate();
@@ -2386,11 +2386,15 @@ public class BGLSRestController {
 
 		List<Principle_and_intrest_shedule_Entity> principleEntities = new ArrayList<>();
 		int installmentNo = 1;
-
+		//disbursement code
+		Principle_and_intrest_shedule_Entity disbEntity = new Principle_and_intrest_shedule_Entity();
+		disbEntity.setInstallment_date(loandetails.getDate_of_loan());
+		disbEntity.setInstallment_description(DisbDetails.getFlow_code());
+		disbEntity.setPrincipal_outstanding(DisbDetails.getFlow_amt());
+		principleEntities.add(disbEntity);
 		for (TestPrincipalCalculation record : interestAmountList) {
 			Principle_and_intrest_shedule_Entity entity = new Principle_and_intrest_shedule_Entity();
-
-			entity.setLoan_amt(productAmt);
+		    entity.setLoan_amt(productAmt);
 			entity.setNo_of_instalment(BigDecimal.valueOf(installmentNo));
 			entity.setAccount_creation_date(creationDate);
 			entity.setEffective_interest_rate(intRate);
@@ -2423,6 +2427,8 @@ public class BGLSRestController {
 			principle_and_intrest_shedule_Rep.save(entity);
 			
 			principleEntities.add(entity);
+		
+
 			installmentNo++;
 		}
 
