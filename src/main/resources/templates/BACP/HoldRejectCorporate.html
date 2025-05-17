@@ -792,7 +792,7 @@ input:hover+.password-info {
 	    var schmtypes = document.getElementById("ca_schemetype").value;
 	    var tranId = a.getAttribute("data-tranid");
 	    //alert(tranId);
-	    if (schmtypes == "LA") {
+	    if (schmtypes == "LA" || schmtypes == "LAEMI") {
 	        var account_number = document.getElementById("loan_accountno").value;
 	        var loanamount = document.getElementById("loan_sanctioned").value.replace(/,/g, ''); // Remove commas
 	        var accountname = document.getElementById("corporateName").value;
@@ -843,7 +843,7 @@ input:hover+.password-info {
 	    console.log("ApprefNO:", ApprefNO);
 	    console.log("schmtypes:", schmtypes);
 
-	    if (schmtypes == "LA") {
+	    if (schmtypes == "LA" || schmtypes == "LAEMI") {
 	        account_number = document.getElementById("loan_accountno").value;
 	    } else if (schmtypes == "TD") {
 	        account_number = document.getElementById("depo_actno").value;
@@ -6043,7 +6043,7 @@ input:hover+.password-info {
 			if (schemeType === "TD") {
 				termDepositDiv.style.display = "block";
 				leaseAccountDiv.style.display = "none";
-			} else if (schemeType === "LA") {
+			} else if (schemeType === "LA" || schemeType === "LAEMI") {
 				leaseAccountDiv.style.display = "block";
 				termDepositDiv.style.display = "none";
 			} else {

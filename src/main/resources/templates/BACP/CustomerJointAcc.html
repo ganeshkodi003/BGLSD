@@ -1832,7 +1832,7 @@ function AccountDetailNxt(a) {
             url: "./AccountDetailNxt?refnumber=" + refnumber,
             data: $("#parisone").serialize(),
             success: function (response) {
-            	if ($("#schemetype").val() === "LA") {
+            	if ($("#schemetype").val() === "LA" || $("#schemetype").val() === "LAEMI") {
             	    addRecords();
             	} else if ($("#schemetype").val() === "LAEMI") {
             	    addRecords();
@@ -1927,7 +1927,7 @@ var Deposit = {
 	          url: "./AccountDetailNxt?refnumber=" + refnumber,
 	          data: $("#parisone").serialize(),
 	          success: function (response) {
-	        	  if($("#schemetype").val()==="LA"){
+	        	  if($("#schemetype").val()==="LA" || $("#schemetype").val() === "LAEMI"){
 	        		  addRecords1();
 	          	}else{
 	          		depositadd();

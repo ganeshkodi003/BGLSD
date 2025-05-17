@@ -11432,7 +11432,7 @@ function gotocorporate(){
 	    console.log("ApprefNO:", ApprefNO);
 	    console.log("schmtypes:", schmtypes);
 	    
-	    if (schmtypes == "LA") {
+	    if (schmtypes == "LA" || schmtypes == "LAEMI") {
 	        account_number = document.getElementById("loan_accountno").value;
 	        //alert("Loan Account Number: " + account_number);
 	    } else if (schmtypes == "TD") {
@@ -11526,7 +11526,7 @@ function tranactionscreens(a) {
         if (schemeType === "TD") {
             termDepositDiv.style.display = "block";
             leaseAccountDiv.style.display = "none";
-        } else if (schemeType === "LA") {
+        } else if (schemeType === "LA" || schemeType === "LAEMI") {
             leaseAccountDiv.style.display = "block";
             termDepositDiv.style.display = "none";
         } else {

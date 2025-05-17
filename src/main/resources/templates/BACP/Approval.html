@@ -2830,7 +2830,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 					<!-- Show this button if ca_schemetype is 'LA' -->
 					<button type="button" class="btn btn-primary" data-dismiss="modal"
-						th:if="${customerRequest?.ca_schemetype == 'LA'}"
+						th:if="${customerRequest?.ca_schemetype == 'LA' OR  customerRequest?.ca_schemetype == 'LAEMI'}"
 						onclick="tranactionscreens(this);"  >Loan
 						Disbursement</button>
 				</div>
@@ -3107,7 +3107,7 @@ function RejectAcc() {
     console.log("ApprefNO:", ApprefNO);
     console.log("schmtypes:", schmtypes);
     
-    if (schmtypes === "LA") {
+    if (schmtypes === "LA"|| schmtypes === "LAEMI") {
         account_number = document.getElementById("loan_accountno").value;
     } else if (schmtypes === "TD") {
         account_number = document.getElementById("depo_actno").value;
@@ -3160,7 +3160,7 @@ function tranactionscreens(a) {
 	    var parttranid = 1;
 	    //alert(tranId);
 	    //alert(parttranid);
-	    if(schmtypes == "LA"){
+	    if(schmtypes == "LA" || schmtypes === "LAEMI"){
 	    	 var account_number = document.getElementById("loan_accountno").value;
 	    	 var loanamount = document.getElementById("loan_sanctioned").value.replace(/,/g, ''); // Remove commas
 	 	    var accountname = document.getElementById("ca_first_name").value;
@@ -3211,7 +3211,7 @@ function tranactionscreens(a) {
         if (schemeType === "TD") {
             termDepositDiv.style.display = "block";
             leaseAccountDiv.style.display = "none";
-        } else if (schemeType === "LA") {
+        } else if (schemeType === "LA" || schemeType === "LAEMI") {
             leaseAccountDiv.style.display = "block";
             termDepositDiv.style.display = "none";
         } else {

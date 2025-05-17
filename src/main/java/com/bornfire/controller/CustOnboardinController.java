@@ -2181,7 +2181,7 @@ public class CustOnboardinController {
 			String AccountNo = null;
 			Lease_Loan_Work_Entity LeaseAccount = lease_Loan_Work_Repo.getLeaseAccount(AccountNO2);
 			DepositEntity DepositAccount = depositRep.getCustdataact(AccountNO1);
-			if (CifId.getCa_schemetype().equals("LA")) {
+			if (CifId.getCa_schemetype().equals("LA")|| CifId.getCa_schemetype().equals("LAEMI")) {
 				AccountNo = LeaseAccount.getLoan_accountno();
 			} else {
 				AccountNo = DepositAccount.getDepo_actno();
@@ -2245,7 +2245,7 @@ public class CustOnboardinController {
 					String AccountNo = null;
 					Lease_Loan_Work_Entity LeaseAccount = lease_Loan_Work_Repo.getLeaseAccount(AccountNO);
 					DepositEntity DepositAccount = depositRep.getCustdataact(AccountNO1);
-					if (CifId.getCa_schemetype().equals("LA")) {
+					if (CifId.getCa_schemetype().equals("LA")|| CifId.getCa_schemetype().equals("LAEMI") ) {
 						AccountNo = LeaseAccount.getLoan_accountno();
 					} else {
 						AccountNo = DepositAccount.getDepo_actno();
@@ -2276,7 +2276,7 @@ public class CustOnboardinController {
 					String AccountNo = null;
 					Lease_Loan_Work_Entity LeaseAccount = lease_Loan_Work_Repo.getLeaseAccount(AccountNO);
 					DepositEntity DepositAccount = depositRep.getCustdataact(AccountNO1);
-					if (CifId.getCa_schemetype().equals("LA")) {
+					if (CifId.getCa_schemetype().equals("LA")|| CifId.getCa_schemetype().equals("LAEMI")) {
 						AccountNo = LeaseAccount.getLoan_accountno();
 					} else {
 						AccountNo = DepositAccount.getDepo_actno();
@@ -2308,7 +2308,7 @@ public class CustOnboardinController {
 					String AccountNo = null;
 					Lease_Loan_Work_Entity LeaseAccount = lease_Loan_Work_Repo.getLeaseAccount(AccountNO);
 					DepositEntity DepositAccount = depositRep.getCustdataact(AccountNO1);
-					if (CifId.getCa_schemetype().equals("LA")) {
+					if (CifId.getCa_schemetype().equals("LA")|| CifId.getCa_schemetype().equals("LAEMI")) {
 						AccountNo = LeaseAccount.getLoan_accountno();
 					} else {
 						AccountNo = DepositAccount.getDepo_actno();
@@ -2437,7 +2437,7 @@ public class CustOnboardinController {
 					String AccountNo = null;
 					Lease_Loan_Work_Entity LeaseAccount = lease_Loan_Work_Repo.getLeaseAccount(AccountNO);
 					DepositEntity DepositAccount = depositRep.getCustdataact(AccountNO1);
-					if (CifId.getCa_schemetype().equals("LA")) {
+					if (CifId.getCa_schemetype().equals("LA")|| CifId.getCa_schemetype().equals("LAEMI")) {
 						AccountNo = LeaseAccount.getLoan_accountno();
 					} else {
 						AccountNo = DepositAccount.getDepo_actno();
@@ -2466,7 +2466,7 @@ public class CustOnboardinController {
 					String AccountNo = null;
 					Lease_Loan_Work_Entity LeaseAccount = lease_Loan_Work_Repo.getLeaseAccount(AccountNO);
 					DepositEntity DepositAccount = depositRep.getCustdataact(AccountNO1);
-					if (CifId.getCa_schemetype().equals("LA")) {
+					if (CifId.getCa_schemetype().equals("LA")|| CifId.getCa_schemetype().equals("LAEMI")) {
 						AccountNo = LeaseAccount.getLoan_accountno();
 					} else {
 						AccountNo = DepositAccount.getDepo_actno();
@@ -2496,7 +2496,7 @@ public class CustOnboardinController {
 					String AccountNo = null;
 					Lease_Loan_Work_Entity LeaseAccount = lease_Loan_Work_Repo.getLeaseAccount(AccountNO);
 					DepositEntity DepositAccount = depositRep.getCustdataact(AccountNO1);
-					if (CifId.getCa_schemetype().equals("LA")) {
+					if (CifId.getCa_schemetype().equals("LA")|| CifId.getCa_schemetype().equals("LAEMI")) {
 						AccountNo = LeaseAccount.getLoan_accountno();
 					} else {
 						AccountNo = DepositAccount.getDepo_actno();
@@ -2617,7 +2617,7 @@ public class CustOnboardinController {
 				BigDecimal partTranId1 = BigDecimal.valueOf(1);
 				BigDecimal partTranId2 = BigDecimal.valueOf(2);
 
-				if (schmtypes.equals("LA")) {
+				if (schmtypes.equals("LA") || schmtypes.equals("LAEMI")) {
 
 					System.out.println("The Retail Loan Account Opening");
 
@@ -2919,7 +2919,7 @@ public class CustOnboardinController {
 				BigDecimal partTranId1 = BigDecimal.valueOf(1);
 				BigDecimal partTranId2 = BigDecimal.valueOf(2);
 
-				if (schmtypes.equals("LA")) {
+				if (schmtypes.equals("LA")|| schmtypes.equals("LAEMI")) {
 
 					System.out.println("The corporate Loan Account Opening");
 
@@ -3223,7 +3223,7 @@ public class CustOnboardinController {
 				BigDecimal partTranId1 = BigDecimal.valueOf(1);
 				BigDecimal partTranId2 = BigDecimal.valueOf(2);
 
-				if (schmtypes.equals("LA")) {
+				if (schmtypes.equals("LA")|| schmtypes.equals("LAEMI")) {
 
 					System.out.println("The corporate Loan Account Opening");
 
@@ -3437,7 +3437,7 @@ public class CustOnboardinController {
 					String AccountNo = null;
 					Lease_Loan_Work_Entity LeaseAccount = lease_Loan_Work_Repo.getLeaseAccount(AccountNO2);
 					DepositEntity DepositAccount = depositRep.getCustdataact(AccountNO1);
-					if (CifId.getCa_schemetype().equals("LA")) {
+					if (CifId.getCa_schemetype().equals("LA")|| CifId.getCa_schemetype().equals("LAEMI")) {
 						AccountNo = LeaseAccount.getLoan_accountno();
 					} else {
 						AccountNo = DepositAccount.getDepo_actno();
@@ -3463,7 +3463,7 @@ public class CustOnboardinController {
 					String AccountNo = null;
 					Lease_Loan_Work_Entity LeaseAccount = lease_Loan_Work_Repo.getLeaseAccount(AccountNO2);
 					DepositEntity DepositAccount = depositRep.getCustdataact(AccountNO1);
-					if (CifId.getCa_schemetype().equals("LA")) {
+					if (CifId.getCa_schemetype().equals("LA")|| CifId.getCa_schemetype().equals("LAEMI")) {
 						AccountNo = LeaseAccount.getLoan_accountno();
 					} else {
 						AccountNo = DepositAccount.getDepo_actno();

@@ -936,7 +936,7 @@ function showError(element, message) {
 	          url: "./AccountDetailNxt?refnumber=" + refnumber,
 	          data: $("#parisone").serialize(),
 	          success: function (response) {  
-	        	  if ($("#schemetype").val() === "LA") {
+	        	  if ($("#schemetype").val() === "LA" || $("#schemetype").val() === "LAEMI" ) {
 	        		  addRecords1();
 	            	} else if ($("#schemetype").val() === "LAEMI") {
 	            		addRecords1();
