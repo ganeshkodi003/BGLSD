@@ -1920,7 +1920,7 @@ function show1(a) {
 
 function onimageon() {
 	var appl_ref_no = document.getElementById("gooom").value;
-	alert(appl_ref_no);
+ 
 	$.ajax({
 		type : 'get',
 		url : '/BGLS/getimagescor?appl_ref_no='
@@ -2069,7 +2069,7 @@ function sechduleView(a) {
 
 							trHTML += '<tr id="sechduleRow">'
 								+ '<td><input type="text" class="border-0" name="scheduleNo" readonly value="' + no_of_instalment + '" /></td>'
-								+ '<td><input type="text" class="border-0" name="originalDemandDate" readonly value="' + from_date + '" /></td>'
+								+ '<td><input type="text" class="border-0" name="originalDemandDate" readonly value="' + installment_date + '" /></td>'
 
 								+ '<td><input type="text" class="border-0" name="demandType" readonly value="' + installment_description + '" /></td>'
 								+ '<td><input type="text" class="text-right border-0" name="demandId" readonly value="' + installment_amt + '" /></td>'
@@ -2258,7 +2258,7 @@ function listradioclick(a) {
 	var account_type = a.getAttribute("data-account_type");
 	alert(account_type)
 	//var rec_no = a.getAttribute("data-rec_no");
-	alert(rec_no)
+	 
 	if(account_type === 'CORPORATE'){
 		location.href = 'ApprovalCorporate?formmode=viewcorp&appl_ref_no=' + appl_ref_no +'&rec_no='+rec_no;
 	}else{
