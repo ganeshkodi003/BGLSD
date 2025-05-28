@@ -890,7 +890,7 @@ function logFormFields() {
     let score = 0;
 
     // Fields to exclude from normal scoring
-    const excludeFields = ["id", "remarks", "monthly_installment", "rate_of_interest", "date_of_application", "loan_amount"];
+    const excludeFields = [  "remarks", "monthly_installment", "rate_of_interest", "date_of_application" ];
 
     // Employer-based scoring
     const employerScores = {
@@ -936,9 +936,14 @@ function logFormFields() {
         }
 
         // Apply Employer scoring
-        if (fieldName === "employer" && employerScores[value]) {
-            score += employerScores[value];
-        } 
+        if (fieldName === "employer") {
+          let trimmedValue = value.trim();
+       if (employerScores[trimmedValue]) {
+        score += employerScores[trimmedValue];
+        console.log(`Employer: ${trimmedValue}, Score Added: ${employerScores[trimmedValue]}, Total Score: ${score}`);
+       }
+   }
+ 
         // Apply Employment Nature scoring
         else if (fieldName === "employment_nature" && employmentScores[value]) {
             score += employmentScores[value];
@@ -949,24 +954,25 @@ function logFormFields() {
         }
     });
 
-    // Loan Amount Scoring based on percentage of Annual Income
+ // Loan Amount Scoring based on 40% of Annual Income (after 60% reserved for maintenance)
     if (annualIncome > 0 && loanAmount > 0) {
-        let loanPercentage = (loanAmount / annualIncome) * 100; // Fixed formula
+        let maxEligibleLoan = annualIncome * 0.40; // Only 40% eligible for loan
+        let loanPercentage = (loanAmount / annualIncome) * 100;
 
-        if (loanPercentage <= 20) {
+        if (loanAmount <= maxEligibleLoan) {
             score += 20;
-        } else if (loanPercentage <= 40) {
-            score += 15;
-        } else if (loanPercentage <= 60) {
+            console.log(`🎯 Loan is within eligible limit. Full score awarded.`,score);
+        } else if (loanAmount <= annualIncome * 0.50) {
             score += 10;
-        } else if (loanPercentage <= 80) {
-            score += 5;
+            console.log(`⚠️ Loan exceeds eligible limit but is within 50%. Partial score awarded.`,score);
         } else {
-            score += 0; // If loan amount is very high compared to income, no score
+            score += 0;
+            console.log(`❌ Loan amount exceeds acceptable threshold. No score.`,score);
         }
 
-        console.log(`💰 Loan Percentage: ${loanPercentage.toFixed(2)}%`);
-    }
+        console.log(`📊 Loan Percentage of Annual Income: ${loanPercentage.toFixed(2)}%`);
+    } 
+
 
     console.log("✅ Filtered Form Data:", formData);
     console.log("🎯 Total Score:", score);
