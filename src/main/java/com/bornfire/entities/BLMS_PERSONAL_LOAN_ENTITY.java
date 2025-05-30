@@ -54,12 +54,78 @@ public class BLMS_PERSONAL_LOAN_ENTITY {
 	private String	reject_user;
 	private String	monthly_expense;
 	private String	annual_expense;
+	private String	other_income;
+	private String	household_expense;
+	private String	other_commit;
+	private String	total_income;
+	private String	total_expense;
+	private String	surflus_funds;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date	hold_date;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date	reject_date;
 	
 	
+	public String getOther_income() {
+		return other_income;
+	}
+
+
+	public void setOther_income(String other_income) {
+		this.other_income = other_income;
+	}
+
+
+	public String getHousehold_expense() {
+		return household_expense;
+	}
+
+
+	public void setHousehold_expense(String household_expense) {
+		this.household_expense = household_expense;
+	}
+
+
+	public String getOther_commit() {
+		return other_commit;
+	}
+
+
+	public void setOther_commit(String other_commit) {
+		this.other_commit = other_commit;
+	}
+
+
+	public String getTotal_income() {
+		return total_income;
+	}
+
+
+	public void setTotal_income(String total_income) {
+		this.total_income = total_income;
+	}
+
+
+	public String getTotal_expense() {
+		return total_expense;
+	}
+
+
+	public void setTotal_expense(String total_expense) {
+		this.total_expense = total_expense;
+	}
+
+
+	public String getSurflus_funds() {
+		return surflus_funds;
+	}
+
+
+	public void setSurflus_funds(String surflus_funds) {
+		this.surflus_funds = surflus_funds;
+	}
+
+
 	public String getHold_flg() {
 		return hold_flg;
 	}
@@ -482,6 +548,7 @@ public class BLMS_PERSONAL_LOAN_ENTITY {
  
 
 
+
 	public BLMS_PERSONAL_LOAN_ENTITY(String name, Date date_of_birth, Date date_of_application, String phone_number,
 			String email_id, String home_address, String marital_status, String place_of_work, String job_title,
 			String work_address, String service, String monthly_income, String annual_income, String employer,
@@ -490,7 +557,8 @@ public class BLMS_PERSONAL_LOAN_ENTITY {
 			String verify_user, Date entity_time, Date modify_time, Date verify_time, String entity_flg,
 			String modify_flg, String verify_flg, String del_flg, String id, String hold_flg, String reject_flg,
 			String hold_remarks, String hold_user, String reject_remarks, String reject_user, String monthly_expense,
-			String annual_expense, Date hold_date, Date reject_date) {
+			String annual_expense, String other_income, String household_expense, String other_commit,
+			String total_income, String total_expense, String surflus_funds, Date hold_date, Date reject_date) {
 		super();
 		this.name = name;
 		this.date_of_birth = date_of_birth;
@@ -532,6 +600,12 @@ public class BLMS_PERSONAL_LOAN_ENTITY {
 		this.reject_user = reject_user;
 		this.monthly_expense = monthly_expense;
 		this.annual_expense = annual_expense;
+		this.other_income = other_income;
+		this.household_expense = household_expense;
+		this.other_commit = other_commit;
+		this.total_income = total_income;
+		this.total_expense = total_expense;
+		this.surflus_funds = surflus_funds;
 		this.hold_date = hold_date;
 		this.reject_date = reject_date;
 	}

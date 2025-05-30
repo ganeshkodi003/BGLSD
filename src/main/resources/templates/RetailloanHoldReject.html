@@ -99,7 +99,7 @@ body {
 	padding: 20px;
 	border: 1px solid #888;
 	width: 70%;
-	margin-left: 200px;
+	margin-left:200px;
 }
 
 .modal-pass {
@@ -403,7 +403,199 @@ function SubVehicleProceed() {
     window.history.back();
 }
 </script>
+<script>
 
+ 
+function getRepaymentDetails(a) {
+	event.preventDefault();
+ 
+	let principleAmount = '';
+	let santionedDate = '';
+	let interestRate = '';
+	let noOfInstallment = '';
+	let installAmount = '';
+  
+	    principleAmount = document.getElementById("loan_amount").value.replace(/,/g, '');
+	    santionedDate = changeDateFormat(document.getElementById("date_of_application").value);
+	    interestRate = document.getElementById("rate_of_interest").value.replace(/,/g, '');
+	    noOfInstallment = document.getElementById("repayment_period").value;
+	    installAmount = document.getElementById("monthly_installment").value.replace(/,/g, '');
+	 
+	
+	let installID = 1;
+	let installStartDate = santionedDate;
+	let pricipleFreq = "Monthly";
+	let interestFreq = "Monthly";
+	let SchmeType = "LAEMI";
+
+	console.log(principleAmount + " " + santionedDate + " " + interestRate + " " + installID + " " + installStartDate + " "
+		+ pricipleFreq + " " + noOfInstallment + " " + installAmount + " " + interestFreq);
+	 $
+		.ajax({
+			type: "GET",
+			url: "./getInterestDetails?creation_Date=" + santionedDate
+				+ "&start_date=" + installStartDate + "&Product_value=" + principleAmount
+				+ "&principle_frequency=" + pricipleFreq + "&int_rate=" + interestRate
+				+ "&no_of_inst=" + noOfInstallment + "&int_amt="
+				+ installAmount + "&interestFrequency=" + interestFreq + "&SchmeType=" + SchmeType,
+			success: function (data) {
+				console.log(data);
+				var trHTML = '';
+				$
+					.each(
+						data,
+						function (index, entity) {
+
+							var no_of_instalment = entity.no_of_instalment;
+							var from_date = formatDate(entity.from_date);
+							var installment_date = formatDate(entity.installment_date);
+							var installment_description = entity.installment_description;
+							var installment_amt = formatNumber(entity.installment_amt);
+							var principal_amt = formatNumber(entity.principal_amt);
+							var interest_amt = formatNumber(entity.interest_amt);
+							var charges_amt = formatNumber(entity.charges_amt);
+							var principal_outstanding = formatNumber(entity.principal_outstanding);
+
+
+
+							trHTML += '<tr id="sechduleRow">'
+								+ '<td><input type="text" class="border-0" name="scheduleNo" readonly value="' + no_of_instalment + '" /></td>'
+								+ '<td><input type="text" class="border-0" name="originalDemandDate" readonly value="' + installment_date + '" /></td>'
+
+								+ '<td><input type="text" class="border-0" name="demandType" readonly value="' + installment_description + '" /></td>'
+								+ '<td><input type="text" class="text-right border-0" name="demandId" readonly value="' + installment_amt + '" /></td>'
+								+ '<td><input class="text-right border-0"  type="text" readonly name="demandAmount" value="'
+								+ principal_amt
+								+ '" /></td>'
+								+ '<td><input type="text" class="text-right border-0" name="demandId" readonly value="' + interest_amt + '" /></td>'
+								+ '<td><input type="text"  class="text-right border-0" name="demandId" readonly value="' + charges_amt + '" /></td>'
+								+ '<td><input type="text"  class="text-right border-0" name="demandId" readonly value="' + principal_outstanding + '" /></td>'
+
+								+ '</tr>';
+
+						});
+				$('#repaymentDet').empty().append(trHTML);
+				 
+
+
+			},
+			error: function (error) {
+				console.error(error);
+			}
+		}); 
+}
+function getRepaymentDetails_v(a) {
+	event.preventDefault();
+ 
+	let principleAmount = '';
+	let santionedDate = '';
+	let interestRate = '';
+	let noOfInstallment = '';
+	let installAmount = '';
+	 
+	    principleAmount = document.getElementById("loan_amount_v").value.replace(/,/g, '');
+	    santionedDate = changeDateFormat(document.getElementById("date_of_application_v").value);
+	    interestRate = document.getElementById("rate_of_interest_v").value.replace(/,/g, '');
+	    noOfInstallment = document.getElementById("repayment_period_v").value;
+	    installAmount = "";
+
+	 
+	let installID = 1;
+	let installStartDate = santionedDate;
+	let pricipleFreq = "Monthly";
+	let interestFreq = "Monthly";
+	let SchmeType = "LAEMI";
+
+	console.log(principleAmount + " " + santionedDate + " " + interestRate + " " + installID + " " + installStartDate + " "
+		+ pricipleFreq + " " + noOfInstallment + " " + installAmount + " " + interestFreq);
+	 $
+		.ajax({
+			type: "GET",
+			url: "./getInterestDetails?creation_Date=" + santionedDate
+				+ "&start_date=" + installStartDate + "&Product_value=" + principleAmount
+				+ "&principle_frequency=" + pricipleFreq + "&int_rate=" + interestRate
+				+ "&no_of_inst=" + noOfInstallment + "&int_amt="
+				+ installAmount + "&interestFrequency=" + interestFreq + "&SchmeType=" + SchmeType,
+			success: function (data) {
+				console.log(data);
+				var trHTML = '';
+				$
+					.each(
+						data,
+						function (index, entity) {
+
+							var no_of_instalment = entity.no_of_instalment;
+							var from_date = formatDate(entity.from_date);
+							var installment_date = formatDate(entity.installment_date);
+							var installment_description = entity.installment_description;
+							var installment_amt = formatNumber(entity.installment_amt);
+							var principal_amt = formatNumber(entity.principal_amt);
+							var interest_amt = formatNumber(entity.interest_amt);
+							var charges_amt = formatNumber(entity.charges_amt);
+							var principal_outstanding = formatNumber(entity.principal_outstanding);
+
+
+
+							trHTML += '<tr id="sechduleRow">'
+								+ '<td><input type="text" class="border-0" name="scheduleNo" readonly value="' + no_of_instalment + '" /></td>'
+								+ '<td><input type="text" class="border-0" name="originalDemandDate" readonly value="' + installment_date + '" /></td>'
+
+								+ '<td><input type="text" class="border-0" name="demandType" readonly value="' + installment_description + '" /></td>'
+								+ '<td><input type="text" class="text-right border-0" name="demandId" readonly value="' + installment_amt + '" /></td>'
+								+ '<td><input class="text-right border-0"  type="text" readonly name="demandAmount" value="'
+								+ principal_amt
+								+ '" /></td>'
+								+ '<td><input type="text" class="text-right border-0" name="demandId" readonly value="' + interest_amt + '" /></td>'
+								+ '<td><input type="text"  class="text-right border-0" name="demandId" readonly value="' + charges_amt + '" /></td>'
+								+ '<td><input type="text"  class="text-right border-0" name="demandId" readonly value="' + principal_outstanding + '" /></td>'
+
+								+ '</tr>';
+
+						});
+				$('#repaymentDet').empty().append(trHTML);
+				 
+
+
+			},
+			error: function (error) {
+				console.error(error);
+			}
+		}); 
+}
+function changeDateFormat(dateString) {
+
+	var parts = dateString.split('-');
+
+	return parts[2] + '-' + parts[1] + '-' + parts[0];
+}
+
+function formatDate(dateString) {
+
+	var date = new Date(dateString);
+
+
+	var day = date.getDate();
+	var month = date.getMonth()+1;
+	var year = date.getFullYear();
+
+
+	if (day < 10) {
+		day = '0' + day;
+	}
+	if (month < 10) {
+		month = '0' + month;
+	}
+
+	return day + '-' + month + '-' + year;
+}
+
+function formatNumber(number) {
+	return Number(number).toLocaleString('en-US', {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2
+	});
+}
+</script>
 </head>
 <body>
 
@@ -697,29 +889,85 @@ function SubVehicleProceed() {
 
 										</div>
 									</div>
-									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="row formline" style="padding: 0px 0px 2px 0px;">
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Monthly Income</div>
 
 
 										<div class="col-sm-2">
-											<input type="text" name="monthly_income" id="monthly_income"
-												th:value="${personal?.monthly_income}"
-												onchange="formatAndSetValue(this)"
-												class="form-control form-control-sm bg-white border border-dark"
-												readonly />
+											<input type="text" name="monthly_income" id="monthly_income" th:value="${personal?.monthly_income}"
+												readonly
+												class="form-control form-control-sm bg-white border border-dark monthly_income_1" />
 
 										</div>
 
 										<div class="col-sm-1"></div>
-										<div class="col-sm-2">Annual Income</div>
+										<div class="col-sm-2">Other Income</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="annual_income" id="annual_income"
-												th:value="${personal?.annual_income}"
-												class="form-control form-control-sm bg-white border border-dark"
+											<input type="text" name="other_income" id="other_income"  th:value="${personal?.other_income}"
+												class="form-control form-control-sm bg-white border border-dark " readonly
+												  />
+
+										</div>
+									</div>
+										<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Household Expense</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="household_expense" id="household_expense"
+												th:value="${personal?.household_expense}" readonly
+												class="form-control form-control-sm bg-white border border-dark  " />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Other Commitment</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="other_commit" id="other_commit"  th:value="${personal?.other_commit}"
+												class="form-control form-control-sm bg-white border border-dark  "  readonly
+												  />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Total Income</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="total_income" id="total_income"
+											 th:value="${personal?.total_income}"
+												class="form-control form-control-sm bg-white border border-dark  "  readonly />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Total Expense</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="total_expense" id="total_expense"  th:value="${personal?.total_expense}"
+												class="form-control form-control-sm bg-white border border-dark  " 
 												readonly />
 
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Annual Income</div>
+										<div class="col-sm-2">
+											<input type="text" name="annual_income" id="annual_income" readonly th:value="${personal?.annual_income}"
+												class="form-control form-control-sm bg-white border border-dark annual_income_1" />
+										</div>
+
+										<div class="col-sm-1"></div>
+									    <div class="col-sm-2">Surplus Funds</div>
+										<div class="col-sm-2">
+											<input type="text" name="surflus_funds" id="surflus_funds" readonly th:value="${personal?.surflus_funds}"
+												class="form-control form-control-sm bg-white border border-dark annual_income_1" />
 										</div>
 									</div>
 									<div class="row formline" style="padding: 0px 0px 2px 0px;">
@@ -782,6 +1030,9 @@ function SubVehicleProceed() {
 												readonly />
 
 										</div>
+										<div class="col-sm-1"> <button type="button" class="btn btn-primary p-2"  data-toggle="modal"
+															data-target="#myleasecal"
+												onclick="getRepaymentDetails(this)">Schedule</button> </div>
 									</div>
 									<div class="row formline" style="padding: 0px 0px 2px 0px;">
 
@@ -973,7 +1224,7 @@ function SubVehicleProceed() {
 										<div class="col-sm-2">Date of Application</div>
 										<div class="col-sm-2">
 											<input type="date" name="date_of_application"
-												id="date_of_application"
+												id="date_of_application_v"
 												class="form-control form-control-sm bg-white border border-dark"
 												th:value="${#dates.format(personal?.date_of_application, 'yyyy-MM-dd')}"
 												readonly />
@@ -1107,7 +1358,7 @@ function SubVehicleProceed() {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="monthly_income" id="monthly_income"
+											<input type="text" name="monthly_income" id="monthly_income_v"
 												th:value="${personal?.monthly_income}"
 												onchange="formatAndSetValue(this)"
 												class="form-control form-control-sm bg-white border border-dark"
@@ -1179,11 +1430,37 @@ function SubVehicleProceed() {
 										<div class="col-sm-2">Vehicle Value</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="vehicle_value" id="vehicle_value"
+											<input type="text" name="vehicle_value" id="loan_amount_v"
 												onchange="formatAndSetValue(this)"
 												th:value="${personal?.vehicle_value}"
 												class="form-control form-control-sm bg-white border border-dark"
 												readonly />
+
+										</div>
+										<div class="col-sm-1"> <button type="button" class="btn btn-primary p-2"  data-toggle="modal"
+															data-target="#myleasecal"
+												onclick="getRepaymentDetails_v(this)">Schedule</button> </div>
+									</div>
+								
+											  <div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Rate of Interest</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="rate_of_interest" readonly
+												id="rate_of_interest_v" th:value="${personal?.rate_of_interest}"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Repayment Period</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="repayment_period"
+												id="repayment_period_v" th:value="${personal?.repayment_period}" readonly
+												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
 									</div>
@@ -1277,7 +1554,63 @@ function SubVehicleProceed() {
 		</div>
 	</div>
 
+  <div class="modal mt-5" id="myleasecal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" data-backdrop="false" aria-hidden="true" style ="padding-right: 300px;">
+	<div class="modal-dialog custom-modal ml-5" role="document">
+		<!-- Custom class added here -->
+		<div class="modal-content" style="width:1000px;" >
+			<div class="modal-header">
+				<h5 class="modal-title" id="myModalLabel"> Schedule
+					Details</h5>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body"   >
+				<div class="table-responsive" id="demandtable">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th style="text-align: left;  ">Srl.
+									No.</th>
+								<!--<th style="text-align: center; width: 60px !important;">From
+										Date</th>-->
+								<th style="text-align: left;  ">
+									Installment Date</th>
+								<th style="text-align: left;  ">
+									Installment Description</th>
+								<th style="text-align: right;  ">
+									Installment Amt.</th>
+								<th style="text-align: right;  ">
+									Principal Amt.</th>
+								<th style="text-align: right; ">Interest
+									Amt.</th>
+								<th style="text-align: right;  ">Charges
+									Amt.</th>
+								<th style="text-align: right;  ">
+									Principal Outstanding</th>
 
+							</tr>
+						</thead>
+						<tbody id="repaymentDet">
+
+							<!-- More rows can be added similarly -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+
+			<div class="modal-footer">
+				<!-- <button type="button" class="btn btn-primary"
+																	onclick="calculateDTI()">Calculate DTI</button> -->
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+
+</div>
 </body>
 
 </html>

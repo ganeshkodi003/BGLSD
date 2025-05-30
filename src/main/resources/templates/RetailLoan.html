@@ -871,7 +871,7 @@ function formatNumberWithIndianSeparation(value) {
 
 var tab = "tab1";
 
-function logFormFields() { 
+/* function logFormFields() { 
  var form =  '';
  
 	if(tab == "tab2" ){
@@ -888,10 +888,6 @@ function logFormFields() {
     const fields = form.querySelectorAll("input, select, textarea");
     let formData = {};
     let score = 0;
-
-    // Fields to exclude from normal scoring
-    const excludeFields = [  "remarks", "monthly_installment", "rate_of_interest", "date_of_application" ];
-
     // Employer-based scoring
     const employerScores = {
         "Private Limited": 10,
@@ -948,10 +944,6 @@ function logFormFields() {
         else if (fieldName === "employment_nature" && employmentScores[value]) {
             score += employmentScores[value];
         }
-        // Standard scoring for other fields (excluding specific ones)
-        else if (value !== "" && value !== "SELECT" && !excludeFields.includes(fieldName)) {
-            score += 5;
-        }
     });
 
  // Loan Amount Scoring based on 40% of Annual Income (after 60% reserved for maintenance)
@@ -988,13 +980,133 @@ function logFormFields() {
 
 
 
-	}
+	} */
 
 	function closeModal() {
 
     $('#scoreModal').modal('hide');
 
 }
+	function closeValiModal() {
+
+	    $('#ValidateModal').modal('hide');
+
+	}
+	
+	let scoreChartInstance = null;
+
+	function logFormFields() {
+		var form =  '';
+		 
+		if(tab == "tab2" ){
+			 form = document.getElementById("VehicleForm");
+		}
+		else if(tab == 'tab1'){
+			form = document.getElementById("PersonalForm");
+		}
+	    if (!form) {
+	        console.error("❌ Form not found!");
+	        return;
+	    }
+
+	    const fields = form.querySelectorAll("input, select, textarea");
+	    let formData = {};
+	    let score = 0;
+
+	    // Fields to exclude from normal scoring
+	    const excludeFields = ["id", "remarks", "monthly_installment", "rate_of_interest", "date_of_application", "loan_amount"];
+
+	    // Employer-based scoring
+	    const employerScores = {
+	        "Private Limited": 10,
+	        "Public Sector": 15,
+	        "Central Government": 20,
+	        "State Government": 20,
+	        "Local Bodies": 10
+	    };
+
+	    // Employment Nature-based scoring
+	    const employmentScores = {
+	        "Salaried": 20,
+	        "Self-Employed": 15,
+	        "Government Employee": 20,
+	        "Contractual/Temporary Employee": 10,
+	        "Retired/Pensioner": 10
+	    };
+
+	    let loanAmount = 0;
+	    let annualIncome = 0;
+
+	    fields.forEach(field => {
+	        let value = field.value.trim();
+	        let fieldName = field.name;
+
+	        // Skip unchecked checkboxes/radios
+	        if ((field.type === "radio" || field.type === "checkbox") && !field.checked) {
+	            return;
+	        }
+
+	        // Store form data (excluding empty values)
+	        if (value !== "") {
+	            formData[fieldName] = value;
+	        }
+
+	        // Parse and store Loan Amount & Annual Income
+	        if (fieldName === "loan_amount") {
+	            loanAmount = parseFloat(value.replace(/,/g, "")) || 0;
+	        }
+	        if (fieldName === "annual_income") {
+	            annualIncome = parseFloat(value.replace(/,/g, "")) || 0; // Remove commas before parsing
+	        }
+
+	        // Apply Employer scoring
+	        if (fieldName === "employer" && employerScores[value]) {
+	            score += employerScores[value];
+	        } 
+	        // Apply Employment Nature scoring
+	        else if (fieldName === "employment_nature" && employmentScores[value]) {
+	            score += employmentScores[value];
+	        }
+	        // Standard scoring for other fields (excluding specific ones)
+	        else if (value !== "" && value !== "SELECT" && !excludeFields.includes(fieldName)) {
+	            score += 5;
+	        }
+	    });
+
+	    // Loan Amount Scoring based on percentage of Annual Income
+	    if (annualIncome > 0 && loanAmount > 0) {
+	        let loanPercentage = (loanAmount / annualIncome) * 100; // Fixed formula
+
+	        if (loanPercentage <= 20) {
+	            score += 20;
+	        } else if (loanPercentage <= 40) {
+	            score += 15;
+	        } else if (loanPercentage <= 60) {
+	            score += 10;
+	        } else if (loanPercentage <= 80) {
+	            score += 5;
+	        } else {
+	            score += 0; // If loan amount is very high compared to income, no score
+	        }
+
+	        console.log(`💰 Loan Percentage: ${loanPercentage.toFixed(2)}%`);
+	    }
+
+	    console.log("✅ Filtered Form Data:", formData);
+	    console.log("🎯 Total Score:", score);
+	    // Show score in the modal
+	    const alertMsg = document.getElementById("alertmsg");
+	    if (alertMsg) {
+	        alertMsg.innerText = `🎯 Your Total Score is: ${score}`;
+					renderScoreChart(score); // draw arc
+	    }
+
+	    // Show the Bootstrap modal
+	       $('#scoreModal').modal('show');
+	    
+	}
+
+
 
 function validateLoanAmount() {
     // Get input values
@@ -1006,12 +1118,7 @@ function validateLoanAmount() {
     let annualIncome = parseFloat(annualIncomeInput.value.replace(/,/g, '')) || 0;
 
     // Check if loan amount exceeds annual income
-    if (loanAmount > annualIncome) {
-        alert("Loan amount cannot exceed Annual Income.");
-        loanAmountInput.value = annualIncome.toLocaleString(); // Set max allowed value
-    } else {
-        loanAmountInput.value = loanAmount.toLocaleString(); // Format input
-    }
+ 
 }
 
 
@@ -1058,6 +1165,202 @@ function renderScoreChart(score) {
 
 
 </script>
+<script>
+var tab = "tab1";
+function getRepaymentDetails(a) {
+	event.preventDefault();
+	let form = '';
+	let principleAmount = '';
+	let santionedDate = '';
+	let interestRate = '';
+	let noOfInstallment = '';
+	let installAmount = '';
+	if (tab === "tab2") {
+	    form = document.getElementById("VehicleForm");
+
+	    principleAmount = document.getElementById("loan_amount_v").value.replace(/,/g, '');
+	    santionedDate = changeDateFormat(document.getElementById("date_of_application_v").value);
+	    interestRate = document.getElementById("rate_of_interest_v").value.replace(/,/g, '');
+	    noOfInstallment = document.getElementById("repayment_period_v").value;
+	    installAmount = "";
+
+	} else if (tab === "tab1") {
+	    form = document.getElementById("PersonalForm");
+
+	    principleAmount = document.getElementById("loan_amount").value.replace(/,/g, '');
+	    santionedDate = changeDateFormat(document.getElementById("date_of_application").value);
+	    interestRate = document.getElementById("rate_of_interest").value.replace(/,/g, '');
+	    noOfInstallment = document.getElementById("repayment_period").value;
+	    installAmount = document.getElementById("monthly_installment").value.replace(/,/g, '');
+	}
+	
+	let installID = 1;
+	let installStartDate = santionedDate;
+	let pricipleFreq = "Monthly";
+	let interestFreq = "Monthly";
+	let SchmeType = "LAEMI";
+
+
+	console.log(principleAmount + " " + santionedDate + " " + interestRate + " " + installID + " " + installStartDate + " "
+		+ pricipleFreq + " " + noOfInstallment + " " + installAmount + " " + interestFreq);
+	 $
+		.ajax({
+			type: "GET",
+			url: "./getInterestDetails?creation_Date=" + santionedDate
+				+ "&start_date=" + installStartDate + "&Product_value=" + principleAmount
+				+ "&principle_frequency=" + pricipleFreq + "&int_rate=" + interestRate
+				+ "&no_of_inst=" + noOfInstallment + "&int_amt="
+				+ installAmount + "&interestFrequency=" + interestFreq + "&SchmeType=" + SchmeType,
+			success: function (data) {
+				console.log(data);
+				var trHTML = '';
+				$
+					.each(
+						data,
+						function (index, entity) {
+
+							var no_of_instalment = entity.no_of_instalment;
+							var from_date = formatDate(entity.from_date);
+							var installment_date = formatDate(entity.installment_date);
+							var installment_description = entity.installment_description;
+							var installment_amt = formatNumber(entity.installment_amt);
+							var principal_amt = formatNumber(entity.principal_amt);
+							var interest_amt = formatNumber(entity.interest_amt);
+							var charges_amt = formatNumber(entity.charges_amt);
+							var principal_outstanding = formatNumber(entity.principal_outstanding);
+
+
+
+							trHTML += '<tr id="sechduleRow">'
+								+ '<td><input type="text" class="border-0" name="scheduleNo" readonly value="' + no_of_instalment + '" /></td>'
+								+ '<td><input type="text" class="border-0" name="originalDemandDate" readonly value="' + installment_date + '" /></td>'
+
+								+ '<td><input type="text" class="border-0" name="demandType" readonly value="' + installment_description + '" /></td>'
+								+ '<td><input type="text" class="text-right border-0" name="demandId" readonly value="' + installment_amt + '" /></td>'
+								+ '<td><input class="text-right border-0"  type="text" readonly name="demandAmount" value="'
+								+ principal_amt
+								+ '" /></td>'
+								+ '<td><input type="text" class="text-right border-0" name="demandId" readonly value="' + interest_amt + '" /></td>'
+								+ '<td><input type="text"  class="text-right border-0" name="demandId" readonly value="' + charges_amt + '" /></td>'
+								+ '<td><input type="text"  class="text-right border-0" name="demandId" readonly value="' + principal_outstanding + '" /></td>'
+
+								+ '</tr>';
+
+						});
+				$('#repaymentDet').empty().append(trHTML);
+				 
+
+
+			},
+			error: function (error) {
+				console.error(error);
+			}
+		}); 
+}
+
+function changeDateFormat(dateString) {
+
+	var parts = dateString.split('-');
+
+	return parts[2] + '-' + parts[1] + '-' + parts[0];
+}
+
+function formatDate(dateString) {
+
+	var date = new Date(dateString);
+
+
+	var day = date.getDate();
+	var month = date.getMonth()+1;
+	var year = date.getFullYear();
+
+
+	if (day < 10) {
+		day = '0' + day;
+	}
+	if (month < 10) {
+		month = '0' + month;
+	}
+
+	return day + '-' + month + '-' + year;
+}
+
+function formatNumber(number) {
+	return Number(number).toLocaleString('en-US', {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2
+	});
+}
+
+function calculateEMI23() {
+    // Get values from DOM and convert to numbers
+   
+    const termMonths = parseInt(document.getElementById('repayment_period')?.value.replace(/,/g, "")) || 0;
+    const loanAmount = parseFloat(document.getElementById('loan_amount')?.value.replace(/,/g, "")) || 0;
+    const annualRate = parseFloat(document.getElementById('rate_of_interest')?.value.replace(/,/g, "")) || 0;  
+    const emiOutput = document.getElementById('monthly_installment');
+    if (!termMonths || !loanAmount || !annualRate) {
+        emiOutput.value = '';
+        return;
+    }
+
+    // Calculations
+    const annualRateFraction = annualRate / 100;
+    const loanTermInYears = termMonths / 12;
+    const totalInterest = loanAmount * annualRateFraction * loanTermInYears;
+    const totalPayable = loanAmount + totalInterest;
+
+    // Full EMI (unrounded)
+    const fullEMI = totalPayable / termMonths;
+    // Fixed EMI (rounded to nearest whole number)
+    const fixedEMI = Math.round(fullEMI);
+
+    // Update monthly installment field
+    emiOutput.value = fixedEMI.toLocaleString('en-IN');
+}
+document.addEventListener('DOMContentLoaded', function () {
+    calculateEMI23();
+});
+ 
+ 
+ 
+</script>
+<script>
+
+function checkemi(){
+	
+	    const monthly_installment = parseInt(document.getElementById('monthly_installment')?.value.replace(/,/g, "")) || 0;
+	    const surflus_funds = parseFloat(document.getElementById('surflus_funds')?.value.replace(/,/g, "")) || 0;
+	    let grade = '';
+	    let message = '';
+	    const loanPercentage = (monthly_installment / surflus_funds) * 100;
+	    if (loanPercentage <= 50) {
+	    	grade="Grade A";
+	        message = " Loan proposal within safe limits.";
+	    }  else if (loanPercentage >= 60) {
+	    	grade="Grade B";
+	        message = "Considerable EMI. Review recommended.";
+	    } else {
+	    	grade="Grade C";
+	        message = "High EMI. Revisit repayment plan.";
+	    }
+
+	   
+	    const valimsg = document.getElementById("valimsg");
+	    if (valimsg) {
+	    	 valimsg.innerText = message;
+					  // draw arc
+	    }
+	    const grademsg = document.getElementById("grademsg");
+	    if (grademsg) {
+	    	grademsg.innerText = grade;
+					  // draw arc
+	    }
+
+	    // Show the Bootstrap modal
+	       $('#ValidateModal').modal('show');
+ }
+</script>
 
 </head>
 
@@ -1091,9 +1394,10 @@ function renderScoreChart(score) {
 								<h6 style="font-size: 1.2rem; color: black;">LOAN ORIGINATION - RETAIL</h6>
 							</div>
 							<div class="float-right">
+							   	 
 								<button class="btn btn-primary p-2"
 									onclick="$('#emiModal').modal('show');">Calculate EMI</button> 
-								<button type="button" class="btn btn-primary p-2" onclick="logFormFields()">Score</button>
+								
 							</div>
 						</div>
 
@@ -1256,19 +1560,78 @@ function renderScoreChart(score) {
 
 										<div class="col-sm-2">
 											<input type="text" name="monthly_income" id="monthly_income"
-												onchange="formatAndSetValue(this)"
+												onchange="formatAndSetValue(this);calculateTotals(); " 
 												class="form-control form-control-sm bg-white border border-dark monthly_income_1" />
 
 										</div>
 
 										<div class="col-sm-1"></div>
-										<div class="col-sm-2">Annual Income</div>
+										<div class="col-sm-2">Other Income</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="annual_income" id="annual_income" 
-												class="form-control form-control-sm bg-white border border-dark annual_income_1" 
+											<input type="text" name="other_income" id="other_income"  onchange="formatAndSetValue(this);calculateTotals(); "
+												class="form-control form-control-sm bg-white border border-dark " 
+												  />
+
+										</div>
+									</div>
+										<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Household Expense</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="household_expense" id="household_expense"
+												onchange="formatAndSetValue(this);calculateTotals(); "
+												class="form-control form-control-sm bg-white border border-dark  " />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Other Commitment</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="other_commit" id="other_commit"  onchange="formatAndSetValue(this);calculateTotals(); "
+												class="form-control form-control-sm bg-white border border-dark  " 
+												  />
+
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Total Income</div>
+
+
+										<div class="col-sm-2">
+											<input type="text" name="total_income" id="total_income"
+											 
+												class="form-control form-control-sm bg-white border border-dark  "  readonly />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Total Expense</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="total_expense" id="total_expense" 
+												class="form-control form-control-sm bg-white border border-dark  " 
 												readonly />
 
+										</div>
+									</div>
+									<div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Annual Income</div>
+										<div class="col-sm-2">
+											<input type="text" name="annual_income" id="annual_income" readonly
+												class="form-control form-control-sm bg-white border border-dark annual_income_1" />
+										</div>
+
+										<div class="col-sm-1"></div>
+									    <div class="col-sm-2">Surplus Funds</div>
+										<div class="col-sm-2">
+											<input type="text" name="surflus_funds" id="surflus_funds" readonly
+												class="form-control form-control-sm bg-white border border-dark annual_income_1" />
 										</div>
 									</div>
 									<div class="row formline" style="padding: 0px 0px 2px 0px;">
@@ -1347,11 +1710,14 @@ function renderScoreChart(score) {
 										<div class="col-sm-2">Loan Amount</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="loan_amount" id="loan_amount" oninput="validateLoanAmount()"
-												onchange="formatAndSetValue(this)"
+											<input type="text" name="loan_amount" id="loan_amount" oninput="validateLoanAmount();calculateEMI23()"
+												onchange="formatAndSetValue(this)" 
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
+										<div class="col-sm-1"> <button type="button" class="btn btn-primary p-2"  data-toggle="modal"
+															data-target="#myleasecal"
+												onclick="getRepaymentDetails(this)">Schedule</button> </div>
 									</div>
 									<div class="row formline" style="padding: 0px 0px 2px 0px;">
 
@@ -1362,7 +1728,7 @@ function renderScoreChart(score) {
 
 										<div class="col-sm-2">
 											<input type="text" name="rate_of_interest"
-												id="rate_of_interest"
+												id="rate_of_interest" oninput="calculateEMI23()"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1372,7 +1738,7 @@ function renderScoreChart(score) {
 										<div class="col-sm-2">
 
 											<input type="text" name="repayment_period"
-												id="repayment_period"
+												id="repayment_period" oninput="calculateEMI23()"
 												class="form-control form-control-sm bg-white border border-dark" />
 
 										</div>
@@ -1391,7 +1757,10 @@ function renderScoreChart(score) {
 
 										</div>
 
-										<div class="col-sm-1"></div>
+										<div class="col-sm-1">
+										<button type="button" class="btn btn-primary p-2" onclick="checkemi();">Validate</button>
+											
+</div>
 										<div class="col-sm-2">Remarks</div>
 										<div class="col-sm-2">
 
@@ -1447,7 +1816,7 @@ function renderScoreChart(score) {
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Date of Application</div>
 										<div class="col-sm-2">
-											<input type="date" name="date_of_application" id="date_of_application"
+											<input type="date" name="date_of_application" id="date_of_application_v"
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
 									</div>
@@ -1569,7 +1938,7 @@ function renderScoreChart(score) {
 
 
 										<div class="col-sm-2">
-											<input type="text" name="monthly_income" id="monthly_income" onchange="formatAndSetValue(this)"
+											<input type="text" name="monthly_income"  id="monthly_income_v" onchange="formatAndSetValue(this)"
 												class="form-control form-control-sm bg-white border border-dark monthly_income_2" />
 
 										</div>
@@ -1578,7 +1947,7 @@ function renderScoreChart(score) {
 										<div class="col-sm-2">Annual Income</div>
 										<div class="col-sm-2">
 
-											<input type="text" name="annual_income" id="annual_income" 
+											<input type="text" name="annual_income" id="annual_income_v" 
 												class="form-control form-control-sm bg-white border border-dark annual_income_2"
 												readonly />
 
@@ -1653,11 +2022,35 @@ function renderScoreChart(score) {
 										<div class="col-sm-1"></div>
 										<div class="col-sm-2">Vehicle Value</div>
 										<div class="col-sm-2">
-											<input type="text" name="vehicle_value" id="vehicle_value" onchange="formatAndSetValue(this)"
+											<input type="text" name="vehicle_value" id="loan_amount_v" onchange="formatAndSetValue(this)"
 												class="form-control form-control-sm bg-white border border-dark" />
 										</div>
+										<div class="col-sm-1"> <button type="button" class="btn btn-primary p-2"  data-toggle="modal"
+															data-target="#myleasecal"
+												onclick="getRepaymentDetails(this)">Schedule</button> </div>
 									</div>
+                                <div class="row formline" style="padding: 0px 0px 2px 0px;">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Rate of Interest</div>
 
+
+										<div class="col-sm-2">
+											<input type="text" name="rate_of_interest"
+												id="rate_of_interest_v"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">Repayment Period</div>
+										<div class="col-sm-2">
+
+											<input type="text" name="repayment_period"
+												id="repayment_period_v"
+												class="form-control form-control-sm bg-white border border-dark" />
+
+										</div>
+									</div>
 									<div class="row formline" style="padding: 0px 0px 2px 0px;">
 
 
@@ -3446,16 +3839,28 @@ function renderScoreChart(score) {
 		<div class="modal-content">
 			<div class="modal-body text-center">
 				<h6 id="alertmsg" class="mb-3"></h6>
-
+                
 				<canvas id="scoreChart" width="200" height="100"></canvas>
-
+                <p id="scorepoint" class="mb-3"></p>
 				<button type="button" class="btn btn-primary mt-3" onclick="closeModal()">Close</button>
 			</div>
 		</div>
 	</div>
 </div>
 
-
+<div class="modal fade" data-backdrop="false" data-keyboard="false"
+	id="ValidateModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-body text-center">
+			   <h5 id="grademsg" class="mb-3"></h5>
+				<h6 id="valimsg" class="mb-3"></h6>
+				
+				<button type="button" class="btn btn-primary mt-3" onclick="closeValiModal()">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 	<div class="modal fade" data-backdrop="false" data-keyboard="false"
@@ -3590,6 +3995,97 @@ function renderScoreChart(score) {
             
         });
     </script>
+    
+    <div class="modal" id="myleasecal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" data-backdrop="false" aria-hidden="true" style ="padding-right: 300px;">
+	<div class="modal-dialog custom-modal" role="document">
+		<!-- Custom class added here -->
+		<div class="modal-content" style="width:1000px;height:700px;" >
+			<div class="modal-header">
+				<h5 class="modal-title" id="myModalLabel"> Schedule
+					Details</h5>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body" style="overflow-y: auto; max-height: 600px;" >
+				<div class="table-responsive" id="demandtable">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th style="text-align: left;  ">Srl.
+									No.</th>
+								<!--<th style="text-align: center; width: 60px !important;">From
+										Date</th>-->
+								<th style="text-align: left;  ">
+									Installment Date</th>
+								<th style="text-align: left;  ">
+									Installment Description</th>
+								<th style="text-align: right;  ">
+									Installment Amt.</th>
+								<th style="text-align: right;  ">
+									Principal Amt.</th>
+								<th style="text-align: right; ">Interest
+									Amt.</th>
+								<th style="text-align: right;  ">Charges
+									Amt.</th>
+								<th style="text-align: right;  ">
+									Principal Outstanding</th>
+
+							</tr>
+						</thead>
+						<tbody id="repaymentDet">
+
+							<!-- More rows can be added similarly -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+
+			<div class="modal-footer">
+				<!-- <button type="button" class="btn btn-primary"
+																	onclick="calculateDTI()">Calculate DTI</button> -->
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	function calculateTotals() {
+	 
+		console.log("Calculating totals...");
+		const monthlyIncome = parseFloat(document.getElementById("monthly_income")?.value.replace(/,/g, "")) || 0;
+		const otherIncome = parseFloat(document.getElementById("other_income")?.value.replace(/,/g, "")) || 0;
+		const monthlyExpense = parseFloat(document.getElementById("household_expense")?.value.replace(/,/g, "")) || 0;
+		const otherExpense = parseFloat(document.getElementById("other_commit")?.value.replace(/,/g, "")) || 0;
+ 
+		const totalIncome = monthlyIncome + otherIncome;
+		const totalExpense = monthlyExpense + otherExpense;
+		const rem_funds = totalIncome - totalExpense;
+		document.getElementById("total_income").value = totalIncome.toLocaleString("en-US", {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2,
+		});
+
+		document.getElementById("total_expense").value = totalExpense.toLocaleString("en-US", {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2,
+		});
+		document.getElementById("surflus_funds").value = rem_funds.toLocaleString("en-US", {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2,
+		});
+	}
+
+	// Expose it to global scope if you want to call it from `onchange`
+	window.calculateTotals = calculateTotals;
+});
+</script>
+
 </body>
 
 </html>

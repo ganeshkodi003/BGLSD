@@ -1703,7 +1703,7 @@ function nextdeposit() { // Use this to go to the previous page in browser
 													</div>
 												</td>
 												<td><input type="text" class="form-control"
-													value="SEYCHELLES"></td>
+													value="INDIA"></td>
 											</tr>
 											<tr>
 												<td>3</td>
@@ -1841,7 +1841,7 @@ function nextdeposit() { // Use this to go to the previous page in browser
 													</div>
 												</td>
 												<td><input type="text" class="form-control"
-													value="SEYCHELLES"></td>
+													value="INDIA"></td>
 											</tr>
 											<tr>
 												<td>3</td>
@@ -1910,151 +1910,7 @@ function nextdeposit() { // Use this to go to the previous page in browser
 					</div>
 				</div>
 				<!--end new  -->
-				<div class="modal " id="workflowModal" tabindex="-1" role="dialog"
-					aria-labelledby="exampleModalLabel" aria-hidden="true"
-					style="display: none; overflow-y: hidden;">
-					<div class="modal-dialog " role="document">
-						<div class="modal-content pt-2 bg-white " id=" ">
-
-							<div class="modal-body ">
-								<!-- Your original form content here -->
-								<div class="card">
-									<div class="card-header"
-										style="background-color: #e9ecef; height: 50px">
-										<div class="float-left">
-											<h6 style="font-size: 1.2rem; color: black;">
-												WORK FLOW <span> </span>
-											</h6>
-
-										</div>
-									</div>
-									<div class="modal-body ">
-										<input type="text" id="referenceids" name="workflow" hidden readonly>
-										<div class="row formline">
-											<div class="col-sm-1"></div>
-											<div class="col-sm-4">
-
-												<label class="checkbox-label"> <span
-													class="label-text" id="label1">1. Minimal Data</span> <input
-													type="checkbox" value="" name="cpb.chlist2" id="chlist1"
-													class="chl" onclick="updateSerial(this, 'label1', 'sr1')">
-													<span class="aln" name="minimal_data" id="sr1"></span> <!-- Span for serial number -->
-												</label> <br> <label class="checkbox-label"> <span
-													class="label-text" id="label2">2. Customer Checks</span> <input
-													type="checkbox" value="" name="cpb.chlist3" id="chlist2"
-													class="chl" onclick="updateSerial(this, 'label2', 'sr2')">
-													<span class="aln" name="customer_checks" id="sr2"></span>
-												</label> <br> <label class="checkbox-label"> <span
-													class="label-text" id="label3">3. Customer
-														Information</span> <input type="checkbox" value=""
-													name="cpb.chlist4" id="chlist4" class="chl"
-													onclick="updateSerial(this, 'label3', 'sr3')"> <span
-													class="aln" name="customer_information" id="sr3"></span>
-												</label> <br> <label class="checkbox-label"> <span
-													class="label-text" id="label4">4. Account
-														Information</span> <input type="checkbox" value=""
-													name="cpb.chlist5" id="chlist5" class="chl"
-													onclick="updateSerial(this, 'label4', 'sr4')"> <span
-													class="aln" name="account_information" id="sr4"></span>
-												</label><br> <label class="checkbox-label"> <span
-													class="label-text" id="label5">5. Documents Upload</span> <input
-													type="checkbox" value="" name="cpb.chlist6" id="chlist6"
-													class="chl" onclick="updateSerial(this, 'label5', 'sr5')">
-													<span class="aln" name="documents_upload" id="sr5"></span>
-												</label><br> <label class="checkbox-label"> <span
-													class="label-text" id="label6">6. Signature Capture</span>
-													<input type="checkbox" value="" name="cpb.chlist7"
-													id="chlist7" class="chl"
-													onclick="updateSerial(this, 'label6', 'sr6')"> <span
-													class="aln" name="signature_capture" id="sr6"></span>
-												</label><br> <label class="checkbox-label"> <span
-													class="label-text" id="label7">7.Photo Upload</span> <input
-													type="checkbox" value="" name="cpb.chlist6" id="chlist6"
-													class="chl" onclick="updateSerial(this, 'label7', 'sr7')">
-													<span class="aln" name="photo_upload" id="sr7"></span>
-												</label> <br> <label class="checkbox-label"> <span
-													class="label-text" id="label8">8. AOF</span> <input
-													type="checkbox" value="" name="cpb.chlist7" id="chlist7"
-													class="chl" onclick="updateSerial(this, 'label8', 'sr8')">
-													<span class="aln" name="aof" id="sr8"></span>
-												</label> <br> <label class="checkbox-label"> <span
-													class="label-text" id="label9">9. Submission for
-														Approval</span> <input type="checkbox" value=""
-													name="cpb.chlist8" id="chlist8" class="chl"
-													onclick="updateSerial(this, 'label9', 'sr9')"> <span
-													class="aln" name="submission_approval" id="sr9"></span>
-												</label><br> <br>
-											</div>
-											<div class="col-sm-2"></div>
-											<div class="col-sm-4">
-												<label class="checkbox-label"> <span
-													class="label-text" id="label10">10. Submission for
-														KYC</span> <input type="checkbox" value="" name="cpb.chlist13"
-													id="chlist13" class="chl"
-													onclick="updateSerial(this, 'label10', 'sr10')"> <span
-													class="aln" name="submission_kyc" id="sr10"></span>
-												</label><br> <label class="checkbox-label"> <span
-													class="label-text" id="label11">11. Customer
-														Creation</span> <input type="checkbox" value=""
-													name="cpb.chlist12" id="chlist12" class="chl"
-													onclick="updateSerial(this, 'label11', 'sr11')"> <span
-													class="aln" name="customer_creation" id="sr11"></span>
-												</label> <br> <label class="checkbox-label"> <span
-													class="label-text" id="label12">12. Account Creation</span>
-													<input type="checkbox" value="" name="cpb.chlist13"
-													id="chlist13" class="chl"
-													onclick="updateSerial(this, 'label12', 'sr12')"> <span
-													class="aln" name="account_creation" id="sr12"></span>
-												</label> <br> <label class="checkbox-label"> <span
-													class="label-text" id="label13">13. ATM Debit Card
-														Issue</span> <input type="checkbox" value="" name="cpb.chlist14"
-													id="chlist13" class="chl"
-													onclick="updateSerial(this, 'label13', 'sr13')"> <span
-													class="aln" name="atm_debitcard_issue" id="sr13"></span>
-												</label><br> <label class="checkbox-label"> <span
-													class="label-text" id="label14">14. Internet Banking</span>
-													<input type="checkbox" value="" name="cpb.chlist15"
-													id="chlist14" class="chl"
-													onclick="updateSerial(this, 'label14', 'sr14')"> <span
-													class="aln" name="internet_banking" id="sr14"></span>
-												</label><br> <label class="checkbox-label"> <span
-													class="label-text" id="label15">15. Mobile Banking</span> <input
-													type="checkbox" value="" name="cpb.chlist16" id="chlist15"
-													class="chl" onclick="updateSerial(this, 'label15', 'sr15')">
-													<span class="aln" name="mobile_banking" id="sr15"></span>
-												</label><br> <label class="checkbox-label"> <span
-													class="label-text" id="label16">16. Document
-														Archieval</span> <input type="checkbox" value=""
-													name="cpb.chlist16" id="chlist16" class="chl"
-													onclick="updateSerial(this, 'label16', 'sr16')"> <span
-													class="aln" name="document_archieval" id="sr16"></span>
-												</label> <br> <label class="checkbox-label"> <span
-													class="label-text" id="label17">17. Signature Upload</span>
-													<input type="checkbox" value="" name="cpb.chlist17"
-													id="chlist17" class="chl"
-													onclick="updateSerial(this, 'label17', 'sr17')"> <span
-													class="aln" name="signature_upload" id="sr17"></span>
-												</label><br> <label class="checkbox-label"> <span
-													class="label-text" id="label18">18. Account
-														Maintenance</span> <input type="checkbox" value=""
-													name="cpb.chlist17" id="chlist18" class="chl"
-													onclick="updateSerial(this, 'label18', 'sr18')"> <span
-													class="aln" name="account_maintenance" id="sr18"></span>
-												</label><br> <br>
-											</div>
-										</div>
-									</div>
-									<div class="card-footer text-center"
-										style="background-color: #e9ecef">
-										<button class="btn btn-primary p-2" onclick="Home();">Home</button>
-										<button class="btn btn-primary p-2" onclick="workflowsub();">Submit</button>
-										<button class="btn btn-primary p-2" data-dismiss="modal">Close</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				
 <!-- FOR VIEW THE WORK FLOW MODEL -->
 			
 				<div th:if="${formmode}=='add'">
@@ -2173,7 +2029,7 @@ function nextdeposit() { // Use this to go to the previous page in browser
 										</select>
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
 											fill="currentColor" class="bi bi-info-circle"
-											onclick="loadof(this)"
+											onclick="loadof()"
 											style="margin-top: 12px; color: #047cfc; margin-left: 10px;"
 											viewBox="0 0 16 16">
 													<path
@@ -2311,7 +2167,7 @@ function nextdeposit() { // Use this to go to the previous page in browser
 												th:value="${city.ref_id}" th:text="${city.ref_id}"></option>
 
 											<!-- Add more options as needed -->
-										</select> <input id="home_curr_no" name="home_curr" value="BTN"
+										</select> <input id="home_curr_no" name="home_curr" value="INR"
 											class="col-sm-2 form-control form-control-sm bg-white border border-dark "
 											style="display: block;">
 
@@ -3698,15 +3554,15 @@ function nextdeposit() { // Use this to go to the previous page in browser
 										<label class="col-sm-2 d-flex align-items-center "
 											style="font-size: 15px; font-weight: 500;">Customer
 											Template</label> 
-											<input type="text" th:value="${OtherServicess?.cus_temp}"
+											<input type="text" th:value="${OtherServicess?.cus_temp}" id="cus_temp"
 											class="col-sm-2 form-control form-control-sm bg-white border border-dark"
-											name="schmcode" id="schmcode" readonly />
+											name="schmcode"   readonly />
 											 
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
 											fill="currentColor" class="bi bi-info-circle"
-											onclick="loadof(this)"
+											
 											style="margin-top: 12px; color: #047cfc; margin-left: 10px;"
-											viewBox="0 0 16 16">
+											viewBox="0 0 16 16"  onclick="loadof()">
 													<path
 												d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
 													<path
@@ -3778,7 +3634,7 @@ function nextdeposit() { // Use this to go to the previous page in browser
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
 											fill="currentColor" class="bi bi-info-circle"
 											style="margin-top: 12px; color: #047cfc; margin-left: 10px;"
-											viewBox="0 0 16 16" onclick="workofView(this)">
+											viewBox="0 0 16 16" onclick="workof(this)">
 													<path
 												d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
 													<path
@@ -3828,7 +3684,7 @@ function nextdeposit() { // Use this to go to the previous page in browser
 												th:value="${city.ref_id}" th:text="${city.ref_id}"></option>
 
 											<!-- Add more options as needed -->
-										</select> <input id="home_curr_no" name="home_curr" value="BTN"
+										</select> <input id="home_curr_no" name="home_curr" value="INR"
 											class="col-sm-2 form-control form-control-sm bg-white border border-dark "
 											style="display: block;">
 
@@ -5251,7 +5107,151 @@ function nextdeposit() { // Use this to go to the previous page in browser
 		</div>
 	</div>
 
+<div class="modal " id="workflowModal" tabindex="-1" role="dialog"
+					aria-labelledby="exampleModalLabel" aria-hidden="true"
+					style="display: none; overflow-y: hidden;">
+					<div class="modal-dialog " role="document">
+						<div class="modal-content pt-2 bg-white 	w-50 " id=" ">
 
+							<div class="modal-body ">
+								<!-- Your original form content here -->
+								<div class="card">
+									<div class="card-header"
+										style="background-color: #e9ecef; height: 50px">
+										<div class="float-left">
+											<h6 style="font-size: 1.2rem; color: black;">
+												WORK FLOW <span> </span>
+											</h6>
+
+										</div>
+									</div>
+									<div class="modal-body ">
+										<input type="text" id="referenceids" name="workflow" hidden readonly>
+										<div class="row formline">
+											<div class="col-sm-1"></div>
+											<div class="col-sm-4">
+
+												<label class="checkbox-label"> <span
+													class="label-text" id="label1">1. Minimal Data</span> <input
+													type="checkbox" value="" name="cpb.chlist2" id="chlist1"
+													class="chl" onclick="updateSerial(this, 'label1', 'sr1')">
+													<span class="aln" name="minimal_data" id="sr1"></span> <!-- Span for serial number -->
+												</label> <br> <label class="checkbox-label"> <span
+													class="label-text" id="label2">2. Customer Checks</span> <input
+													type="checkbox" value="" name="cpb.chlist3" id="chlist2"
+													class="chl" onclick="updateSerial(this, 'label2', 'sr2')">
+													<span class="aln" name="customer_checks" id="sr2"></span>
+												</label> <br> <label class="checkbox-label"> <span
+													class="label-text" id="label3">3. Customer
+														Information</span> <input type="checkbox" value=""
+													name="cpb.chlist4" id="chlist4" class="chl"
+													onclick="updateSerial(this, 'label3', 'sr3')"> <span
+													class="aln" name="customer_information" id="sr3"></span>
+												</label> <br> <label class="checkbox-label"> <span
+													class="label-text" id="label4">4. Account
+														Information</span> <input type="checkbox" value=""
+													name="cpb.chlist5" id="chlist5" class="chl"
+													onclick="updateSerial(this, 'label4', 'sr4')"> <span
+													class="aln" name="account_information" id="sr4"></span>
+												</label><br> <label class="checkbox-label"> <span
+													class="label-text" id="label5">5. Documents Upload</span> <input
+													type="checkbox" value="" name="cpb.chlist6" id="chlist6"
+													class="chl" onclick="updateSerial(this, 'label5', 'sr5')">
+													<span class="aln" name="documents_upload" id="sr5"></span>
+												</label><br> <label class="checkbox-label"> <span
+													class="label-text" id="label6">6. Signature Capture</span>
+													<input type="checkbox" value="" name="cpb.chlist7"
+													id="chlist7" class="chl"
+													onclick="updateSerial(this, 'label6', 'sr6')"> <span
+													class="aln" name="signature_capture" id="sr6"></span>
+												</label><br> <label class="checkbox-label"> <span
+													class="label-text" id="label7">7.Photo Upload</span> <input
+													type="checkbox" value="" name="cpb.chlist6" id="chlist6"
+													class="chl" onclick="updateSerial(this, 'label7', 'sr7')">
+													<span class="aln" name="photo_upload" id="sr7"></span>
+												</label> <br> <label class="checkbox-label"> <span
+													class="label-text" id="label8">8. AOF</span> <input
+													type="checkbox" value="" name="cpb.chlist7" id="chlist7"
+													class="chl" onclick="updateSerial(this, 'label8', 'sr8')">
+													<span class="aln" name="aof" id="sr8"></span>
+												</label> <br> <label class="checkbox-label"> <span
+													class="label-text" id="label9">9. Submission for
+														Approval</span> <input type="checkbox" value=""
+													name="cpb.chlist8" id="chlist8" class="chl"
+													onclick="updateSerial(this, 'label9', 'sr9')"> <span
+													class="aln" name="submission_approval" id="sr9"></span>
+												</label><br> <br>
+											</div>
+											<div class="col-sm-2"></div>
+											<div class="col-sm-4">
+												<label class="checkbox-label"> <span
+													class="label-text" id="label10">10. Submission for
+														KYC</span> <input type="checkbox" value="" name="cpb.chlist13"
+													id="chlist13" class="chl"
+													onclick="updateSerial(this, 'label10', 'sr10')"> <span
+													class="aln" name="submission_kyc" id="sr10"></span>
+												</label><br> <label class="checkbox-label"> <span
+													class="label-text" id="label11">11. Customer
+														Creation</span> <input type="checkbox" value=""
+													name="cpb.chlist12" id="chlist12" class="chl"
+													onclick="updateSerial(this, 'label11', 'sr11')"> <span
+													class="aln" name="customer_creation" id="sr11"></span>
+												</label> <br> <label class="checkbox-label"> <span
+													class="label-text" id="label12">12. Account Creation</span>
+													<input type="checkbox" value="" name="cpb.chlist13"
+													id="chlist13" class="chl"
+													onclick="updateSerial(this, 'label12', 'sr12')"> <span
+													class="aln" name="account_creation" id="sr12"></span>
+												</label> <br> <label class="checkbox-label"> <span
+													class="label-text" id="label13">13. ATM Debit Card
+														Issue</span> <input type="checkbox" value="" name="cpb.chlist14"
+													id="chlist13" class="chl"
+													onclick="updateSerial(this, 'label13', 'sr13')"> <span
+													class="aln" name="atm_debitcard_issue" id="sr13"></span>
+												</label><br> <label class="checkbox-label"> <span
+													class="label-text" id="label14">14. Internet Banking</span>
+													<input type="checkbox" value="" name="cpb.chlist15"
+													id="chlist14" class="chl"
+													onclick="updateSerial(this, 'label14', 'sr14')"> <span
+													class="aln" name="internet_banking" id="sr14"></span>
+												</label><br> <label class="checkbox-label"> <span
+													class="label-text" id="label15">15. Mobile Banking</span> <input
+													type="checkbox" value="" name="cpb.chlist16" id="chlist15"
+													class="chl" onclick="updateSerial(this, 'label15', 'sr15')">
+													<span class="aln" name="mobile_banking" id="sr15"></span>
+												</label><br> <label class="checkbox-label"> <span
+													class="label-text" id="label16">16. Document
+														Archieval</span> <input type="checkbox" value=""
+													name="cpb.chlist16" id="chlist16" class="chl"
+													onclick="updateSerial(this, 'label16', 'sr16')"> <span
+													class="aln" name="document_archieval" id="sr16"></span>
+												</label> <br> <label class="checkbox-label"> <span
+													class="label-text" id="label17">17. Signature Upload</span>
+													<input type="checkbox" value="" name="cpb.chlist17"
+													id="chlist17" class="chl"
+													onclick="updateSerial(this, 'label17', 'sr17')"> <span
+													class="aln" name="signature_upload" id="sr17"></span>
+												</label><br> <label class="checkbox-label"> <span
+													class="label-text" id="label18">18. Account
+														Maintenance</span> <input type="checkbox" value=""
+													name="cpb.chlist17" id="chlist18" class="chl"
+													onclick="updateSerial(this, 'label18', 'sr18')"> <span
+													class="aln" name="account_maintenance" id="sr18"></span>
+												</label><br> <br>
+											</div>
+										</div>
+									</div>
+									<div class="card-footer text-center"
+										style="background-color: #e9ecef">
+										<button class="btn btn-primary p-2" onclick="Home();">Home</button>
+										<button class="btn btn-primary p-2" onclick="workflowsub();">Submit</button>
+										<button class="btn btn-primary p-2" data-dismiss="modal">Close</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 	<!-- Modal -->
 	<div class="modal" id="submit_model" tabindex="-1" role="dialog"
 		aria-labelledby="alertLabel" aria-hidden="true">

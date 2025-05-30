@@ -59,9 +59,30 @@ public class BLMS_VEHICLE_DET_ENTITY {
 	private Date	hold_date;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date	reject_date;
+	private String	rate_of_interest;
+	private String	repayment_period;
 	
 	
-	
+	public String getRate_of_interest() {
+		return rate_of_interest;
+	}
+
+
+	public void setRate_of_interest(String rate_of_interest) {
+		this.rate_of_interest = rate_of_interest;
+	}
+
+
+	public String getRepayment_period() {
+		return repayment_period;
+	}
+
+
+	public void setRepayment_period(String repayment_period) {
+		this.repayment_period = repayment_period;
+	}
+
+
 	public String getHold_flg() {
 		return hold_flg;
 	}
@@ -483,6 +504,8 @@ public class BLMS_VEHICLE_DET_ENTITY {
 
 
 
+
+
 	public BLMS_VEHICLE_DET_ENTITY(String name, Date date_of_birth, Date date_of_application, String phone_number,
 			String email_id, String home_address, String marital_status, String place_of_work, String job_title,
 			String work_address, String service, String monthly_income, String annual_income, String employer,
@@ -491,7 +514,8 @@ public class BLMS_VEHICLE_DET_ENTITY {
 			String modify_user, String verify_user, Date entity_time, Date modify_time, Date verify_time,
 			String entity_flg, String modify_flg, String verify_flg, String del_flg, String id, String hold_flg,
 			String reject_flg, String hold_remarks, String hold_user, String reject_remarks, String reject_user,
-			String monthly_expense, String annual_expense, Date hold_date, Date reject_date) {
+			String monthly_expense, String annual_expense, Date hold_date, Date reject_date, String rate_of_interest,
+			String repayment_period) {
 		super();
 		this.name = name;
 		this.date_of_birth = date_of_birth;
@@ -535,6 +559,8 @@ public class BLMS_VEHICLE_DET_ENTITY {
 		this.annual_expense = annual_expense;
 		this.hold_date = hold_date;
 		this.reject_date = reject_date;
+		this.rate_of_interest = rate_of_interest;
+		this.repayment_period = repayment_period;
 	}
 
 

@@ -112,7 +112,7 @@ public class LoanOrginationController {
 				up.setHold_remarks(hold_remarks);
 				blms_PERSONALDET_REPO.save(up);
 			}else {
-				
+				up1.setHold_flg("Y");
 				up1.setVerify_flg("Y");
 				up1.setVerify_time(new Date());
 				up1.setVerify_user(user);

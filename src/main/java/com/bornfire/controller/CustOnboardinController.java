@@ -765,9 +765,11 @@ public class CustOnboardinController {
 			
 			
 			String workflow = check.getWork_flow();
-			List<String> workflow1 = workflow != null ? Arrays.asList(workflow.split("/")) : new ArrayList<>();
-			System.out.println(workflow1 +"workflow");
-			md.addAttribute("work_flow", workflow1);
+			List<String> workflow1 = (workflow != null && !workflow.isEmpty())
+				    ? Arrays.asList(workflow.split("/"))
+				    : new ArrayList<>();
+				md.addAttribute("work_flow", workflow1);
+
 
 		} else if (formmode.equals("verify")) {
 			md.addAttribute("formmode", formmode);
